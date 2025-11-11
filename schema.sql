@@ -40,81 +40,73 @@ DROP TABLE IF EXISTS suppliers;
 	#####################
 */
 CREATE TABLE stock_items(
-	item_id 			int,
-	item_name 			varchar(30) NOT NULL,
-    unit_of_measure 	varchar(30) NOT NULL,
-    category 			varchar(30) NOT NULL,
-    PRIMARY KEY(item_id)
-    
+	item_id 			int				AUTO_INCREMENT			PRIMARY KEY,
+	item_name 			varchar(30)     NOT NULL,
+    unit_of_measure 	varchar(30)     NOT NULL,
+    category 			varchar(30)     NOT NULL
 );
 
 CREATE TABLE stock_locations(
-	location_id 		int,
-    storage_name 		varchar(30)   NOT NULL,
+	location_id 		int				AUTO_INCREMENT			PRIMARY KEY,
+    storage_name 		varchar(30)     NOT NULL,
     address 			varchar(15),
-    storage_type 		varchar(15),
-    PRIMARY KEY(location_id)
-);
-
-CREATE TABLE inventory(
-	inventory_id 		int,
-    running_balance 	int 		  NOT NULL,
-    last_restock_date 	timestamp,
-    expiry_date 		timestamp,
-    location_id			int			  NOT NULL,
-    item_id				int			  NOT NULL,
-    PRIMARY KEY(inventory_id),
-    FOREIGN KEY (location_id)  REFERENCES stock_locations (location_id),
-    FOREIGN KEY (item_id) 	   REFERENCES stock_items (item_id)
+    storage_type 		varchar(15)
 );
 
 CREATE TABLE suppliers(
-	supplier_id 		int,
-    name 				varchar(30)   NOT NULL,
-    contact_person 		varchar(30)   NOT NULL,
-    contact_info 		varchar(30)   NOT NULL,
-    PRIMARY KEY(supplier_id)
+	supplier_id 		int				AUTO_INCREMENT			PRIMARY KEY,
+    name 				varchar(30)     NOT NULL,
+    contact_person 		varchar(30)     NOT NULL,
+    contact_info 		varchar(30)     NOT NULL
+);
+
+CREATE TABLE inventory(
+	inventory_id 		int				AUTO_INCREMENT			PRIMARY KEY,
+    running_balance 	int 		    NOT NULL				CHECK (running_balance >= 0),
+    last_restock_date 	timestamp								DEFAULT CURRENT_TIMESTAMP,
+    expiry_date 		timestamp								DEFAULT CURRENT_TIMESTAMP,
+    location_id			int			    NOT NULL,
+    item_id				int			    NOT NULL,
+    FOREIGN KEY (location_id)  REFERENCES stock_locations (location_id)			ON DELETE CASCADE,
+    FOREIGN KEY (item_id) 	   REFERENCES stock_items (item_id)					ON DELETE CASCADE
 );
 
 CREATE TABLE purchases(
-	purchase_id 		int,
-    order_date 			date  		  NOT NULL,
+	purchase_id 		int				AUTO_INCREMENT			PRIMARY KEY,
+    order_date 			date  		    NOT NULL,
     receive_date 		date,
-    total_cost 			decimal(10,2) NOT NULL,
-    supplier_id			int			  NOT NULL,
-    PRIMARY KEY(purchase_id),
-    FOREIGN KEY (supplier_id)  REFERENCES suppliers (supplier_id)
+    total_cost 			decimal(10,2)   NOT NULL,
+    supplier_id			int			    NOT NULL,
+    FOREIGN KEY (supplier_id)  REFERENCES suppliers (supplier_id)				ON DELETE CASCADE
 );
 
 CREATE TABLE purchase_line(
-	purchase_line_id 	int,
-    quantity 			int 		  NOT NULL,
-    unit_cost 			decimal(10,2) NOT NULL,
-    purchase_id			int			  NOT NULL,
-    item_id				int			  NOT NULL,
+	purchase_line_id 	int				AUTO_INCREMENT			PRIMARY KEY,
+    quantity 			int 		    NOT NULL				CHECK (quantity >= 0),
+    unit_cost 			decimal(10,2)   NOT NULL				CHECK (unit_cost >= 0),
+    purchase_id			int			    NOT NULL,
+    item_id				int			    NOT NULL,
     inventory_id		int,
-    PRIMARY KEY(purchase_line_id),
-    FOREIGN KEY (purchase_id)  REFERENCES purchases (purchase_id),
-    FOREIGN KEY (item_id)      REFERENCES stock_items (item_id),
-    FOREIGN KEY (inventory_id) REFERENCES inventory (inventory_id)
+    FOREIGN KEY (purchase_id)  REFERENCES purchases (purchase_id)				ON DELETE CASCADE,
+    FOREIGN KEY (item_id)      REFERENCES stock_items (item_id)					ON DELETE CASCADE,
+    FOREIGN KEY (inventory_id) REFERENCES inventory (inventory_id)				ON DELETE CASCADE
 );
 
 CREATE TABLE supplier_products(
-	amount 				int 		  NOT NULL,
-    unit_cost 			decimal(10,2) NOT NULL,
-    supplier_id			int			  NOT NULL,
-    item_id				int			  NOT NULL,
-    FOREIGN KEY (supplier_id)  REFERENCES suppliers (supplier_id),
-    FOREIGN KEY (item_id)      REFERENCES stock_items (item_id),
+	amount 				int 		    NOT NULL				CHECK (amount >= 0),
+    unit_cost 			decimal(10,2)   NOT NULL				CHECK (unit_cost >= 0),
+    supplier_id			int			    NOT NULL,
+    item_id				int			    NOT NULL,
+    FOREIGN KEY (supplier_id)  REFERENCES suppliers (supplier_id)				ON DELETE CASCADE,
+    FOREIGN KEY (item_id)      REFERENCES stock_items (item_id)					ON DELETE CASCADE,
     PRIMARY KEY(supplier_id, item_id)
 );
 
 CREATE TABLE stock_movement(
-	movement_id 		int,
-    quantity 			int 		  NOT NULL,
-    moved_at 			timestamp 	  NOT NULL,
-    transaction_type 	varchar(15)   NOT NULL,
-    inventory_id		int			  NOT NULL,
-    PRIMARY KEY(movement_id),
-    FOREIGN KEY (inventory_id) REFERENCES inventory (inventory_id)
+	movement_id 		int				AUTO_INCREMENT			PRIMARY KEY,
+    quantity 			int 		    NOT NULL				CHECK (quantity >= 0),
+    moved_at 			timestamp 	    NOT NULL				DEFAULT CURRENT_TIMESTAMP,
+    transaction_type 	varchar(15)     NOT NULL,
+    inventory_id		int			    NOT NULL,
+    FOREIGN KEY (inventory_id) REFERENCES inventory (inventory_id)				ON DELETE CASCADE
 );
