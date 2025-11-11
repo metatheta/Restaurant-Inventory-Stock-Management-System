@@ -110,3 +110,110 @@ CREATE TABLE stock_movement(
     inventory_id		int			    NOT NULL,
     FOREIGN KEY (inventory_id) REFERENCES inventory (inventory_id)				ON DELETE CASCADE
 );
+
+INSERT INTO stock_items (item_name, unit_of_measure, category)
+VALUES 
+('tomato', 'kg', 'vegetable'),
+('cooking oil', 'liter', 'fat'),
+('rice', 'kg', 'grain'),
+('beef', 'kg', 'protein'),
+('salt', 'kg', 'condiment'),
+('garlic', 'kg', 'vegetable'),
+('curry', 'kg', 'condiment'),
+('fish', 'kg', 'protein'),
+('soy sauce', 'liter', 'condiment'),
+('butter', 'kg', 'fat');
+
+INSERT INTO stock_locations (storage_name, address, storage_type)
+VALUES
+('Main Kitchen', 'Sack'),
+('Main Kitchen', 'Barrel'),
+('Freezer Room', 'Sack')
+('Cabinet', 'Ziplock'),
+('Lower Shelves', 'Tupperware'),
+('Upper Shelves', 'Sack'),
+('Lower Shelves', 'Tupperware'),
+('Freezer Room', 'Ziplock'),
+('Lower Shelves', 'Jug'),
+('Refridgerator', 'Tupperware');
+
+INSERT INTO suppliers (name, contact_person, contact_info)
+VALUES
+('FreshHarvest Co.', 'Ana Santos', '09171234567'),
+('Metro Food Supply', 'Carlos Tan', '09179876543'),
+('AgriPro Distributor', 'Liza Cruz', '09172345678'),
+('From The Backyard Inc.', 'Thomas Tiam-Lee', '09563461648'),
+('Orchard Place', 'Austin Fernandez' '0945825243'),
+('Vineyard Valley', 'Roger Uy', '09874853264'),
+('Grow A Garden', 'Josh Nacasabog', '09789562341'),
+('Aiden Tan Kitchen', 'Uncle Roger', '09786532154'),
+('Coffee Tea Co.', 'Elmar Francisco', '09784512326'),
+('Rice Lab Enterprise', 'Gordon Ramsay', '09789865452');
+
+INSERT INTO purchases (order_date, receive_date, total_cost, supplier_id)
+VALUES
+('2025-11-01', '2025-11-03', 5000.00, 1),
+('2025-11-02', '2025-11-04', 2500.00, 2),
+('2025-11-05', '2025-11-06', 3000.00, 3),
+('2025-10-31', '2025-11-07', 1000.00, 4),
+('2025-10-30', '2025-11-09', 2000.00, 5),
+('2025-10-25', '2025-11-03', 6000.00, 6),
+('2025-10-21', '2025-11-07', 8000.00, 7),
+('2025-10-12', '2025-11-11', 4700.00, 8),
+('2025-10-29', '2025-11-10', 9800.00, 9),
+('2025-10-27', '2025-11-01', 1200.00, 10);
+
+INSERT INTO inventory (running_balance, location_id, item_id)
+VALUES
+(50, 1, 1),
+(30, 2, 2),
+(100, 2, 3),
+(20, 3, 4),
+(70, 4, 5),
+(12, 5, 6),
+(30, 6, 7),
+(68, 7, 8),
+(120, 8, 9),
+(43, 9, 10),
+(98, 10, 11);
+
+INSERT INTO purchase_line (quantity, unit_cost, purchase_id, item_id, inventory_id)
+VALUES
+(20, 50.00, 1, 1, 1),
+(10, 100.00, 2, 2, 2),
+(30, 30.00, 3, 3, 3),
+(15, 200.00, , 4, 4),
+(25, 45.00, 5, 5, 5),
+(8, 120.00, 6, 6, 6),
+(50, 25.00, 7, 7, 7),
+(10, 210.00, 8, 8, 8),
+(15, 55.00, 9, 9, 9),
+(5, 95.00, 10, 10, 10);
+
+
+INSERT INTO supplier_products (amount, unit_cost, supplier_id, item_id)
+VALUES
+(100, 50.00, 1, 1),
+(200, 100.00, 2, 2),
+(500, 30.00, 3, 3),
+(50, 200.00, 4, 4),
+(80, 48.00, 5, 5), 
+(300, 28.00, 6, 6),  
+(400, 32.00, 7, 7),  
+(100, 190.00, 8, 8), 
+(150, 60.00, 9, 9),  
+(120, 110.00, 10, 10); 
+
+
+INSERT INTO stock_movement (quantity, transaction_type, inventory_id)
+VALUES
+(20, 'purchase', 1),     
+(5, 'usage', 2),       
+(10, 'purchase', 3),    
+(3, 'usage', 5),      
+(50, 'purchase', 6),     
+(20, 'usage', 7),    
+(15, 'purchase', 4),    
+(10, 'usage', 8),     
+(30, 'usage', 9),  
+(2, 'spoilage', 10);     
