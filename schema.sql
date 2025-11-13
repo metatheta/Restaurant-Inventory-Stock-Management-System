@@ -49,7 +49,7 @@ CREATE TABLE stock_items(
 CREATE TABLE stock_locations(
 	location_id 		int				AUTO_INCREMENT			PRIMARY KEY,
     storage_name 		varchar(30)     NOT NULL,
-    address 			varchar(15),
+    address 			varchar(30),
     storage_type 		varchar(15)
 );
 
@@ -122,20 +122,22 @@ VALUES
 ('curry', 'kg', 'condiment'),
 ('fish', 'kg', 'protein'),
 ('soy sauce', 'liter', 'condiment'),
-('butter', 'kg', 'fat');
+('butter', 'kg', 'fat'),
+('asparagus', 'kg', 'vegatable');
 
 INSERT INTO stock_locations (storage_name, address, storage_type)
 VALUES
-('Main Kitchen', 'Sack'),
-('Main Kitchen', 'Barrel'),
-('Freezer Room', 'Sack')
-('Cabinet', 'Ziplock'),
-('Lower Shelves', 'Tupperware'),
-('Upper Shelves', 'Sack'),
-('Lower Shelves', 'Tupperware'),
-('Freezer Room', 'Ziplock'),
-('Lower Shelves', 'Jug'),
-('Refridgerator', 'Tupperware');
+('Main Kitchen', 'Batman, Turkey', 'Sack'),
+('Main Kitchen', 'Sesame Street', 'Barrel'),
+('Freezer Room', 'Sesame Street', 'Sack'),
+('Cabinet', 'Batman, Turkey', 'Ziplock'),
+('Lower Shelves', 'Crapstone, England', 'Tupperware'),
+('Upper Shelves', 'Sesame Street', 'Sack'),
+('Lower Shelves', 'Batman, Turkey', 'Tupperware'),
+('Freezer Room', 'Crapstone, England', 'Ziplock'),
+('Lower Shelves', 'Crapstone, England', 'Jug'),
+('Refridgerator', 'Batman, Turkey', 'Tupperware'),
+('Main Kitchen', 'Batman, Turkey', 'Sack');
 
 INSERT INTO suppliers (name, contact_person, contact_info)
 VALUES
@@ -143,7 +145,7 @@ VALUES
 ('Metro Food Supply', 'Carlos Tan', '09179876543'),
 ('AgriPro Distributor', 'Liza Cruz', '09172345678'),
 ('From The Backyard Inc.', 'Thomas Tiam-Lee', '09563461648'),
-('Orchard Place', 'Austin Fernandez' '0945825243'),
+('Tears Place', 'Austin Fernandez', '0945825243'),
 ('Vineyard Valley', 'Roger Uy', '09874853264'),
 ('Grow A Garden', 'Josh Nacasabog', '09789562341'),
 ('Aiden Tan Kitchen', 'Uncle Roger', '09786532154'),
@@ -182,13 +184,14 @@ VALUES
 (20, 50.00, 1, 1, 1),
 (10, 100.00, 2, 2, 2),
 (30, 30.00, 3, 3, 3),
-(15, 200.00, , 4, 4),
+(15, 200.00, 4, 4, 4),
 (25, 45.00, 5, 5, 5),
 (8, 120.00, 6, 6, 6),
 (50, 25.00, 7, 7, 7),
 (10, 210.00, 8, 8, 8),
 (15, 55.00, 9, 9, 9),
 (5, 95.00, 10, 10, 10);
+
 
 
 INSERT INTO supplier_products (amount, unit_cost, supplier_id, item_id)
