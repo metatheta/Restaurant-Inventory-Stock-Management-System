@@ -37,21 +37,24 @@ CREATE TABLE stock_items(
 	item_id 			INT				AUTO_INCREMENT			PRIMARY KEY,
 	item_name 			VARCHAR(30)     NOT NULL,
     unit_of_measure 	VARCHAR(30)     NOT NULL,    -- kg, liter, pcs, etc.
-    category 			VARCHAR(30)     NOT NULL     -- vegetable, fat, grain, etc.
+    category 			VARCHAR(30)     NOT NULL,     -- vegetable, fat, grain, etc.
+    visible				TINYINT(1)								DEFAULT 1
 );
 
 CREATE TABLE stock_locations(
 	location_id 		INT				AUTO_INCREMENT			PRIMARY KEY,
     storage_name 		VARCHAR(30)     NOT NULL,    -- e.g., Main Kitchen, Freezer Room
     address 			VARCHAR(100),                -- e.g., Batman, Turkey; Sesame Street; Crapstone, England
-    storage_type 		VARCHAR(15)                 -- e.g., Sack, Barrel, Tupperware, Ziplock
+    storage_type 		VARCHAR(15) ,                -- e.g., Sack, Barrel, Tupperware, Ziplock
+    visible				TINYINT(1)								DEFAULT 1
 );
 
 CREATE TABLE suppliers(
 	supplier_id 		INT				AUTO_INCREMENT			PRIMARY KEY,
     name 				VARCHAR(30)     NOT NULL,
     contact_person 		VARCHAR(30)     NOT NULL,
-    contact_info 		VARCHAR(30)     NOT NULL
+    contact_info 		VARCHAR(30)     NOT NULL,
+    visible				TINYINT(1)								DEFAULT 1
 );
 
 CREATE TABLE inventory(
@@ -61,6 +64,7 @@ CREATE TABLE inventory(
     expiry_date 		TIMESTAMP								NULL,   -- NULL for non-perishables
     location_id			INT			    NOT NULL,
     item_id				INT			    NOT NULL,
+    visible				TINYINT(1)								DEFAULT 1,
     FOREIGN KEY (location_id)  REFERENCES stock_locations (location_id)	ON DELETE CASCADE,
     FOREIGN KEY (item_id) 	   REFERENCES stock_items (item_id)		ON DELETE CASCADE
 );
@@ -71,6 +75,7 @@ CREATE TABLE purchases(
     receive_date 		DATE,
     total_cost 			DECIMAL(10,2)   NOT NULL,
     supplier_id			INT			    NOT NULL,
+    visible				TINYINT(1)								DEFAULT 1,
     -- for reporting (fast month/year filters)
     order_year          INT GENERATED ALWAYS AS (YEAR(order_date)) STORED,
     order_month         INT GENERATED ALWAYS AS (MONTH(order_date)) STORED,
@@ -85,6 +90,7 @@ CREATE TABLE purchase_line(
     purchase_id			INT			    NOT NULL,
     item_id				INT			    NOT NULL,
     inventory_id		INT,
+    visible				TINYINT(1)								DEFAULT 1,
     FOREIGN KEY (purchase_id)  REFERENCES purchases (purchase_id)	ON DELETE CASCADE,
     FOREIGN KEY (item_id)      REFERENCES stock_items (item_id)		ON DELETE CASCADE,
     FOREIGN KEY (inventory_id) REFERENCES inventory (inventory_id)	ON DELETE CASCADE
@@ -95,6 +101,7 @@ CREATE TABLE supplier_products(
     unit_cost 			DECIMAL(10,2)   NOT NULL				CHECK (unit_cost >= 0),
     supplier_id			INT			    NOT NULL,
     item_id				INT			    NOT NULL,
+    visible				TINYINT(1)								DEFAULT 1,
     FOREIGN KEY (supplier_id)  REFERENCES suppliers (supplier_id)	ON DELETE CASCADE,
     FOREIGN KEY (item_id)      REFERENCES stock_items (item_id)		ON DELETE CASCADE,
     PRIMARY KEY(supplier_id, item_id)
@@ -109,6 +116,7 @@ CREATE TABLE stock_movement(
     item_id             INT             NOT NULL,
     location_id         INT             NOT NULL,
     inventory_id		INT				NOT NULL,
+    visible				TINYINT(1)								DEFAULT 1,
     FOREIGN KEY (item_id)      REFERENCES stock_items (item_id)		ON DELETE CASCADE,
     FOREIGN KEY (location_id)  REFERENCES stock_locations (location_id)	ON DELETE CASCADE,
     FOREIGN KEY (inventory_id) REFERENCES inventory (inventory_id)	ON DELETE CASCADE
