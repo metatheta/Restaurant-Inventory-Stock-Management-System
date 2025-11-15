@@ -122,6 +122,21 @@ CREATE TABLE stock_movement(
     FOREIGN KEY (inventory_id) REFERENCES inventory (inventory_id)	ON DELETE CASCADE
 );
 
+CREATE TABLE dishes (
+    dish_id      INT           AUTO_INCREMENT PRIMARY KEY,
+    dish_name    VARCHAR(50)   NOT NULL,
+    visible     TINYINT(1)    DEFAULT 1
+);
+
+CREATE TABLE dish_requirements (
+    dish_id      INT           NOT NULL,
+    item_id      INT           NOT NULL,
+    quantity     DECIMAL(12,3) NOT NULL CHECK (quantity > 0),
+    visible     TINYINT(1)    DEFAULT 1,
+    PRIMARY KEY (dish_id, item_id),
+    FOREIGN KEY (dish_id) REFERENCES dishes(dish_id)       ON DELETE CASCADE,
+    FOREIGN KEY (item_id) REFERENCES stock_items(item_id)  ON DELETE CASCADE
+);
 
 -- STOCK ITEMS
 INSERT INTO stock_items (item_name, unit_of_measure, category)
@@ -235,3 +250,20 @@ VALUES
 (10, 'CONSUMPTION',  8, 7, 8),   -- fish used
 (30, 'CONSUMPTION',  9, 8, 9),   -- soy sauce used
 (2,  'DISPOSAL',    10, 9,10);   -- butter disposed (spoilage)
+
+-- DISHES (for dish-based consumption transaction)
+INSERT INTO dishes (dish_name)
+VALUES
+('Beef Curry'),
+('Garlic Rice');
+
+-- DISH REQUIREMENTS (recipe: item + quantity per dish)
+-- Note: item_id values correspond to the stock_items inserted above.
+INSERT INTO dish_requirements (dish_id, item_id, quantity)
+VALUES
+(1, 4, 0.500),   -- Beef Curry: 0.5 kg beef
+(1, 7, 0.100),   -- Beef Curry: 0.1 kg curry
+(1, 5, 0.010),   -- Beef Curry: 0.01 kg salt
+(2, 3, 0.200),   -- Garlic Rice: 0.2 kg rice
+(2, 6, 0.050),   -- Garlic Rice: 0.05 kg garlic
+(2, 5, 0.005);   -- Garlic Rice: 0.005 kg salt
