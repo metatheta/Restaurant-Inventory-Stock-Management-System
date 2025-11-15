@@ -43,7 +43,7 @@ CREATE TABLE stock_items(
 CREATE TABLE stock_locations(
 	location_id 		INT				AUTO_INCREMENT			PRIMARY KEY,
     storage_name 		VARCHAR(30)     NOT NULL,    -- e.g., Main Kitchen, Freezer Room
-    address 			VARCHAR(15),                -- e.g., Batman, Turkey; Sesame Street; Crapstone, England
+    address 			VARCHAR(100),                -- e.g., Batman, Turkey; Sesame Street; Crapstone, England
     storage_type 		VARCHAR(15)                 -- e.g., Sack, Barrel, Tupperware, Ziplock
 );
 
