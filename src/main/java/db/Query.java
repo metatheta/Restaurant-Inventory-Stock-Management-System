@@ -6,6 +6,10 @@ public class Query {
         # section 3.0 #
         ###############
     */
+    public Query()
+    {
+    }
+
     public String stockItemAndSuppliers()
     {
         return "";
@@ -37,7 +41,7 @@ public class Query {
         return "";
     }
 
-    public String buyStockItem(String name, String unitOfMeasure, String category)
+    public String buyNewStockItem(String name, String unitOfMeasure, String category)
     {
         return "";
     }
