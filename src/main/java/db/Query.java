@@ -22,7 +22,12 @@ public class Query {
 
     public String locationAndStoredItems()
     {
-        return "";
+        return "SELECT sl.storage_name, sl.storage_type, si.item_name, i.running_balance\n" +
+                "FROM stock_locations sl\n" +
+                "JOIN inventory i \n" +
+                "\tON sl.location_id = i.location_id\n" +
+                "JOIN stock_items si\n" +
+                "\tON i.item_id = si.item_id;";
     }
 
     public String supplierAndProducts()
