@@ -7,7 +7,7 @@ import java.sql.Statement;
 
 public class DBInteractor {
 
-    private Query query;
+    private final Query query;
     private Connection c;
     private Statement s;
 
