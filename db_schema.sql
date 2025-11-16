@@ -52,19 +52,19 @@ CREATE TABLE stock_locations(
 CREATE TABLE suppliers(
                           supplier_id 		INT				AUTO_INCREMENT			PRIMARY KEY,
                           name 				VARCHAR(30)     NOT NULL,
-                          contact_person 		VARCHAR(30)     NOT NULL,
+                          contact_person 	VARCHAR(30)     NOT NULL,
                           contact_info 		VARCHAR(30)     NOT NULL,
-                          visible				TINYINT(1)								DEFAULT 1
+                          visible			TINYINT(1)								DEFAULT 1
 );
 
 CREATE TABLE inventory(
                           inventory_id 		INT				AUTO_INCREMENT			PRIMARY KEY,
                           running_balance 	DECIMAL(12,3)   NOT NULL				CHECK (running_balance >= 0),
-                          last_restock_date 	TIMESTAMP								DEFAULT CURRENT_TIMESTAMP,
+                          last_restock_date TIMESTAMP								DEFAULT CURRENT_TIMESTAMP,
                           expiry_date 		TIMESTAMP								NULL,   -- NULL for non-perishables
-                          location_id			INT			    NOT NULL,
-                          item_id				INT			    NOT NULL,
-                          visible				TINYINT(1)								DEFAULT 1,
+                          location_id		INT			    NOT NULL,
+                          item_id			INT			    NOT NULL,
+                          visible			TINYINT(1)								DEFAULT 1,
                           FOREIGN KEY (location_id)  REFERENCES stock_locations (location_id)	ON DELETE CASCADE,
                           FOREIGN KEY (item_id) 	   REFERENCES stock_items (item_id)		ON DELETE CASCADE
 );
@@ -78,15 +78,14 @@ CREATE TABLE purchases(
                           visible				TINYINT(1)								DEFAULT 1,
     -- for reporting (fast month/year filters)
                           order_year          INT GENERATED ALWAYS AS (YEAR(order_date)) STORED,
-    order_month         INT GENERATED ALWAYS AS (MONTH(order_date)) STORED,
-    FOREIGN KEY (supplier_id)  REFERENCES suppliers (supplier_id)	ON DELETE CASCADE,
-    INDEX idx_pur_year_month (order_year, order_month)
+	order_month         INT GENERATED ALWAYS AS (MONTH(order_date)) STORED,
+	FOREIGN KEY (supplier_id)  REFERENCES suppliers (supplier_id)	ON DELETE CASCADE,
+	INDEX idx_pur_year_month (order_year, order_month)
 );
 
 CREATE TABLE purchase_line(
                               purchase_line_id 	INT				AUTO_INCREMENT			PRIMARY KEY,
                               quantity 			DECIMAL(12,3)   NOT NULL				CHECK (quantity >= 0),
-                              unit_cost 			DECIMAL(10,2)   NOT NULL				CHECK (unit_cost >= 0),
                               purchase_id			INT			    NOT NULL,
                               item_id				INT			    NOT NULL,
                               inventory_id		INT,
@@ -111,8 +110,7 @@ CREATE TABLE stock_movement(
                                movement_id 		INT				AUTO_INCREMENT			PRIMARY KEY,
                                quantity 			INT 		    NOT NULL				CHECK (quantity >= 0),
                                moved_at 			TIMESTAMP 	    NOT NULL				DEFAULT CURRENT_TIMESTAMP,
-                               transaction_type 	ENUM('RESTOCK','DISPOSAL','CONSUMPTION',
-                             'TRANSFER_IN','TRANSFER_OUT')     NOT NULL,
+                               transaction_type 	ENUM('RESTOCK','DISPOSAL','CONSUMPTION','TRANSFER_IN','TRANSFER_OUT')     NOT NULL,
                                item_id             INT             NOT NULL,
                                location_id         INT             NOT NULL,
                                inventory_id		INT				NOT NULL,
@@ -144,8 +142,30 @@ VALUES
     ('brown sugar',  'kg',   'condiment'),
     ('milk',         'liter','dairy'),
     ('cheese',         'kg',  'dairy'),
-    ('ginger',       'kg',   'vegetable'),
-    ('mayonnaise',   'liter','condiment');
+    ('ginger',       'kg',   'vegetable');
+
+-- SUPPLIERS
+INSERT INTO suppliers (name, contact_person, contact_info)
+VALUES
+    ('FreshHarvest Produce Co.', 'Ana Dizon', '0917-123-4567'),
+    ('Golden Sun Oil Mills', 'Marco Reyes', '0998-456-1234'),
+    ('Sunrise Grains Trading', 'Liza Santos', '0928-344-5566'),
+    ('GreenLeaf Organic Butchery', 'Julian Mercado', '0917-555-3322'),
+    ('Pacific Seas Inc.', 'Paolo Dominguez', '0935-888-2219'),
+    ('Vampire Free Garden', 'Rica Villanueva', '0917-666-7788'),
+    ('Manila Spice Merchants', 'Noel Chua', '0995-123-4888'),
+    ('West Philippine Fisheries', 'Steph Uy', '0918-111-2223'),
+    ('Bean Trading Co.', 'Gabriel Tan', '0947-555-6621'),
+    ('Churned and Packed Depot', 'Celine Ramos', '0922-333-4455'),
+    ('Sierra Madre Vegetables', 'Arvin Lim', '0918-777-6655'),
+    ('Irish Fields', 'Hannah Bautista', '0935-999-1234'),
+    ('Free Range Poultry', 'Ralph Go', '0927-888-9911'),
+    ('PorkHaus Premium Meats', 'Donna Fajardo', '0917-444-3322'),
+    ('Cane2Table Distribution', 'Kenji Robles', '0947-666-5542'),
+    ('Golden Brown Cane Co.', 'Ramon Villareal', '0926-111-9331'),
+    ('Cow Haven Inc.', 'Maria Celestino', '0922-333-7712'),
+    ('Aged Cold Storage', 'Jonas Alonzo', '0995-777-4411'),
+    ('Ground Plant Distributors', 'Melanie Cruz', '0918-555-6622');
 
 -- STOCK LOCATIONS
 INSERT INTO stock_locations (storage_name, address, storage_type)
@@ -157,9 +177,9 @@ VALUES
     ('Walk-in Freezer', '7 Pine Lane, Davao', 'Ziplock'),
     ('Refridgerator', '7 Pine Lane, Davao', 'Tupperware'),
     ('Pantry', '7 Pine Lane, Davao', 'Shelf'),
-    ('Walk-in Freezer', '101 Mango St., Manila', 'Sack'),
+    ('Walk-in Freezer', '101 Mango St., Manila', 'Box'),
     ('Upper Shelves', '101 Mango St., Manila', 'Ziplock'),
-    ('Pantry', '101 Mango St., Manila', 'Plastic Container'),
+    ('Pantry', '101 Mango St., Manila', 'Airlock'),
     ('Upper Shelves', '12 Sampaguita Ave., QC', 'Box'),
     ('Refridgerator', '12 Sampaguita Ave., QC', 'Tupperware'),
     ('Main Kitchen', '12 Sampaguita Ave., QC', 'Sack'),
@@ -169,7 +189,7 @@ VALUES
     ('Walk-in Freezer', '3 Narra Drive, Cebu', 'Box'),
     ('Main Kitchen', '4 Matino St., QC', 'Sack'),
     ('Lower Shelves', '4 Matino St., QC', 'Jug'),
-    ('Pantry', '4 Matino St., QC', 'Plastic Container');
+    ('Pantry', '4 Matino St., QC', 'Airlock');
 
 -- INVENTORY (per item per location)
 INSERT INTO inventory (running_balance, item_id, location_id)
@@ -193,7 +213,6 @@ VALUES
     (149, 17, 12), -- milk in refridgerator
     (105, 18, 11), -- cheese in upper shelves
     (12, 19, 13), -- ginger in main kitchen
-    (42, 20, 14), -- mayonaise in lower shelves
     (197, 1, 18), -- tomatoes in main kitchen
     (24, 9, 19), -- soy sauce in lower shelves
     (192, 5, 20), -- salt in plastic container
@@ -204,31 +223,7 @@ VALUES
     (81, 17, 1), -- milk in main kitchen
     (36, 4, 5), -- beef in freezer
     (177, 15, 1), -- vinegar in main kitchen
-    (162, 16, 3); -- sugar in main kitchen
-
--- SUPPLIERS
-INSERT INTO suppliers (name, contact_person, contact_info)
-VALUES
-    ('FreshHarvest Produce Co.', 'Ana Dizon', '0917-123-4567'),
-    ('Golden Fields Dairy', 'Marco Reyes', '0998-456-1234'),
-    ('Pacific Seas Fisheries', 'Liza Santos', '0928-344-5566'),
-    ('GreenLeaf Organic Farms', 'Julian Mercado', '0917-555-3322'),
-    ('Sunrise Grains Trading', 'Paolo Dominguez', '0935-888-2219'),
-    ('Manila Spice Merchants', 'Rica Villanueva', '0917-666-7788'),
-    ('Silver River Poultry', 'Noel Chua', '0995-123-4888'),
-    ('Royal Bake Ingredients Co.', 'Steph Uy', '0918-111-2223'),
-    ('Island Fresh Beverages', 'Gabriel Tan', '0947-555-6621'),
-    ('Sierra Madre Vegetables', 'Celine Ramos', '0922-333-4455'),
-    ('Prime Butchers Depot', 'Arvin Lim', '0918-777-6655'),
-    ('Northwind Meat Supply', 'Hannah Bautista', '0935-999-1234'),
-    ('Ocean Crest Seafood', 'Ralph Go', '0927-888-9911'),
-    ('Golden Sun Oil Mills', 'Donna Fajardo', '0917-444-3322'),
-    ('Farm2Table Distribution', 'Kenji Robles', '0947-666-5542'),
-    ('PorkHaus Premium Meats', 'Patricia Ong', '0919-123-4588'),
-    ('Mabuhay Baking Supply Co.', 'Ramon Villareal', '0926-111-9331'),
-    ('Asian Harvest Rice Mills', 'Maria Celestino', '0922-333-7712'),
-    ('FreshWave Cold Storage', 'Jonas Alonzo', '0995-777-4411'),
-    ('Tropical Fruits Distributors', 'Melanie Cruz', '0918-555-6622');
+    (162, 8, 2); -- sugar in main kitchen
 
 
 -- PURCHASES
@@ -236,30 +231,33 @@ INSERT INTO purchases (order_date, receive_date, total_cost, supplier_id)
 VALUES
     ('2025-11-01', '2025-11-03', 1000.00, 1),
     ('2025-11-02', '2025-11-04', 1000.00, 2),
-    ('2025-11-05', '2025-11-06', 3000.00, 3),
-    ('2025-10-31', '2025-11-07', 1000.00, 4),
-    ('2025-10-30', '2025-11-09', 2000.00, 5),
-    ('2025-10-25', '2025-11-03', 6000.00, 6),
-    ('2025-10-21', '2025-11-07', 8000.00, 7),
-    ('2025-10-12', '2025-11-11', 4700.00, 8),
-    ('2025-10-29', '2025-11-10', 9800.00, 9),
-    ('2025-10-27', '2025-11-01', 1200.00, 10);
+    ('2025-11-05', '2025-11-06', 900.00, 3),
+    ('2025-10-31', '2025-11-07', 5450.00, 4),
+    ('2025-10-30', '2025-11-09', 1200.00, 5),
+    ('2025-10-25', '2025-11-03', 224.00, 6),
+    ('2025-10-21', '2025-11-07', 1600.00, 7),
+    ('2025-10-12', '2025-11-11', 1900.00, 8),
+    ('2025-10-29', '2025-11-10', 900.00, 9),
+    ('2025-10-27', '2025-11-01', 550.00, 10);
+
+
 
 -- PURCHASE LINE (link purchases to items + inventory)
-INSERT INTO purchase_line (quantity, unit_cost, purchase_id, item_id, inventory_id)
+INSERT INTO purchase_line (quantity, purchase_id, item_id, inventory_id)
 VALUES
-    (20,  50.00,  1,  1,  1),
-    (10, 100.00,  2,  2,  2),
-    (30,  30.00,  3,  3,  3),
-    (15, 200.00,  4,  4,  4),
-    (25,  48.00,  5,  5,  5),
-    (8,  120.00,  6,  6,  6),
-    (50,  25.00,  7,  7,  7),
-    (10, 210.00,  8,  8,  8),
-    (15,  55.00,  9,  9,  9),
-    (5,   95.00, 10, 10, 10),
-    (
-;
+    (20, 1,  1,  1),
+    (10, 2,  2,  2),
+    (30, 3,  3,  3),
+    (15, 4,  8,  8),
+    (5, 4,  4,  4),
+    (8, 4,  14,  14),
+    (16, 4,  13,  13),
+    (25, 5,  5,  5),
+    (8, 6,  6,  6),
+    (50, 7,  7,  7),
+    (10, 8,  8,  8),
+    (15, 9,  9,  9),
+    (5, 10, 10, 10);
 
 -- SUPPLIER PRODUCTS (price lists)
 INSERT INTO supplier_products (amount, unit_cost, supplier_id, item_id)
@@ -283,12 +281,9 @@ VALUES
     (14, 80.00, 17, 17),
     (200, 110.00, 18, 18),
     (176, 40.00, 19, 19),
-    (122, 35.00, 20, 20),
-    (100,  50.00, 4, 1),
-    (200, 100.00, 4, 2),
-    (500,  30.00, 4, 3),
-    (50,  200.00, 4, 4),
-    (80,   48.00, 4, 5);
+    (200, 100.00, 4, 8),
+    (500,  30.00, 4, 13),
+    (80,   48.00, 4, 14);
 
 -- STOCK MOVEMENT (ledger: restock / consumption / disposal)
 INSERT INTO stock_movement (quantity, transaction_type, item_id, location_id, inventory_id)
@@ -303,3 +298,4 @@ VALUES
     (10, 'CONSUMPTION',  8, 7, 8),   -- fish used
     (30, 'CONSUMPTION',  9, 8, 9),   -- soy sauce used
     (2,  'DISPOSAL',    10, 9,10);   -- butter disposed (spoilage)
+
