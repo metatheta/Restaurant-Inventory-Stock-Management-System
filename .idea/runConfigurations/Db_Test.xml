@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Db Test" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="db.DbTest" />
+    <module name="dbapp" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
