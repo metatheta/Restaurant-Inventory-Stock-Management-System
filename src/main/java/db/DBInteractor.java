@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 
 public class DBInteractor {
 
@@ -69,21 +70,22 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet recordManagement4()
+    public ResultSet recordManagement4(int supplierId)
     {
         createConnection();
         try
         {
-            ResultSet rs = s.executeQuery(query.supplierAndProducts());
-            return rs;
+            String sql = query.supplierAndProducts();
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setInt(1, supplierId);   // binds s.supplier_id = ?
+            return ps.executeQuery();
         }
         catch (Exception e)
         {
             System.out.println(e.getMessage());
+            closeConnection();
+            return null;
         }
-        closeConnection();
-
-        return null;
     }
 
     public ResultSet transaction1()
@@ -137,21 +139,22 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet transaction4(int numberOfDishes)
+    public ResultSet transaction4(int dishId, int numberOfDishes)
     {
         createConnection();
         try
         {
-            ResultSet rs = s.executeQuery(query.createDish(numberOfDishes));
-            return rs;
+            String sql = query.createDish(numberOfDishes);
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setInt(1, dishId);   // binds dr.dish_id = ?
+            return ps.executeQuery();
         }
         catch (Exception e)
         {
             System.out.println(e.getMessage());
+            closeConnection();
+            return null;
         }
-        closeConnection();
-
-        return null;
     }
 
     public ResultSet report1()
@@ -205,21 +208,25 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet report4()
+    public ResultSet report4(int year, int month)
     {
         createConnection();
         try
         {
-            ResultSet rs = s.executeQuery(query.expiryReport());
-            return rs;
+            String sql = query.expiryReport();
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setInt(1, year);   // purchases.order_year
+            ps.setInt(2, month);  // purchases.order_month
+            ps.setInt(3, year);   // YEAR(moved_at)
+            ps.setInt(4, month);  // MONTH(moved_at)
+            return ps.executeQuery();
         }
         catch (Exception e)
         {
             System.out.println(e.getMessage());
+            closeConnection();
+            return null;
         }
-        closeConnection();
-
-        return null;
     }
 
     private void createConnection()
