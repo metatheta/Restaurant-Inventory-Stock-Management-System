@@ -6,6 +6,26 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 
+/*
+    This class performs different SQL statements in its
+    different methods
+
+    Note:
+    - If a report/transaction needs multiple SQL statements, we
+      CANNOT place all the SQL statements in 1 string then pass
+      that string as a parameter to executeUpdate() or
+      executeQuery()
+    - When trying to execute an SQL statement, we have to follow a
+      1 method per SQL statement rule
+    - The flow of each method should be createConnection(),
+      either executeUpdate(*insert SQL statement*) or
+      executeQuery(*insert SQL statement*), then closeConnection()
+    - executeQuery(*insert SQL statement*) is used to retrieve
+      information by returning a ResultSet object
+    - executeUpdate(*insert SQL statement*) is used to insert, rewrite,
+      or 'delete' a record
+ */
+
 public class DBInteractor {
 
     private final Query query;
@@ -253,6 +273,4 @@ public class DBInteractor {
             System.out.println(e.getMessage());
         }
     }
-
-
 }

@@ -1,5 +1,12 @@
 package db;
 
+/*
+    This is where we will store all out SQL statements
+    as strings
+
+    Note:
+    - Each SQL statement should have its own method
+ */
 public class Query {
     /*
         ###############
