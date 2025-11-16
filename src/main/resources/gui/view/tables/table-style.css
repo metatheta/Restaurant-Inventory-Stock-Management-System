@@ -1,0 +1,14 @@
+    @font-face {
+        font-family: "Geist Mono";
+        src: url("/fonts/GeistMono-Regular.ttf");
+    }
+
+    .table-view .table-cell {
+        -fx-font-family: "Geist Mono";
+        -fx-font-size: 20px;
+    }
+
+    .table-view .column-header .label {
+    -fx-font-family: "Geist Mono";}
+        -fx-font-size: 18   px;
+    }

@@ -15,7 +15,7 @@
                <font>
                   <Font size="48.0" />
                </font></Label>
-            <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="60.0" prefWidth="434.0" text="Table Selection">
+            <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#tableSelectMenu" prefHeight="60.0" prefWidth="434.0" text="Table Selection">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>
@@ -33,7 +33,7 @@
                   <Font name="System Bold" size="24.0" />
                </font>
             </Button>
-            <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="60.0" prefWidth="434.0" text="Exit Program">
+            <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#exitApplication" prefHeight="60.0" prefWidth="434.0" text="Exit Program">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>
