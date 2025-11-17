@@ -43,7 +43,6 @@ public class SQLTableController {
         table.getColumns().clear();
         data.clear();
         columnStructures.clear();
-
         try {
             Statement statement = conn.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM " + tableName);
@@ -72,7 +71,7 @@ public class SQLTableController {
                 Map<String, Object> row = new HashMap<>();
                 for (int i = 1; i <= cols; i++) {
                     Object object = rs.getObject(i);
-                    if (object == null) {
+                    if (object == null || object.toString().isEmpty()) {
                         object = "NULL";
                     }
                     row.put(metaData.getColumnName(i), object);

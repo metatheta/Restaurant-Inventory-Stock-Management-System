@@ -1,5 +1,7 @@
 package gui.controllers.tables;
 
+import javafx.beans.Observable;
+import javafx.beans.binding.Bindings;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
@@ -8,11 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 public class AddRowDialog extends Dialog<Map<String, String>> {
-    private String tableName;
-    private ButtonType confirmAddButton;
+    private ButtonType confirmAddButtonType;
     private GridPane grid;
     private Map<String, TextField> inputFields;
-
 
     public AddRowDialog(String tableName, List<ColumnStructure> columns) {
         buildUI(tableName);
@@ -23,8 +23,8 @@ public class AddRowDialog extends Dialog<Map<String, String>> {
         this.setTitle("Add New Row to " + tableName);
         this.setHeaderText("Enter the details for the new row: ");
 
-        confirmAddButton = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
-        this.getDialogPane().getButtonTypes().addAll(confirmAddButton, ButtonType.CANCEL);
+        confirmAddButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+        this.getDialogPane().getButtonTypes().addAll(confirmAddButtonType, ButtonType.CANCEL);
 
         grid = new GridPane();
         grid.setHgap(10);
@@ -48,8 +48,19 @@ public class AddRowDialog extends Dialog<Map<String, String>> {
         }
 
         this.getDialogPane().setContent(grid);
+
+        this.setOnShown(e -> {
+            Button confirmAddButton = (Button) getDialogPane().lookupButton(confirmAddButtonType);
+            confirmAddButton.disableProperty().bind(
+                    Bindings.createBooleanBinding(
+                            () -> inputFields.values().stream().anyMatch(f -> f.getText().isBlank()),
+                            inputFields.values().stream().map(TextField::textProperty).toArray(Observable[]::new)
+                    )
+            );
+        });
+
         this.setResultConverter(dialogButton -> {
-            if (dialogButton == confirmAddButton) {
+            if (dialogButton.equals(confirmAddButtonType)) {
                 return getResultMap();
             }
             return null;
