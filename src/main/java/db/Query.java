@@ -19,7 +19,14 @@ public class Query {
 
     public String stockItemAndSuppliers()
     {
-        return "";
+        return "SELECT si.item_name, si.unit_of_measure, si.category, s.name, s.contact_person, s.contact_info\n" +
+                "FROM stock_items si\n" +
+                "\t\tJOIN supplier_products sp \n" +
+                "\t\t\tON si.item_id = sp.item_id\n" +
+                "\t\tJOIN suppliers s \n" +
+                "\t\t\tON sp.supplier_id = s.supplier_id\n" +
+                "WHERE si.visible = 1 AND sp.visible = 1 AND s.visible = 1\n" +
+                "ORDER BY si.item_id, s.supplier_id;";
     }
 
     public String storedItemAndLocations()
@@ -29,12 +36,14 @@ public class Query {
 
     public String locationAndStoredItems()
     {
-        return "SELECT sl.storage_name, sl.storage_type, si.item_name, i.running_balance\n" +
+        return "SELECT sl.location_id, sl.storage_name, sl.storage_type, sl.address, si.item_id, si.item_name, si.unit_of_measure, si.category\n" +
                 "FROM stock_locations sl\n" +
-                "JOIN inventory i \n" +
-                "\tON sl.location_id = i.location_id\n" +
-                "JOIN stock_items si\n" +
-                "\tON i.item_id = si.item_id;";
+                "\tJOIN inventory i\n" +
+                "\t\tON sl.location_id = i.location_id\n" +
+                "\tJOIN stock_items si\n" +
+                "\t\tON i.item_id = si.item_id\n" +
+                "WHERE sl.visible = 1 AND i.visible = 1 AND si.visible = 1\n" +
+                "ORDER BY sl.location_id, si.item_id;";
     }
 
     public String supplierAndProducts()
