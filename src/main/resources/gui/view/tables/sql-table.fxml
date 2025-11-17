@@ -13,17 +13,7 @@
 
     <HBox alignment="CENTER" spacing="130.0">
         <children>
-            <Button fx:id="addButton" onAction="#addRow" text="Add">
-                <font>
-                    <Font name="System Bold" size="24.0" />
-                </font>
-            </Button>
-            <Button fx:id="deleteButton" text="Delete">
-                <font>
-                    <Font name="System Bold" size="24.0" />
-                </font>
-            </Button>
-            <Button fx:id="saveButton" text="Edit Row">
+            <Button fx:id="addButton" onAction="#addRowPopup" text="Add">
                 <font>
                     <Font name="System Bold" size="24.0" />
                 </font>

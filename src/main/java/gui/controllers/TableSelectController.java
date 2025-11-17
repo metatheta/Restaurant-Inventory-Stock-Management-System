@@ -1,7 +1,4 @@
-package gui.controllers.tables;
-
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
+package gui.controllers;
 
 public class TableSelectController {
 

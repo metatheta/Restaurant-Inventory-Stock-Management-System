@@ -11,7 +11,8 @@ public class Driver extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/crisms_db?" +
-                "user=root&password=p@ssword"); ;
+                "user=root&password=p@ssword");
+        // TODO migrate from using one connection to making a connection for every query
         ScreenManager.SINGLETON.start(primaryStage, conn);
         ScreenManager.SINGLETON.displayScreen("/gui/view/main-menu.fxml");
         primaryStage.setTitle("Restaurant Inventory Stock Management System");

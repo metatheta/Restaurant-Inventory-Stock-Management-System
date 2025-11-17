@@ -9,12 +9,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AddRowDialog extends Dialog<Map<String, String>> {
-    private ButtonType confirmAddButtonType;
+public class EditRowDialog extends Dialog<Map<String, String>> {
+
+    private ButtonType confirmEditButtonType;
     private GridPane grid;
     private Map<String, TextField> inputFields;
+    private Map<String, Object> originalData;
 
-    public AddRowDialog(String tableName, List<ColumnStructure> columns) {
+    public EditRowDialog(String tableName, List<ColumnStructure> columns, Map<String, Object> originalData) {
+        this.originalData = originalData;
         buildUI(tableName);
         initializeInputFields(columns);
         this.getDialogPane().setMinHeight(400);
@@ -22,11 +25,11 @@ public class AddRowDialog extends Dialog<Map<String, String>> {
     }
 
     private void buildUI(String tableName) {
-        this.setTitle("Add New Row to " + tableName);
-        this.setHeaderText("Enter the details for the new row: ");
+        this.setTitle("Edit Row in " + tableName);
+        this.setHeaderText("Modify the details below:");
 
-        confirmAddButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
-        this.getDialogPane().getButtonTypes().addAll(confirmAddButtonType, ButtonType.CANCEL);
+        confirmEditButtonType = new ButtonType("Save Changes", ButtonBar.ButtonData.OK_DONE);
+        this.getDialogPane().getButtonTypes().addAll(confirmEditButtonType, ButtonType.CANCEL);
 
         grid = new GridPane();
         grid.setHgap(10);
@@ -39,9 +42,16 @@ public class AddRowDialog extends Dialog<Map<String, String>> {
 
         for (ColumnStructure column : columns) {
             if (column.isHidden()) continue;
+
             grid.add(new Label(column.name() + ":"), 0, row);
             TextField input = new TextField();
             input.setPromptText(column.type());
+            Object originalValue = originalData.get(column.name());
+
+            if (originalValue != null && !originalValue.toString().equals("NULL")) {
+                input.setText(String.valueOf(originalValue));
+            }
+            // --- END OF CHANGE ---
 
             grid.add(input, 1, row);
             inputFields.put(column.name(), input);
@@ -51,8 +61,8 @@ public class AddRowDialog extends Dialog<Map<String, String>> {
         this.getDialogPane().setContent(grid);
 
         this.setOnShown(e -> {
-            Button confirmAddButton = (Button) getDialogPane().lookupButton(confirmAddButtonType);
-            confirmAddButton.disableProperty().bind(
+            Button confirmButton = (Button) getDialogPane().lookupButton(confirmEditButtonType);
+            confirmButton.disableProperty().bind(
                     Bindings.createBooleanBinding(
                             () -> inputFields.values().stream().anyMatch(f -> f.getText().isBlank()),
                             inputFields.values().stream().map(TextField::textProperty).toArray(Observable[]::new)
@@ -61,7 +71,7 @@ public class AddRowDialog extends Dialog<Map<String, String>> {
         });
 
         this.setResultConverter(dialogButton -> {
-            if (dialogButton.equals(confirmAddButtonType)) {
+            if (dialogButton.equals(confirmEditButtonType)) {
                 return getResultMap();
             }
             return null;
