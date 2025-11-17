@@ -4,11 +4,12 @@
     }
 
     .table-view .table-cell {
-        -fx-font-family: "Geist Mono";
-        -fx-font-size: 20px;
+        -fx-font-family: "Inter";
+        -fx-font-size: 18px;
     }
 
     .table-view .column-header .label {
-    -fx-font-family: "Geist Mono";}
-        -fx-font-size: 18   px;
+        -fx-font-family: "Inter";
+        -fx-font-weight: bold;
+        -fx-font-size: 20px;
     }

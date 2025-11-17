@@ -23,12 +23,7 @@
                     <Font name="System Bold" size="24.0" />
                 </font>
             </Button>
-            <Button fx:id="saveButton" text="Save">
-                <font>
-                    <Font name="System Bold" size="24.0" />
-                </font>
-            </Button>
-            <Button fx:id="refreshButton" onAction="#refreshData" text="Refresh">
+            <Button fx:id="saveButton" text="Edit Row">
                 <font>
                     <Font name="System Bold" size="24.0" />
                 </font>
