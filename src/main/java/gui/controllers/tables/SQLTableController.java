@@ -32,7 +32,6 @@ public class SQLTableController {
     @FXML
     public void initialize() {
         conn = ScreenManager.SINGLETON.getConnection();
-        refreshButton.setOnAction(e -> loadTable(tableName));
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
     }
 
@@ -46,26 +45,26 @@ public class SQLTableController {
             ResultSet rs = statement.executeQuery("SELECT * FROM " + tableName);
             ResultSetMetaData metaData = rs.getMetaData();
 
+            java.util.List<TableColumn<Map<String, Object>, Object>> columnHolder = new java.util.ArrayList<>();
+
             int cols = metaData.getColumnCount();
             for (int i = 1; i <= cols; i++) {
-                int colIndex = i;
-                TableColumn<Map<String, Object>, Object> tableCol = new TableColumn<>(metaData.getColumnName(i));
+                String columnName = metaData.getColumnName(i);
+                TableColumn<Map<String, Object>, Object> tableCol = new TableColumn<>(columnName);
                 tableCol.setCellValueFactory(cellData ->
-                        {
-                            try {
-                                return new SimpleObjectProperty<>(cellData.getValue().get(metaData.getColumnName(colIndex)));
-                            } catch (SQLException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
+                        new SimpleObjectProperty<>(cellData.getValue().get(columnName))
                 );
-                table.getColumns().add(tableCol);
+                columnHolder.add(tableCol);
             }
-
+            table.getColumns().addAll(columnHolder);
             while (rs.next()) {
                 Map<String, Object> row = new HashMap<>();
                 for (int i = 1; i <= cols; i++) {
-                    row.put(metaData.getColumnName(i), rs.getObject(i));
+                    Object object = rs.getObject(i);
+                    if (object == null) {
+                        object = "NULL";
+                    }
+                    row.put(metaData.getColumnName(i), object);
                 }
                 data.add(row);
             }
@@ -73,6 +72,10 @@ public class SQLTableController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void refreshData() {
+        loadTable(tableName);
     }
 
     public void returnToMainMenu() {
