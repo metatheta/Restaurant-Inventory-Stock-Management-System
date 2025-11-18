@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="feat: changed selection for add and edit to use custom date + time picker">
-      <change beforePath="$PROJECT_DIR$/db_schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/db_schema.sql" afterDir="false" />
+    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="feat: edited table CSS">
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/Driver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/SQLTableController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/SQLTableController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/view/ScreenManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/view/ScreenManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +26,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="gui/transaction-interface" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -59,43 +61,39 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Application.Db Test.executor&quot;: &quot;Run&quot;,
-    &quot;Application.DbTest.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Driver.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Main Menu.executor&quot;: &quot;Run&quot;,
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;Maven.Main Menu.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;deletionFromPopupRequiresConfirmation&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;gui/transaction-interface&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/allen/projects/Java/try/Restaurant-Inventory-Stock-Management-System/src/main/resources/gui/view&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.47286108&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.JavaFX&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Application.Db Test.executor": "Run",
+    "Application.DbTest.executor": "Run",
+    "Application.Driver.executor": "Run",
+    "Application.Main Menu.executor": "Run",
+    "Downloaded.Files.Path.Enabled": "false",
+    "Maven.Main Menu.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "deletionFromPopupRequiresConfirmation": "false",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/Users/allen/projects/Java/try/Restaurant-Inventory-Stock-Management-System/src/main/resources/fonts",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.28582203",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\resources\gui\view" />
       <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\resources\fonts" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\resources\gui" />
       <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\resources\gui\view" />
+      <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\resources\gui" />
       <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\resources" />
       <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\java" />
-    </key>
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="gui" />
     </key>
   </component>
   <component name="RunManager" selected="Maven.Main Menu">
@@ -192,23 +190,7 @@
       <option name="project" value="LOCAL" />
       <updated>1763458119188</updated>
     </task>
-    <task id="LOCAL-00011" summary="chore: add gitignore">
-      <option name="closed" value="true" />
-      <created>1763467875714</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1763467875714</updated>
-    </task>
-    <task id="LOCAL-00012" summary="feat: changed selection for add and edit to use custom date + time picker">
-      <option name="closed" value="true" />
-      <created>1763477399662</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1763477399662</updated>
-    </task>
-    <option name="localTasksCounter" value="13" />
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -244,9 +226,7 @@
     <MESSAGE value="feat: disabled add row button until all cols are non empty" />
     <MESSAGE value="feat: made edit and delete buttons per-row" />
     <MESSAGE value="feat: edited table CSS" />
-    <MESSAGE value="chore: add gitignore" />
-    <MESSAGE value="feat: changed selection for add and edit to use custom date + time picker" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: changed selection for add and edit to use custom date + time picker" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: edited table CSS" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

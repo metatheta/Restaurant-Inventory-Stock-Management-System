@@ -13,10 +13,12 @@ public class Query {
         # section 3.0 #
         ###############
     */
-    public Query() {
+    public Query()
+    {
     }
 
-    public String stockItemAndSuppliers() {
+    public String stockItemAndSuppliers()
+    {
         return "SELECT si.item_name, si.unit_of_measure, si.category, s.name, s.contact_person, s.contact_info\n" +
                 "FROM stock_items si\n" +
                 "\t\tJOIN supplier_products sp \n" +
@@ -27,11 +29,13 @@ public class Query {
                 "ORDER BY si.item_id, s.supplier_id;";
     }
 
-    public String storedItemAndLocations() {
+    public String storedItemAndLocations()
+    {
         return "";
     }
 
-    public String locationAndStoredItems() {
+    public String locationAndStoredItems()
+    {
         return "SELECT sl.location_id, sl.storage_name, sl.storage_type, sl.address, si.item_id, si.item_name, si.unit_of_measure, si.category\n" +
                 "FROM stock_locations sl\n" +
                 "\tJOIN inventory i\n" +
@@ -42,28 +46,29 @@ public class Query {
                 "ORDER BY sl.location_id, si.item_id;";
     }
 
-    public String supplierAndProducts() {
+    public String supplierAndProducts()
+    {
         return """
-                SELECT
-                    s.supplier_id,
-                    s.name AS supplier_name,
-                    s.contact_person,
-                    s.contact_info,
-                    sp.item_id,
-                    si.item_name,
-                    sp.amount,
-                    sp.unit_cost
-                FROM suppliers s
-                LEFT JOIN supplier_products sp
-                       ON s.supplier_id = sp.supplier_id
-                LEFT JOIN stock_items si
-                       ON sp.item_id = si.item_id
-                WHERE s.visible = 1
-                  AND sp.visible = 1
-                  AND si.visible = 1
-                  AND s.supplier_id = ?
-                ORDER BY si.item_name
-                """;
+            SELECT
+                s.supplier_id,
+                s.name AS supplier_name,
+                s.contact_person,
+                s.contact_info,
+                sp.item_id,
+                si.item_name,
+                sp.amount,
+                sp.unit_cost
+            FROM suppliers s
+            LEFT JOIN supplier_products sp
+                   ON s.supplier_id = sp.supplier_id
+            LEFT JOIN stock_items si
+                   ON sp.item_id = si.item_id
+            WHERE s.visible = 1
+              AND sp.visible = 1
+              AND si.visible = 1
+              AND s.supplier_id = ?
+             ORDER BY s.supplier_id, si.item_id
+            """;
     }
 
     /*
@@ -72,44 +77,30 @@ public class Query {
         ###############
     */
 
-    public String selectItemsToRestock() {
-        return "SELECT \n" +
-                "\tinventory_id,\n" +
-                "    item_name AS 'Item',\n" +
-                "    storage_name AS 'Storage',\n" +
-                "    address AS 'Address',\n" +
-                "    running_balance AS 'Running Balance'\n" +
-                "FROM\n" +
-                "    inventory\n" +
-                "        LEFT JOIN\n" +
-                "    stock_items USING (item_id)\n" +
-                "        LEFT JOIN\n" +
-                "    stock_locations USING (location_id)\n" +
-                "WHERE\n" +
-                "    running_balance = 0\n" +
-                "        AND inventory.visible = 1;";
-    }
-
-    public String restockingItem() {
+    public String restockingItem()
+    {
         return "";
     }
 
-    public String buyNewStockItem(String name, String unitOfMeasure, String category) {
+    public String buyNewStockItem(String name, String unitOfMeasure, String category)
+    {
         return "";
     }
 
-    public String disposeUnusedStock() {
+    public String disposeUnusedStock()
+    {
         return "";
     }
 
-    public String createDish(int quantity) {
+    public String createDish(int quantity)
+    {
         return "SELECT " +
-                "  dr.item_id, " +
-                "  si.item_name, " +
-                "  dr.quantity * " + quantity + " AS required_quantity " +
-                "FROM dish_requirements dr " +
-                "JOIN stock_items si ON dr.item_id = si.item_id " +
-                "WHERE dr.dish_id = ?";
+           "  dr.item_id, " +
+           "  si.item_name, " +
+           "  dr.quantity * " + quantity + " AS required_quantity " +
+           "FROM dish_requirements dr " +
+           "JOIN stock_items si ON dr.item_id = si.item_id " +
+           "WHERE dr.dish_id = ?";
     }
 
     /*
@@ -118,58 +109,62 @@ public class Query {
         ###############
     */
 
-    public String preferredSuppliersReport() {
+    public String preferredSuppliersReport()
+    {
         return "";
     }
 
-    public String storageDistributionReport() {
+    public String storageDistributionReport()
+    {
         return "";
     }
 
-    public String seasonalStockReport() {
+    public String seasonalStockReport()
+    {
         return "";
     }
 
-    public String expiryReport() {
+    public String expiryReport()
+    {
         return """
+            SELECT
+                si.item_id,
+                si.item_name,
+                COALESCE(p.total_purchased, 0) AS total_purchased,
+                COALESCE(d.total_disposed, 0) AS total_disposed,
+                CASE
+                    WHEN COALESCE(p.total_purchased, 0) = 0 THEN NULL
+                    ELSE (COALESCE(d.total_disposed, 0) / p.total_purchased) * 100
+                END AS waste_percentage
+            FROM stock_items si
+            LEFT JOIN (
                 SELECT
-                    si.item_id,
-                    si.item_name,
-                    COALESCE(p.total_purchased, 0) AS total_purchased,
-                    COALESCE(d.total_disposed, 0) AS total_disposed,
-                    CASE
-                        WHEN COALESCE(p.total_purchased, 0) = 0 THEN NULL
-                        ELSE (COALESCE(d.total_disposed, 0) / p.total_purchased) * 100
-                    END AS waste_percentage
-                FROM stock_items si
-                LEFT JOIN (
-                    SELECT
-                        pl.item_id,
-                        SUM(pl.quantity) AS total_purchased
-                    FROM purchase_line pl
-                    JOIN purchases pu
-                      ON pl.purchase_id = pu.purchase_id
-                    WHERE pu.order_year  = ?
-                      AND pu.order_month = ?
-                      AND pu.visible     = 1
-                      AND pl.visible     = 1
-                    GROUP BY pl.item_id
-                ) p
-                  ON si.item_id = p.item_id
-                LEFT JOIN (
-                    SELECT
-                        sm.item_id,
-                        SUM(sm.quantity) AS total_disposed
-                    FROM stock_movement sm
-                    WHERE sm.transaction_type = 'DISPOSAL'
-                      AND YEAR(sm.moved_at)  = ?
-                      AND MONTH(sm.moved_at) = ?
-                      AND sm.visible         = 1
-                    GROUP BY sm.item_id
-                ) d
-                  ON si.item_id = d.item_id
-                WHERE si.visible = 1
-                ORDER BY waste_percentage DESC IS NULL, waste_percentage DESC
-                """;
+                    pl.item_id,
+                    SUM(pl.quantity) AS total_purchased
+                FROM purchase_line pl
+                JOIN purchases pu
+                  ON pl.purchase_id = pu.purchase_id
+                WHERE pu.order_year  = ?
+                  AND pu.order_month = ?
+                  AND pu.visible     = 1
+                  AND pl.visible     = 1
+                GROUP BY pl.item_id
+            ) p
+              ON si.item_id = p.item_id
+            LEFT JOIN (
+                SELECT
+                    sm.item_id,
+                    SUM(sm.quantity) AS total_disposed
+                FROM stock_movement sm
+                WHERE sm.transaction_type = 'DISPOSAL'
+                  AND YEAR(sm.moved_at)  = ?
+                  AND MONTH(sm.moved_at) = ?
+                  AND sm.visible         = 1
+                GROUP BY sm.item_id
+            ) d
+              ON si.item_id = d.item_id
+            WHERE si.visible = 1
+            ORDER BY waste_percentage DESC IS NULL, waste_percentage DESC
+            """;
     }
 }

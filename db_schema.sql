@@ -299,6 +299,14 @@ END$$
 
 DELIMITER ;
 
+	(1, 4, 0.500),   -- Beef Curry: 0.5 kg beef
+	(1, 7, 0.100),   -- Beef Curry: 0.1 kg curry
+	(1, 5, 0.010),   -- Beef Curry: 0.01 kg salt
+	(2, 3, 0.200),   -- Garlic Rice: 0.2 kg rice
+	(2, 6, 0.050),   -- Garlic Rice: 0.05 kg garlic
+	(2, 5, 0.005);   -- Garlic Rice: 0.005 kg salt
+
+
 
 DELIMITER $$
 

@@ -2,6 +2,7 @@ package gui.controllers;
 
 import gui.ScreenManager;
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class MainMenuController {
     public void tableSelectMenu() {
@@ -28,7 +29,8 @@ public class MainMenuController {
             e.printStackTrace();
         }
     }
-    public void exitApplication() {
+    public void exitApplication() throws SQLException {
+        ScreenManager.closeConnection();
         System.exit(0);
     }
 }

@@ -68,6 +68,8 @@ public class AddRowDialog extends Dialog<Map<String, String>> {
             row++;
         }
 
+        // TODO make choosing date a proper datepicker
+
         this.getDialogPane().setContent(grid);
         setupValidation();
         setupResultConverter();
