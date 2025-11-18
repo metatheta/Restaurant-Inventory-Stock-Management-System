@@ -1,6 +1,7 @@
 package gui.controllers;
 
 import gui.ScreenManager;
+
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -13,6 +14,7 @@ public class MainMenuController {
             e.printStackTrace();
         }
     }
+
     public void transactionMenu() {
         try {
             ScreenManager.SINGLETON.displayScreen("/gui/view/transaction-menu.fxml");
@@ -21,14 +23,16 @@ public class MainMenuController {
             e.printStackTrace();
         }
     }
+
     public void reportsMenu() {
         try {
-            ScreenManager.SINGLETON.displayScreen("/gui/view/reports-menu.fxml");
+            ScreenManager.SINGLETON.loadReadOnlyTableScreen("/gui/view/reports-menu.fxml");
             // TODO
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     public void exitApplication() throws SQLException {
         ScreenManager.closeConnection();
         System.exit(0);

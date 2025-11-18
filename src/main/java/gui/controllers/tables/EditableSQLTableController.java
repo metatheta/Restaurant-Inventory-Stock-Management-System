@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SQLTableController {
+public class EditableSQLTableController {
     @FXML
     private TableView<Map<String, Object>> table;
 

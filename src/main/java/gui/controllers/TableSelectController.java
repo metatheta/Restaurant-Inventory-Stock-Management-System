@@ -7,7 +7,7 @@ public class TableSelectController {
     public void inventoryTable() {
         try {
             String[] columnNames = {"Running Balance", "Last Restock Date", "Expiry Date", "Location ID", "Item ID"};
-            ScreenManager.SINGLETON.loadTableScreen("inventory", columnNames);
+            ScreenManager.SINGLETON.loadCoreTableScreen("inventory", columnNames);
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
@@ -16,7 +16,7 @@ public class TableSelectController {
     public void stockItemsTable() {
         try {
             String[] columnNames = {"Item Name", "Unit of Measure", "Category"};
-            ScreenManager.SINGLETON.loadTableScreen("stock_items", columnNames);
+            ScreenManager.SINGLETON.loadCoreTableScreen("stock_items", columnNames);
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
@@ -25,7 +25,7 @@ public class TableSelectController {
     public void stockLocationsTable() {
         try {
             String[] columnNames = {"Storage Name", "Address", "Storage Type"};
-            ScreenManager.SINGLETON.loadTableScreen("stock_locations", columnNames);
+            ScreenManager.SINGLETON.loadCoreTableScreen("stock_locations", columnNames);
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
@@ -34,7 +34,7 @@ public class TableSelectController {
     public void suppliersTable() {
         try {
             String[] columnNames = {"Name", "Contact Person", "Contact Info"};
-            ScreenManager.SINGLETON.loadTableScreen("suppliers", columnNames);
+            ScreenManager.SINGLETON.loadCoreTableScreen("suppliers", columnNames);
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }

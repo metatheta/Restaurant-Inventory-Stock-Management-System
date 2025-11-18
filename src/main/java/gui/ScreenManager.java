@@ -1,6 +1,7 @@
 package gui;
 
-import gui.controllers.tables.SQLTableController;
+import gui.controllers.tables.EditableSQLTableController;
+import gui.controllers.tables.ReadOnlySQLTableController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -49,10 +50,23 @@ public class ScreenManager {
         }
     }
 
-    public void loadTableScreen(String tableName, String... columnNames) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/view/tables/sql-table.fxml"));
+    public void loadCoreTableScreen(String tableName, String... columnNames) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/view/tables/core-sql-table.fxml"));
         Parent root = loader.load();
-        SQLTableController controller = loader.getController();
+        EditableSQLTableController controller = loader.getController();
+        controller.loadTable(tableName, columnNames);
+
+        if (stage.getScene() == null) {
+            stage.setScene(new Scene(root));
+        } else {
+            stage.getScene().setRoot(root);
+        }
+    }
+
+    public void loadReadOnlyTableScreen(String tableName, String... columnNames) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/view/tables/read-only-sql-table.fxml"));
+        Parent root = loader.load();
+        ReadOnlySQLTableController controller = loader.getController();
         controller.loadTable(tableName, columnNames);
 
         if (stage.getScene() == null) {
