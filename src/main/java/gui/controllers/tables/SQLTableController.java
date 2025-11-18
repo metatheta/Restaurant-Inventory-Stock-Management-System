@@ -38,7 +38,7 @@ public class SQLTableController {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
     }
 
-    public void loadTable(String tableName) {
+    public void loadTable(String tableName, String... columnNames) {
         this.tableName = tableName;
         table.getColumns().clear();
         data.clear();
@@ -61,16 +61,21 @@ public class SQLTableController {
             java.util.List<TableColumn<Map<String, Object>, Object>> columnHolder = new java.util.ArrayList<>();
 
             int cols = metaData.getColumnCount();
+            int visibleColIndex = 0;
             for (int i = 1; i <= cols; i++) {
                 String columnName = metaData.getColumnName(i);
                 ColumnStructure currentStructure = new ColumnStructure(columnName, metaData.getColumnTypeName(i),
-                        metaData.isAutoIncrement(i) || metaData.getColumnName(i).equals("visible") || metaData.isReadOnly(i));
+                        metaData.getColumnName(i).equals("visible") ||
+                                metaData.getColumnName(i).contains("_id"));
+                // Currently hiding all _id columns so foreign and primary keys
+                // TODO ask sir if we can hide these id columns given the edit and delete buttons being per-row
 
                 columnStructures.add(currentStructure);
 
                 if (currentStructure.isHidden()) continue;
 
-                TableColumn<Map<String, Object>, Object> tableCol = new TableColumn<>(columnName);
+                TableColumn<Map<String, Object>, Object> tableCol = new TableColumn<>(columnNames[visibleColIndex]);
+                visibleColIndex++;
                 tableCol.setCellValueFactory(cellData ->
                         new SimpleObjectProperty<>(cellData.getValue().get(columnName))
                 );

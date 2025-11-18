@@ -33,11 +33,11 @@ public class ScreenManager {
         }
     }
 
-    public void loadTableScreen(String tableName) throws IOException {
+    public void loadTableScreen(String tableName, String... columnNames) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/view/tables/sql-table.fxml"));
         Parent root = loader.load();
         SQLTableController controller = loader.getController();
-        controller.loadTable(tableName);
+        controller.loadTable(tableName, columnNames);
 
         if (stage.getScene() == null) {
             stage.setScene(new Scene(root));
