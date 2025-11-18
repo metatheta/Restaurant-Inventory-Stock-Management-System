@@ -5,7 +5,7 @@
 <?import org.controlsfx.control.ListSelectionView?>
 
 <AnchorPane prefHeight="900.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.transactions.DishMenuController">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.transactions.dish.DishMenuController">
     <children>
         <ListSelectionView layoutX="130.0" layoutY="65.0" prefHeight="562.0" prefWidth="960.0"/>
     </children>

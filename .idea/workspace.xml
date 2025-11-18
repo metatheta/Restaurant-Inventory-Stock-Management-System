@@ -4,10 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="feat: edited table CSS">
-      <change beforePath="$PROJECT_DIR$/src/main/java/db/DBInteractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/db/DBInteractor.java" afterDir="false" />
+    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="fix: merging errors">
+      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/restock/RestockDetailsDialog.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/restock/RestockEntry.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/restock/RestockMenuController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/restock/RestockSelection.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/restock/SupplierOption.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/db/Query.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/db/Query.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/Driver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/ScreenManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/ScreenManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/DishMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/dish/DishMenuController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/DisposalMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/disposal/DisposalMenuController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/ListSelectionRow.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/PurchaseMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/purchase/PurchaseMenuController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/RestockMenuController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/SelectionRow.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/dish-menu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/dish-menu.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/disposal-menu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/disposal-menu.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/purchase-menu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/purchase-menu.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/restock-menu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/restock-menu.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,8 +33,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="FxmlFile" />
-        <option value="Record" />
         <option value="Class" />
+        <option value="Record" />
       </list>
     </option>
   </component>
@@ -190,7 +205,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763458119188</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="fix: merging errors">
+      <option name="closed" value="true" />
+      <created>1763479729903</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1763479729903</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -226,7 +249,8 @@
     <MESSAGE value="feat: disabled add row button until all cols are non empty" />
     <MESSAGE value="feat: made edit and delete buttons per-row" />
     <MESSAGE value="feat: edited table CSS" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: edited table CSS" />
+    <MESSAGE value="fix: merging errors" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: merging errors" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

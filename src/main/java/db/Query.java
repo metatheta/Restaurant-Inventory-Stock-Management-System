@@ -16,7 +16,7 @@ public class Query {
     public Query() {
     }
 
-    public String stockItemAndSuppliers() {
+    public static String stockItemAndSuppliers() {
         return "SELECT si.item_name, si.unit_of_measure, si.category, s.name, s.contact_person, s.contact_info\n" +
                 "FROM stock_items si\n" +
                 "\t\tJOIN supplier_products sp \n" +
@@ -27,11 +27,11 @@ public class Query {
                 "ORDER BY si.item_id, s.supplier_id;";
     }
 
-    public String storedItemAndLocations() {
+    public static String storedItemAndLocations() {
         return "";
     }
 
-    public String locationAndStoredItems() {
+    public static String locationAndStoredItems() {
         return "SELECT sl.location_id, sl.storage_name, sl.storage_type, sl.address, si.item_id, si.item_name, si.unit_of_measure, si.category\n" +
                 "FROM stock_locations sl\n" +
                 "\tJOIN inventory i\n" +
@@ -42,7 +42,7 @@ public class Query {
                 "ORDER BY sl.location_id, si.item_id;";
     }
 
-    public String supplierAndProducts() {
+    public static String supplierAndProducts() {
         return """
                 SELECT
                     s.supplier_id,
@@ -72,11 +72,10 @@ public class Query {
         ###############
     */
 
-    public String selectItemsToRestock() {
-        return "USE crisms_db;\n" +
-                "\n" +
-                "SELECT \n" +
+    public static String selectItemsToRestock() {
+        return "SELECT \n" +
                 "\tinventory_id,\n" +
+                "    item_id,\n" +
                 "    item_name AS 'Item',\n" +
                 "    storage_name AS 'Storage',\n" +
                 "    address AS 'Address',\n" +
@@ -92,19 +91,19 @@ public class Query {
                 "        AND inventory.visible = 1;";
     }
 
-    public String restockingItem() {
+    public static String restockingItem() {
         return "";
     }
 
-    public String buyNewStockItem(String name, String unitOfMeasure, String category) {
+    public static String buyNewStockItem(String name, String unitOfMeasure, String category) {
         return "";
     }
 
-    public String disposeUnusedStock() {
+    public static String disposeUnusedStock() {
         return "";
     }
 
-    public String createDish(int quantity) {
+    public static String createDish(int quantity) {
         return "SELECT " +
                 "  dr.item_id, " +
                 "  si.item_name, " +
@@ -120,19 +119,19 @@ public class Query {
         ###############
     */
 
-    public String preferredSuppliersReport() {
+    public static String preferredSuppliersReport() {
         return "";
     }
 
-    public String storageDistributionReport() {
+    public static String storageDistributionReport() {
         return "";
     }
 
-    public String seasonalStockReport() {
+    public static String seasonalStockReport() {
         return "";
     }
 
-    public String expiryReport() {
+    public static String expiryReport() {
         return """
                 SELECT
                     si.item_id,

@@ -21,18 +21,21 @@ public class ScreenManager {
         this.stage = stage;
     }
 
-    public static Connection getConnection() throws SQLException {
-        if (connection == null || connection.isClosed()) {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost/crisms_db?" +
-                    "user=root&password=p@ssword");
+    public static Connection getConnection() {
+        try {
+            if (connection == null || connection.isClosed()) {
+                connection = DriverManager.getConnection("jdbc:mysql://localhost/crisms_db?" +
+                        "user=root&password=p@ssword");
+            }
+            return connection;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return connection;
+        return null;
     }
 
-    public static void closeConnection() throws SQLException
-    {
-        if (connection != null && !connection.isClosed())
-        {
+    public static void closeConnection() throws SQLException {
+        if (connection != null && !connection.isClosed()) {
             connection.close();
         }
     }
