@@ -6,7 +6,7 @@ public class TableSelectController {
 
     public void inventoryTable() {
         try {
-            String[] columnNames = {"Running Balance", "Last Restock Date", "Expiry Date"};
+            String[] columnNames = {"Running Balance", "Last Restock Date", "Expiry Date", "Location ID", "Item ID"};
             ScreenManager.SINGLETON.loadTableScreen("inventory", columnNames);
         } catch (java.io.IOException e) {
             e.printStackTrace();

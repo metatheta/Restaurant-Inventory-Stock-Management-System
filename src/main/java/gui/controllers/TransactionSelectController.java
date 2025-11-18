@@ -5,8 +5,7 @@ import gui.ScreenManager;
 public class TransactionSelectController {
     public void restockItems() {
         try {
-            String[] columnNames = {"Running Balance", "Last Restock Date", "Expiry Date"};
-            ScreenManager.SINGLETON.loadTableScreen("inventory", columnNames);
+            ScreenManager.SINGLETON.displayScreen("/gui/view/transactions/restock-menu.fxml");
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
@@ -14,8 +13,7 @@ public class TransactionSelectController {
 
     public void purchaseNewStock() {
         try {
-            String[] columnNames = {"Item Name", "Unit of Measure", "Category"};
-            ScreenManager.SINGLETON.loadTableScreen("stock_items", columnNames);
+            ScreenManager.SINGLETON.displayScreen("/gui/view/transactions/purchase-menu.fxml");
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
@@ -23,8 +21,7 @@ public class TransactionSelectController {
 
     public void disposeUnusedStock() {
         try {
-            String[] columnNames = {"Storage Name", "Address", "Storage Type"};
-            ScreenManager.SINGLETON.loadTableScreen("stock_locations", columnNames);
+            ScreenManager.SINGLETON.displayScreen("/gui/view/transactions/disposal-menu.fxml");
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
@@ -32,8 +29,7 @@ public class TransactionSelectController {
 
     public void createDish() {
         try {
-            String[] columnNames = {"Name", "Contact Person", "Contact Info"};
-            ScreenManager.SINGLETON.loadTableScreen("suppliers", columnNames);
+            ScreenManager.SINGLETON.displayScreen("/gui/view/transactions/dish-menu.fxml");
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }

@@ -23,12 +23,12 @@
                   <Insets bottom="20.0" />
                </VBox.margin>
             </Button>
-            <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="60.0" prefWidth="434.0" text="Create Transactions">
+            <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#transactionMenu" prefHeight="60.0" prefWidth="434.0" text="Create Transactions">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>
             </Button>
-            <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="60.0" prefWidth="434.0" text="Generate Reports">
+            <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#reportsMenu" prefHeight="60.0" prefWidth="434.0" text="Generate Reports">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>

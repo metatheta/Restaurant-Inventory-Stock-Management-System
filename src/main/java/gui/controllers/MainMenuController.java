@@ -14,7 +14,7 @@ public class MainMenuController {
     }
     public void transactionMenu() {
         try {
-            ScreenManager.SINGLETON.displayScreen("");
+            ScreenManager.SINGLETON.displayScreen("/gui/view/transaction-menu.fxml");
             // TODO
         } catch (IOException e) {
             e.printStackTrace();
@@ -22,7 +22,7 @@ public class MainMenuController {
     }
     public void reportsMenu() {
         try {
-            ScreenManager.SINGLETON.displayScreen("");
+            ScreenManager.SINGLETON.displayScreen("/gui/view/reports-menu.fxml");
             // TODO
         } catch (IOException e) {
             e.printStackTrace();
