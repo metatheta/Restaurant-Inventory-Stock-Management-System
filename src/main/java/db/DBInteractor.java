@@ -1,12 +1,10 @@
 package db;
 
-import gui.view.ScreenManager;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+import gui.ScreenManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.sql.PreparedStatement;
 
 /*
     This class performs different SQL statements in its
@@ -33,191 +31,141 @@ public class DBInteractor {
     private final Query query;
     private Statement s;
 
-    public DBInteractor(Query q)
-    {
+    public DBInteractor(Query q) {
         query = q;
-        try
-        {
+        try {
             s = ScreenManager.getConnection().createStatement();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
     }
 
-    public ResultSet recordManagement1()
-    {
-        try
-        {
+    public ResultSet recordManagement1() {
+        try {
             ResultSet rs = s.executeQuery(query.stockItemAndSuppliers());
             return rs;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
         return null;
     }
 
-    public ResultSet recordManagement2()
-    {
-        try
-        {
+    public ResultSet recordManagement2() {
+        try {
             ResultSet rs = s.executeQuery(query.storedItemAndLocations());
             return rs;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
         return null;
     }
 
-    public ResultSet recordManagement3()
-    {
-        try
-        {
+    public ResultSet recordManagement3() {
+        try {
             ResultSet rs = s.executeQuery(query.locationAndStoredItems());
             return rs;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
         return null;
     }
 
-    public ResultSet recordManagement4(int supplierId)
-    {
-        try
-        {
+    public ResultSet recordManagement4(int supplierId) {
+        try {
             String sql = query.supplierAndProducts();
             PreparedStatement ps = ScreenManager.getConnection().prepareStatement(sql);
             ps.setInt(1, supplierId);   // binds s.supplier_id = ?
             return ps.executeQuery();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
     }
 
-    public ResultSet transaction1()
-    {
-        try
-        {
+    public ResultSet transaction1() {
+        try {
             ResultSet rs = s.executeQuery(query.restockingItem());
             return rs;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
         return null;
     }
 
-    public ResultSet transaction2(String name, String unitOfMeasure, String category)
-    {
-        try
-        {
+    public ResultSet transaction2(String name, String unitOfMeasure, String category) {
+        try {
             ResultSet rs = s.executeQuery(query.buyNewStockItem(name, unitOfMeasure, category));
             return rs;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
         return null;
     }
 
-    public ResultSet transaction3()
-    {
-        try
-        {
+    public ResultSet transaction3() {
+        try {
             ResultSet rs = s.executeQuery(query.disposeUnusedStock());
             return rs;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
         return null;
     }
 
-    public ResultSet transaction4(int dishId, int numberOfDishes)
-    {
-        try
-        {
+    public ResultSet transaction4(int dishId, int numberOfDishes) {
+        try {
             String sql = query.createDish(numberOfDishes);
             PreparedStatement ps = ScreenManager.getConnection().prepareStatement(sql);
             ps.setInt(1, dishId);   // binds dr.dish_id = ?
             return ps.executeQuery();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
     }
 
-    public ResultSet report1()
-    {
-        try
-        {
+    public ResultSet report1() {
+        try {
             ResultSet rs = s.executeQuery(query.preferredSuppliersReport());
             return rs;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
         return null;
     }
 
-    public ResultSet report2()
-    {
-        try
-        {
+    public ResultSet report2() {
+        try {
             ResultSet rs = s.executeQuery(query.storageDistributionReport());
             return rs;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
         return null;
     }
 
-    public ResultSet report3()
-    {
-        try
-        {
+    public ResultSet report3() {
+        try {
             ResultSet rs = s.executeQuery(query.seasonalStockReport());
             return rs;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
         return null;
     }
 
-    public ResultSet report4(int year, int month)
-    {
-        try
-        {
+    public ResultSet report4(int year, int month) {
+        try {
             String sql = query.expiryReport();
             PreparedStatement ps = ScreenManager.getConnection().prepareStatement(sql);
             ps.setInt(1, year);   // purchases.order_year
@@ -225,9 +173,7 @@ public class DBInteractor {
             ps.setInt(3, year);   // YEAR(moved_at)
             ps.setInt(4, month);  // MONTH(moved_at)
             return ps.executeQuery();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }

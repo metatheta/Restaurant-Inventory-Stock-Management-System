@@ -5,9 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="feat: edited table CSS">
+      <change beforePath="$PROJECT_DIR$/src/main/java/db/DBInteractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/db/DBInteractor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/db/Query.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/db/Query.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/gui/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/Driver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/SQLTableController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/SQLTableController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/view/ScreenManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/view/ScreenManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +77,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "deletionFromPopupRequiresConfirmation": "false",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "gui/transaction-interface",
     "last_opened_file_path": "C:/Users/allen/projects/Java/try/Restaurant-Inventory-Stock-Management-System/src/main/resources/fonts",
     "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.15",
