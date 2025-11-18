@@ -4,16 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="feat: disabled add row button until all cols are non empty">
-      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/EditDeleteCell.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/EditRowDialog.java" afterDir="false" />
+    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="feat: made edit and delete buttons per-row">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/Driver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/AddRowDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/AddRowDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/SQLTableController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/SQLTableController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/TableSelectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/TableSelectController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/tables/sql-table.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/tables/sql-table.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/tables/table-selection.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/tables/table-selection.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/EditDeleteCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/EditDeleteCell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/EditRowDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/EditRowDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/tables/table-style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/tables/table-style.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -180,7 +176,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763378219539</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="feat: made edit and delete buttons per-row">
+      <option name="closed" value="true" />
+      <created>1763395904970</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1763395904970</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -214,7 +218,8 @@
     <MESSAGE value="feat: created add row button + dialog" />
     <MESSAGE value="feat: changed table font" />
     <MESSAGE value="feat: disabled add row button until all cols are non empty" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: disabled add row button until all cols are non empty" />
+    <MESSAGE value="feat: made edit and delete buttons per-row" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: made edit and delete buttons per-row" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

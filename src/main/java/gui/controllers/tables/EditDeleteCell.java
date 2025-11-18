@@ -1,5 +1,6 @@
 package gui.controllers.tables;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
@@ -27,7 +28,9 @@ public class EditDeleteCell extends TableCell<Map<String, Object>, Void> {
         this.deleteButton.getStyleClass().add("delete-button");
         // TODO CSS
 
-        this.pane = new HBox(5, editButton, deleteButton);
+        this.pane = new HBox(8, editButton, deleteButton);
+        HBox.setMargin(editButton, new Insets(10, 0, 10, 0));
+        HBox.setMargin(deleteButton, new Insets(10, 0, 10, 0));
         this.pane.setAlignment(Pos.CENTER);
 
         setButtonActions();

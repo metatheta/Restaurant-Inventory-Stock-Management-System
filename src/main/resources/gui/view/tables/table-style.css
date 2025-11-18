@@ -1,15 +1,66 @@
-    @font-face {
-        font-family: "Geist Mono";
-        src: url("/fonts/GeistMono-Regular.ttf");
+    .table-view {
+        -fx-background-color: transparent;
+        -fx-border-color: rgba(134,188,37,1);
+        -fx-table-cell-border-color: transparent;
+        -fx-padding: 0;
+        -fx-border-width: 0 0 2px 0;
+        -fx-font-size: 16px;
     }
 
-    .table-view .table-cell {
-        -fx-font-family: "Inter";
-        -fx-font-size: 18px;
+    .table-view .column-header-background {
+        -fx-background-color: rgba(38,137,13,1);
+        -fx-border-width: 0 0 2px 0;
+        -fx-border-color: rgba(134,188,37,1);
+    }
+
+    .table-view .column-header {
+        -fx-text-fill: #FFFFFF;
+        -fx-alignment: CENTER_LEFT;
+        -fx-background-color: transparent;
     }
 
     .table-view .column-header .label {
-        -fx-font-family: "Inter";
         -fx-font-weight: bold;
+        -fx-text-fill: #FFFFFF;
+        -fx-alignment: CENTER;
         -fx-font-size: 20px;
+    }
+
+    .table-cell {
+        -fx-border-color: transparent;
+        -fx-text-fill: #111827;
+        -fx-border-width: 0 0px 2px 0px;
+        -fx-border-color: rgba(134,188,37,1);
+        -fx-padding: 0px 0px 0px 0px;
+        -fx-alignment: CENTER;
+    }
+
+    .table-row-cell:odd {
+        -fx-background-color: #FFFFFF;
+    }
+    .table-row-cell:even {
+        -fx-background-color: rgba(0,0,0,.12);
+    }
+
+    .edit-button, .delete-button {
+        -fx-font-size: 16px;
+        -fx-text-fill: white;
+        -fx-padding: 5px 12px;
+        -fx-border-radius: 6px;
+        -fx-background-radius: 6px;
+        -fx-cursor: hand;
+    }
+
+    .edit-button {
+        -fx-background-color: #2a9d8f;
+    }
+    .edit-button:hover {
+        -fx-background-color: #268a7f;
+    }
+
+    .delete-button {
+        -fx-background-color: #e76f51;
+    }
+    .delete-button:hover {
+        -fx-background-color: #d96245;
     }
