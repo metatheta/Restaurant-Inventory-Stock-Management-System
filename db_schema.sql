@@ -20,6 +20,7 @@ USE crisms_db;
 -- #######################
 -- # drop current tables #
 -- #######################
+DROP TABLE IF EXISTS disposed_items;
 DROP TABLE IF EXISTS supplier_products;
 DROP TABLE IF EXISTS stock_movement;
 DROP TABLE IF EXISTS purchase_line;
@@ -108,7 +109,7 @@ CREATE TABLE supplier_products(
 
 CREATE TABLE stock_movement(
                                movement_id 		INT				AUTO_INCREMENT			PRIMARY KEY,
-                               quantity 			INT 		    NOT NULL				CHECK (quantity >= 0),
+                               quantity 			DECIMAL(12,3)	NOT NULL				CHECK (quantity >= 0),
                                moved_at 			TIMESTAMP 	    NOT NULL				DEFAULT CURRENT_TIMESTAMP,
                                transaction_type 	ENUM('RESTOCK','DISPOSAL','CONSUMPTION','TRANSFER_IN','TRANSFER_OUT')     NOT NULL,
                                item_id             INT             NOT NULL,
@@ -120,21 +121,15 @@ CREATE TABLE stock_movement(
                                FOREIGN KEY (inventory_id) REFERENCES inventory (inventory_id)	ON DELETE CASCADE
 );
 
-CREATE TABLE dishes (
-    						   dish_id   INT AUTO_INCREMENT PRIMARY KEY,
-    						   dish_name VARCHAR(50) NOT NULL
+CREATE TABLE disposed_items(
+                               disposed_id 		INT				AUTO_INCREMENT			PRIMARY KEY,
+                               quantity_disposed 	DECIMAL(12,3)   NOT NULL				CHECK (quantity_disposed >= 0),
+                               disposed_date 		TIMESTAMP								DEFAULT CURRENT_TIMESTAMP,
+                               inventory_id             INT             NOT NULL,
+                               visible				TINYINT(1)								DEFAULT 1,
+                               should_update_inventory	TINYINT(1)								DEFAULT 1,
+                               FOREIGN KEY (inventory_id)  REFERENCES inventory (inventory_id)	ON DELETE CASCADE
 );
-
-CREATE TABLE dish_requirements (
-    						  dish_id   INT NOT NULL,
-    					      item_id   INT NOT NULL,
-    						  quantity  DECIMAL(12,3) NOT NULL CHECK (quantity > 0),
-    						  PRIMARY KEY (dish_id, item_id),
-    					      FOREIGN KEY (dish_id)  REFERENCES dishes(dish_id)      ON DELETE CASCADE,
-    						  FOREIGN KEY (item_id)  REFERENCES stock_items(item_id) ON DELETE CASCADE
-);
-
-
 
 -- STOCK ITEMS
 INSERT INTO stock_items (item_name, unit_of_measure, category)
@@ -202,20 +197,20 @@ VALUES
 -- INVENTORY
 INSERT INTO inventory (running_balance, last_restock_date, expiry_date, location_id, item_id)
 VALUES
-    (50, '2025-11-01 08:00:00', NULL, 3, 1),   -- tomato in Main Kitchen
+    (50, '2025-11-01 08:00:00', '2025-11-10', 3, 1),   -- tomato in Main Kitchen
     (30, '2025-11-02 09:00:00', NULL, 1, 2),   -- cooking oil in Lower Shelves
-    (100, '2025-11-03 10:00:00', NULL, 7, 3),  -- rice in Pantry
-    (20, '2025-11-04 11:00:00', NULL, 2, 4),   -- beef in Walk-in Freezer
-    (15, '2025-11-05 12:00:00', NULL, 4, 5),   -- salt in Main Kitchen
-    (40, '2025-11-06 13:00:00', NULL, 6, 6),   -- garlic in Refrigerator
+    (100, '2025-11-03 10:00:00', '2025-11-13', 7, 3),  -- rice in Pantry
+    (20, '2025-11-04 11:00:00', '2025-11-14', 2, 4),   -- beef in Walk-in Freezer
+    (15, '2025-11-05 12:00:00', '2025-11-15', 4, 5),   -- salt in Main Kitchen
+    (40, '2025-11-06 13:00:00', '2025-11-16', 6, 6),   -- garlic in Refrigerator
     (25, '2025-11-07 14:00:00', NULL, 9, 7),   -- curry in Upper Shelves
-    (10, '2025-11-08 15:00:00', NULL, 5, 8),   -- fish in Walk-in Freezer
-    (30, '2025-11-09 16:00:00', NULL, 1, 9),   -- soy sauce in Lower Shelves
+    (10, '2025-11-08 15:00:00', '2025-11-28', 5, 8),   -- fish in Walk-in Freezer
+    (30, '2025-11-09 16:00:00', '2025-11-25', 1, 9),   -- soy sauce in Lower Shelves
     (12, '2025-11-10 17:00:00', NULL, 6, 10), -- butter in Refrigerator
-    (18, '2025-11-11 08:00:00', NULL, 10, 11), -- onion in Refrigerator
-    (40, '2025-11-12 09:00:00', NULL, 7, 12),  -- potato in Pantry
-    (10, '2025-11-12 09:00:00', NULL, 8, 13), -- chicken in Freezer
-    (10, '2025-11-12 09:00:00', NULL, 2, 14); -- pork in Freezer
+    (18, '2025-11-11 08:00:00', '2025-11-19', 10, 11), -- onion in Refrigerator
+    (40, '2025-11-12 09:00:00', '2025-11-18', 7, 12),  -- potato in Pantry
+    (10, '2025-11-12 09:00:00', '2025-11-29', 8, 13), -- chicken in Freezer
+    (10, '2025-11-12 09:00:00', '2025-11-29', 2, 14); -- pork in Freezer
 
 -- PURCHASES
 INSERT INTO purchases (order_date, receive_date, total_cost, supplier_id)
@@ -266,23 +261,3 @@ VALUES
     (40, '2025-11-12 09:00:00', 'RESTOCK', 12, 7, 12), -- potato
     (5, '2025-11-13 09:00:00', 'RESTOCK', 13, 8, 13),  -- chicken
     (5, '2025-11-13 10:00:00', 'RESTOCK', 14, 2, 14);  -- pork
-
--- DISHES (for dish-based consumption transaction)
-INSERT INTO dishes (dish_name)
-VALUES
-	('Beef Curry'),
-	('Garlic Rice');
-
--- DISH REQUIREMENTS (recipe: item + quantity per dish)
--- Note: item_id values correspond to the stock_items inserted above.
-INSERT INTO dish_requirements (dish_id, item_id, quantity)
-VALUES
-	(1, 4, 0.500),   -- Beef Curry: 0.5 kg beef
-	(1, 7, 0.100),   -- Beef Curry: 0.1 kg curry
-	(1, 5, 0.010),   -- Beef Curry: 0.01 kg salt
-	(2, 3, 0.200),   -- Garlic Rice: 0.2 kg rice
-	(2, 6, 0.050),   -- Garlic Rice: 0.05 kg garlic
-	(2, 5, 0.005);   -- Garlic Rice: 0.005 kg salt
-
-
-

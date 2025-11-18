@@ -138,11 +138,25 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet transaction3()
+    public void transaction3Part1()
     {
         try
         {
-            ResultSet rs = s.executeQuery(query.disposeUnusedStock());
+            s.executeUpdate(query.disposingExpiredItems());
+            s.executeUpdate(query.recordingDisposedItemsInStockMovement());
+            s.executeUpdate(query.updateInventoryAfterDisposing());
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public ResultSet displayAllDisposedItems()
+    {
+        try
+        {
+            ResultSet rs = s.executeQuery(query.displayAllDisposedItems());
             return rs;
         }
         catch (Exception e)
@@ -151,6 +165,33 @@ public class DBInteractor {
         }
 
         return null;
+    }
+
+    public ResultSet displayRecentlyDisposedItems()
+    {
+        try
+        {
+            ResultSet rs = s.executeQuery(query.displayRecentlyDisposedItems());
+            return rs;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+
+        return null;
+    }
+
+    public void transaction3Part2()
+    {
+        try
+        {
+            s.executeUpdate(query.updateNewlyDisposedToPreviouslyDisposed());
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
     }
 
     public ResultSet transaction4(int dishId, int numberOfDishes)

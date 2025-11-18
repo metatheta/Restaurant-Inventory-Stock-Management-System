@@ -87,10 +87,65 @@ public class Query {
         return "";
     }
 
-    public String disposeUnusedStock()
+    public String disposingExpiredItems()
     {
-        return "";
+        return "INSERT INTO disposed_items(quantity_disposed, inventory_id)\n" +
+                "SELECT running_balance, inventory_id\n" +
+                "FROM inventory\n" +
+                "WHERE expiry_date < CURRENT_TIMESTAMP() AND running_balance  > 0;";
     }
+
+    public String recordingDisposedItemsInStockMovement()
+    {
+        return "INSERT INTO stock_movement(quantity, transaction_type, item_id, inventory_id, location_id)\n" +
+                "SELECT d.quantity_disposed, 'DISPOSAL', i.item_id, i.inventory_id, i.location_id\n" +
+                "FROM disposed_items d\n" +
+                "\tJOIN inventory i\n" +
+                "\t\tON d.inventory_id = i.inventory_id\n" +
+                "WHERE d.should_update_inventory = 1;";
+    }
+
+    public String updateInventoryAfterDisposing()
+    {
+        return "UPDATE inventory i\n" +
+                "\tJOIN disposed_items d\n" +
+                "\t\tON i.inventory_id = d.inventory_id\n" +
+                "SET i.running_balance = 0\n" +
+                "WHERE d.should_update_inventory = 1;";
+    }
+
+    public String displayAllDisposedItems()
+    {
+        return "SELECT si.item_name, si.category, sl.storage_name, sl.address\n" +
+                "FROM disposed_items d\n" +
+                "\tJOIN inventory i\n" +
+                "\t\tON d.inventory_id = i.inventory_id\n" +
+                "\tJOIN stock_items si\n" +
+                "\t\tON i.item_id = si.item_id\n" +
+                "\tJOIN stock_locations sl\n" +
+                "\t\tON i.location_id = sl.location_id;";
+    }
+
+    public String displayRecentlyDisposedItems()
+    {
+        return "SELECT si.item_name, si.category, sl.storage_name, sl.address\n" +
+                "FROM disposed_items d\n" +
+                "\tJOIN inventory i\n" +
+                "\t\tON d.inventory_id = i.inventory_id\n" +
+                "\tJOIN stock_items si\n" +
+                "\t\tON i.item_id = si.item_id\n" +
+                "\tJOIN stock_locations sl\n" +
+                "\t\tON i.location_id = sl.location_id\n" +
+                "WHERE d.should_update_inventory = 1;";
+    }
+
+    public String updateNewlyDisposedToPreviouslyDisposed()
+    {
+        return "UPDATE disposed_items\n" +
+                "SET should_update_inventory = 0\n" +
+                "WHERE should_update_inventory = 1;";
+    }
+
 
     public String createDish(int quantity)
     {
