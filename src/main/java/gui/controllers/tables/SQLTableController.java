@@ -29,13 +29,11 @@ public class SQLTableController {
     // TODO pascalcase column and table names
 
     private ObservableList<Map<String, Object>> data = FXCollections.observableArrayList();
-    private Connection conn;
     private List<ColumnStructure> columnStructures = new ArrayList<>();
     private String[] columnNames;
 
     @FXML
     public void initialize() {
-        conn = ScreenManager.SINGLETON.getConnection();
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
     }
 
@@ -55,7 +53,7 @@ public class SQLTableController {
                 this::deleteRowFromDb
         ));
 
-        try {
+        try (Connection conn = ScreenManager.getConnection()) {
             Statement statement = conn.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM " + tableName);
             ResultSetMetaData metaData = rs.getMetaData();
@@ -128,7 +126,8 @@ public class SQLTableController {
 
         String sql = "INSERT INTO " + tableName + " (" + columnsPart + ") VALUES (" + valuesPart + ")";
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (Connection conn = ScreenManager.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(sql);
             for (int i = 0; i < values.size(); i++) {
                 statement.setObject(i + 1, values.get(i));
             }
@@ -152,7 +151,8 @@ public class SQLTableController {
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 String sql = "UPDATE " + tableName + " SET visible = 0 WHERE " + idColumn + " = ?";
-                try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                try (Connection conn = ScreenManager.getConnection()) {
+                    PreparedStatement statement = conn.prepareStatement(sql);
                     statement.setObject(1, targetId);
                     int affectedRows = statement.executeUpdate();
                     if (affectedRows > 0) {
@@ -186,7 +186,8 @@ public class SQLTableController {
         values.add(targetId);
         String sql = "UPDATE " + tableName + " SET " + setPart + " WHERE " + idColumn + " = ?";
 
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+        try (Connection conn = ScreenManager.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(sql);
             for (int i = 0; i < values.size(); i++) {
                 statement.setObject(i + 1, values.get(i));
             }

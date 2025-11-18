@@ -8,19 +8,24 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class ScreenManager {
     public static final ScreenManager SINGLETON = new ScreenManager();
 
     private Stage stage;
-    private Connection connection;
+    private static Connection connection = null;
 
-    public void start(Stage stage, Connection connection) {
+    public void start(Stage stage) {
         this.stage = stage;
-        this.connection = connection;
     }
 
-    public Connection getConnection() {
+    public static Connection getConnection() throws SQLException {
+        if (connection == null || connection.isClosed()) {
+            connection = DriverManager.getConnection("jdbc:mysql://localhost/crisms_db?" +
+                    "user=root&password=p@ssword");
+        }
         return connection;
     }
 
