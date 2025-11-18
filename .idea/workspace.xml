@@ -4,15 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="feat: restock menu">
-      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/ReadOnlySQLTableController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/gui/view/tables/read-only-sql-table.fxml" afterDir="false" />
+    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="feat: created 2 types of sql tables the main and the read only">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/db/Query.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/db/Query.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/gui/ScreenManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/ScreenManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/MainMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/MainMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/TableSelectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/TableSelectController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/SQLTableController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/EditableSQLTableController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/tables/sql-table.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/tables/core-sql-table.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/EditDeleteCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/EditDeleteRelatedCell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/EditableSQLTableController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/EditableSQLTableController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/ReadOnlySQLTableController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/ReadOnlySQLTableController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/tables/core-sql-table.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/tables/core-sql-table.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/tables/read-only-sql-table.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/tables/read-only-sql-table.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/tables/table-style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/tables/table-style.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,8 +25,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Record" />
-        <option value="Class" />
         <option value="FxmlFile" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -211,7 +213,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763486497065</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="feat: created 2 types of sql tables the main and the read only">
+      <option name="closed" value="true" />
+      <created>1763487589963</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1763487589963</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -249,7 +259,8 @@
     <MESSAGE value="feat: edited table CSS" />
     <MESSAGE value="fix: merging errors" />
     <MESSAGE value="feat: restock menu" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: restock menu" />
+    <MESSAGE value="feat: created 2 types of sql tables the main and the read only" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: created 2 types of sql tables the main and the read only" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

@@ -1,5 +1,6 @@
 package gui.controllers.tables;
 
+import db.Query;
 import gui.ScreenManager;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -10,13 +11,14 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EditableSQLTableController {
+public class CoreTableSQLController {
     @FXML
     private TableView<Map<String, Object>> table;
 
@@ -42,9 +44,10 @@ public class EditableSQLTableController {
         actionCol.setMinWidth(300);
         actionCol.setMaxWidth(300);
 
-        actionCol.setCellFactory(param -> new EditDeleteCell(
+        actionCol.setCellFactory(param -> new EditDeleteRelatedCell(
                 this::editRowPopup,
-                this::deleteRowFromDb
+                this::deleteRowFromDb,
+                this::viewRelatedRows
         ));
 
         try (Connection conn = ScreenManager.getConnection()) {
@@ -190,6 +193,63 @@ public class EditableSQLTableController {
             e.printStackTrace();
         }
     }
+
+    private void viewRelatedRows(Map<String, Object> rowData) {
+        if (rowData == null || tableName == null) return;
+        String sql = null;
+        Object idValue = null;
+        String[] relatedColumnNames = null;
+        String tableTitle = null;
+        switch (tableName) {
+            case "stock_items":
+                sql = Query.stockItemAndSuppliers();
+                idValue = rowData.get("item_id");
+                relatedColumnNames = new String[]{"Item Name", "Unit of Measure", "Category", "Supplier Name",
+                        "Contact Person", "Contact Info"};
+                tableTitle = "Stock Item and Suppliers Providing It";
+                break;
+            case "inventory":
+                sql = Query.storedItemAndLocations();
+                idValue = rowData.get("inventory_id");
+                relatedColumnNames = new String[]{"Stored Item", "Running Balance", "Last Restocked", "Expiry Date",
+                        "Storage Name", "Address", "Storage Type"};
+                tableTitle = "Inventory Item and Locations It is Present In";
+                break;
+            case "stock_locations":
+                sql = Query.locationAndStoredItems();
+                idValue = rowData.get("location_id");
+                relatedColumnNames = new String[]{"Storage Name", "Storage Type", "Address", "Stored Item",
+                        "Unit of Measure", "Running Balance", "Item Category"};
+                tableTitle = "Storage Location and Inventory Items Stored There";
+                break;
+            case "suppliers":
+                sql = Query.supplierAndProducts();
+                idValue = rowData.get("supplier_id");
+                relatedColumnNames = new String[]{"Supplier Name", "Contact Person", "Contact Info", "Item Name",
+                        "Amount", "Unit Cost"};
+                tableTitle = "Supplier and Products They Provide";
+                break;
+            default:
+                System.out.println("Not a core table: " + tableName);
+                return;
+        }
+
+        if (idValue == null) return;
+
+        try (
+                Connection conn = ScreenManager.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setObject(1, idValue);
+            ResultSet rs = stmt.executeQuery();
+
+            ScreenManager.SINGLETON.loadReadOnlyTableScreen(rs, tableTitle, relatedColumnNames);
+
+        } catch (
+                SQLException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void refreshData() {
         loadTable(tableName, columnNames);

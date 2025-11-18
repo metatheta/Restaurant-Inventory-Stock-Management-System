@@ -26,7 +26,7 @@ public class MainMenuController {
 
     public void reportsMenu() {
         try {
-            ScreenManager.SINGLETON.loadReadOnlyTableScreen("/gui/view/reports-menu.fxml");
+            ScreenManager.SINGLETON.displayScreen("/gui/view/reports-menu.fxml");
             // TODO
         } catch (IOException e) {
             e.printStackTrace();

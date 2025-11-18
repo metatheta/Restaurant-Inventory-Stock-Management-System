@@ -7,9 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="900" prefWidth="1300" spacing="8" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.tables.EditableSQLTableController">
-
-    <TableView fx:id="table" editable="true" prefHeight="754.0" prefWidth="1300.0" stylesheets="@table-style.css" />
+<VBox prefHeight="900" prefWidth="1300" spacing="8" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.tables.CoreTableSQLController">
 
     <HBox alignment="CENTER" spacing="130.0">
         <children>
@@ -18,14 +16,21 @@
                     <Font name="System Bold" size="24.0" />
                 </font>
             </Button>
-            <Button fx:id="returnButton" onAction="#returnToMainMenu" text="Return">
+            <Button fx:id="returnButton" onAction="#returnToMainMenu" text="View with Related Records">
                 <font>
                     <Font name="System Bold" size="24.0" />
                 </font>
             </Button>
+         <Button fx:id="returnButton1" layoutX="710.0" layoutY="10.0" onAction="#returnToMainMenu" text="Return">
+            <font>
+               <Font name="System Bold" size="24.0" />
+            </font>
+         </Button>
         </children>
         <VBox.margin>
-            <Insets top="40.0" />
+            <Insets bottom="10.0" top="20.0" />
         </VBox.margin>
     </HBox>
+
+    <TableView fx:id="table" editable="true" prefHeight="811.0" prefWidth="1300.0" stylesheets="@table-style.css" />
 </VBox>
