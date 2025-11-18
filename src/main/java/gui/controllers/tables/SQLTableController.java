@@ -62,10 +62,9 @@ public class SQLTableController {
                 String columnName = metaData.getColumnName(i);
                 ColumnStructure currentStructure = new ColumnStructure(columnName, metaData.getColumnTypeName(i),
                         metaData.getColumnName(i).equals("visible") ||
-                                metaData.getColumnName(i).contains("_id"));
-                // Currently hiding all _id columns so foreign and primary keys
-                // TODO ask sir if we can hide these id columns given the edit and delete buttons being per-row
-
+                                metaData.isAutoIncrement(i));
+                // We don't have a default foreign key value so I'm gonna include them in the display / add prompt
+                // TODO ask sir about this
                 columnStructures.add(currentStructure);
 
                 if (currentStructure.isHidden()) continue;
@@ -160,9 +159,9 @@ public class SQLTableController {
     }
 
     private void editRowPopup(Map<String, Object> originalRowData) {
-        Object targetId = originalRowData.get(columnStructures.getFirst().name());
-        EditRowDialog dialog = new EditRowDialog(tableName, columnStructures, originalRowData, columnNames);
+        EditRowDialog dialog = new EditRowDialog(tableName, columnStructures, columnNames, originalRowData);
         dialog.showAndWait().ifPresent(editedData -> {
+            Object targetId = originalRowData.get(columnStructures.get(0).name());
             editRowInDb(editedData, targetId);
         });
     }

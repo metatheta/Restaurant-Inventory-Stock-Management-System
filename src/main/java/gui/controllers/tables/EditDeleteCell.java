@@ -26,7 +26,6 @@ public class EditDeleteCell extends TableCell<Map<String, Object>, Void> {
 
         this.editButton.getStyleClass().add("edit-button");
         this.deleteButton.getStyleClass().add("delete-button");
-        // TODO CSS
 
         this.pane = new HBox(8, editButton, deleteButton);
         HBox.setMargin(editButton, new Insets(10, 0, 10, 0));

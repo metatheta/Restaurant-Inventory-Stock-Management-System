@@ -11,41 +11,36 @@ import java.util.List;
 import java.util.Map;
 
 public class EditRowDialog extends Dialog<Map<String, String>> {
-
-    private ButtonType confirmEditButtonType;
+    private ButtonType confirmSaveButtonType;
     private GridPane grid;
-    private Map<String, TextField> inputFields;
-    private Map<String, Object> originalData;
+    private Map<String, Node> inputControls;
     private final String STYLE = "-fx-font-size: 16px";
 
-    public EditRowDialog(String tableName, List<ColumnStructure> columns, Map<String, Object> originalData,
-                         String[] columnNames) {
-        this.originalData = originalData;
+    public EditRowDialog(String tableName, List<ColumnStructure> columns, String[] columnNames, Map<String, Object> originalData) {
         buildUI(tableName);
-        initializeInputFields(columns, columnNames);
+        initializeInputFields(columns, columnNames, originalData);
         this.getDialogPane().setMinHeight(400);
         this.getDialogPane().setMinWidth(600);
     }
 
     private void buildUI(String tableName) {
         this.setTitle("Edit Row in " + tableName);
-        this.setHeaderText("Modify the details below:");
+        this.setHeaderText("Edit the details below: ");
         this.setOnShown(e -> {
             Node header = getDialogPane().getHeader();
             header.setStyle(STYLE);
         });
 
-
-        confirmEditButtonType = new ButtonType("Save Changes", ButtonBar.ButtonData.OK_DONE);
-        this.getDialogPane().getButtonTypes().addAll(confirmEditButtonType, ButtonType.CANCEL);
+        confirmSaveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        this.getDialogPane().getButtonTypes().addAll(confirmSaveButtonType, ButtonType.CANCEL);
 
         grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
     }
 
-    private void initializeInputFields(List<ColumnStructure> columns, String columnNames[]) {
-        inputFields = new HashMap<>();
+    private void initializeInputFields(List<ColumnStructure> columns, String[] columnNames, Map<String, Object> originalData) {
+        inputControls = new HashMap<>();
         int row = 0;
 
         for (ColumnStructure column : columns) {
@@ -55,43 +50,78 @@ public class EditRowDialog extends Dialog<Map<String, String>> {
             columnNameLabel.setStyle(STYLE);
             grid.add(columnNameLabel, 0, row);
 
-            TextField input = new TextField();
-            input.setStyle(STYLE);
-            input.setPromptText(column.type());
+            Node inputNode;
+            String colType = column.type().toLowerCase();
             Object originalValue = originalData.get(column.name());
 
-            if (originalValue != null && !originalValue.toString().equals("NULL")) {
-                input.setText(String.valueOf(originalValue));
+            if (colType.contains("date") || colType.contains("time") || colType.contains("stamp")) {
+                DateTimePicker picker = new DateTimePicker();
+                picker.setStyle(STYLE);
+
+                if (originalValue != null) {
+                    picker.setTimestamp(originalValue.toString());
+                }
+                inputNode = picker;
+            } else {
+                TextField textField = new TextField();
+                textField.setStyle(STYLE);
+                textField.setPromptText(column.type());
+                if (originalValue != null && !originalValue.toString().equals("NULL")) {
+                    textField.setText(originalValue.toString());
+                }
+                inputNode = textField;
             }
 
-            grid.add(input, 1, row);
-            inputFields.put(column.name(), input);
+            grid.add(inputNode, 1, row);
+            inputControls.put(column.name(), inputNode);
             row++;
         }
 
         this.getDialogPane().setContent(grid);
+        setupValidation();
+        setupResultConverter();
+    }
 
+    private void setupValidation() {
         this.setOnShown(e -> {
-            Button confirmButton = (Button) getDialogPane().lookupButton(confirmEditButtonType);
+            Button confirmButton = (Button) getDialogPane().lookupButton(confirmSaveButtonType);
             confirmButton.disableProperty().bind(
                     Bindings.createBooleanBinding(
-                            () -> inputFields.values().stream().anyMatch(f -> f.getText().isBlank()),
-                            inputFields.values().stream().map(TextField::textProperty).toArray(Observable[]::new)
+                            () -> inputControls.values().stream().anyMatch(node -> {
+                                if (node instanceof TextField) {
+                                    return ((TextField) node).getText().isBlank();
+                                } else if (node instanceof DateTimePicker) {
+                                    return ((DateTimePicker) node).isEmpty();
+                                }
+                                return true;
+                            }),
+                            inputControls.values().stream().map(node -> {
+                                if (node instanceof TextField) {
+                                    return ((TextField) node).textProperty();
+                                } else if (node instanceof DateTimePicker) {
+                                    return ((DateTimePicker) node).getDatePicker().valueProperty();
+                                }
+                                return null;
+                            }).toArray(Observable[]::new)
                     )
             );
         });
+    }
 
+    private void setupResultConverter() {
         this.setResultConverter(dialogButton -> {
-            if (dialogButton.equals(confirmEditButtonType)) {
-                return getResultMap();
+            if (dialogButton.equals(confirmSaveButtonType)) {
+                Map<String, String> results = new HashMap<>();
+                inputControls.forEach((columnName, node) -> {
+                    if (node instanceof TextField) {
+                        results.put(columnName, ((TextField) node).getText());
+                    } else if (node instanceof DateTimePicker) {
+                        results.put(columnName, ((DateTimePicker) node).getTimestamp());
+                    }
+                });
+                return results;
             }
             return null;
         });
-    }
-
-    private Map<String, String> getResultMap() {
-        Map<String, String> results = new HashMap<>();
-        inputFields.forEach((columnName, input) -> results.put(columnName, input.getText()));
-        return results;
     }
 }
