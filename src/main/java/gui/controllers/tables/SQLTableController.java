@@ -31,6 +31,7 @@ public class SQLTableController {
     private ObservableList<Map<String, Object>> data = FXCollections.observableArrayList();
     private Connection conn;
     private List<ColumnStructure> columnStructures = new ArrayList<>();
+    private String[] columnNames;
 
     @FXML
     public void initialize() {
@@ -40,6 +41,7 @@ public class SQLTableController {
 
     public void loadTable(String tableName, String... columnNames) {
         this.tableName = tableName;
+        this.columnNames = columnNames;
         table.getColumns().clear();
         data.clear();
         columnStructures.clear();
@@ -196,7 +198,7 @@ public class SQLTableController {
     }
 
     public void refreshData() {
-        loadTable(tableName);
+        loadTable(tableName, columnNames);
     }
 
     public void returnToMainMenu() {
