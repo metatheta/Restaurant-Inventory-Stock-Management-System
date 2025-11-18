@@ -7,6 +7,8 @@
         NICOLAS, Francis Medin N.
 */
 
+USE crisms_db;
+
 -- #################
 -- # make database #
 -- #################
@@ -85,7 +87,7 @@ CREATE TABLE purchases(
 
 CREATE TABLE purchase_line(
                               purchase_line_id 	INT				AUTO_INCREMENT			PRIMARY KEY,
-                              quantity 			DECIMAL(12,3)   NOT NULL				CHECK (quantity >= 0),
+                              quantity 			INT			    NOT NULL				CHECK (quantity >= 0),
                               purchase_id			INT			    NOT NULL,
                               item_id				INT			    NOT NULL,
                               inventory_id		INT,
@@ -96,7 +98,7 @@ CREATE TABLE purchase_line(
 );
 
 CREATE TABLE supplier_products(
-                                  amount 				INT 		    NOT NULL				CHECK (amount >= 0),
+                                  amount 				int			    NOT NULL				CHECK (amount >= 0),
                                   unit_cost 			DECIMAL(10,2)   NOT NULL				CHECK (unit_cost >= 0),
                                   supplier_id			INT			    NOT NULL,
                                   item_id				INT			    NOT NULL,
@@ -137,12 +139,7 @@ VALUES
     ('onion',        'kg',   'vegetable'),
     ('potato',       'kg',   'vegetable'),
     ('chicken',      'kg',   'protein'),
-    ('pork',         'kg',   'protein'),
-    ('vinegar',      'liter','condiment'),
-    ('brown sugar',  'kg',   'condiment'),
-    ('milk',         'liter','dairy'),
-    ('cheese',         'kg',  'dairy'),
-    ('ginger',       'kg',   'vegetable');
+    ('pork',         'kg',   'protein');
 
 -- SUPPLIERS
 INSERT INTO suppliers (name, contact_person, contact_info)
@@ -156,16 +153,24 @@ VALUES
     ('Manila Spice Merchants', 'Noel Chua', '0995-123-4888'),
     ('West Philippine Fisheries', 'Steph Uy', '0918-111-2223'),
     ('Bean Trading Co.', 'Gabriel Tan', '0947-555-6621'),
-    ('Churned and Packed Depot', 'Celine Ramos', '0922-333-4455'),
-    ('Sierra Madre Vegetables', 'Arvin Lim', '0918-777-6655'),
-    ('Irish Fields', 'Hannah Bautista', '0935-999-1234'),
-    ('Free Range Poultry', 'Ralph Go', '0927-888-9911'),
-    ('PorkHaus Premium Meats', 'Donna Fajardo', '0917-444-3322'),
-    ('Cane2Table Distribution', 'Kenji Robles', '0947-666-5542'),
-    ('Golden Brown Cane Co.', 'Ramon Villareal', '0926-111-9331'),
-    ('Cow Haven Inc.', 'Maria Celestino', '0922-333-7712'),
-    ('Aged Cold Storage', 'Jonas Alonzo', '0995-777-4411'),
-    ('Ground Plant Distributors', 'Melanie Cruz', '0918-555-6622');
+    ('Churned and Packed Depot', 'Celine Ramos', '0922-333-4455');
+
+INSERT INTO supplier_products (amount, unit_cost, supplier_id, item_id)
+VALUES
+    (100, 50.00, 1, 1), -- tomato
+    (200, 30.00, 2, 2), -- oil
+    (200, 30.00, 3, 3), -- rice
+    (50, 200.00, 4, 4), -- beef
+    (80, 48.00, 5, 5), -- salt
+    (90, 28.00, 6, 6), -- garlic
+    (60, 32.00, 7, 7), -- curry
+    (30, 180.00, 8, 8), -- fish
+    (120, 110.00, 9, 9),-- soy sauce
+    (15, 250.00, 10, 10), -- butter
+    (45, 20.00, 1, 11),  -- onion
+    (60, 30, 1, 12), -- potato
+    (150, 150, 4, 13), -- chicken
+    (100, 175, 4, 14); -- pork
 
 -- STOCK LOCATIONS
 INSERT INTO stock_locations (storage_name, address, storage_type)
@@ -179,123 +184,76 @@ VALUES
     ('Pantry', '7 Pine Lane, Davao', 'Shelf'),
     ('Walk-in Freezer', '101 Mango St., Manila', 'Box'),
     ('Upper Shelves', '101 Mango St., Manila', 'Ziplock'),
-    ('Pantry', '101 Mango St., Manila', 'Airlock'),
-    ('Upper Shelves', '12 Sampaguita Ave., QC', 'Box'),
-    ('Refridgerator', '12 Sampaguita Ave., QC', 'Tupperware'),
-    ('Main Kitchen', '12 Sampaguita Ave., QC', 'Sack'),
-    ('Lower Shelves', '3 Narra Drive, Cebu', 'Jug'),
-    ('Main Kitchen', '3 Narra Drive, Cebu', 'Sack'),
-    ('Refridgerator', '3 Narra Drive, Cebu', 'Ziplock'),
-    ('Walk-in Freezer', '3 Narra Drive, Cebu', 'Box'),
-    ('Main Kitchen', '4 Matino St., QC', 'Sack'),
-    ('Lower Shelves', '4 Matino St., QC', 'Jug'),
-    ('Pantry', '4 Matino St., QC', 'Airlock');
+    ('Pantry', '101 Mango St., Manila', 'Airlock');
 
--- INVENTORY (per item per location)
-INSERT INTO inventory (running_balance, item_id, location_id)
+-- INVENTORY
+INSERT INTO inventory (running_balance, last_restock_date, expiry_date, location_id, item_id)
 VALUES
-    (50, 1, 3), -- tomato in main kitchen
-    (30, 2, 3), -- cooking oil in main kitchen
-    (100, 3, 7), -- rice in pantry
-    (20, 4, 2),  -- beef in freezer
-    (70, 5, 4), -- salt in barrel
-    (12, 6, 6), -- garlic in refridgereator
-    (30, 7, 9), -- curry in upper shelves
-    (68, 8, 5), -- fish in freezer
-    (120, 9, 1), -- soy sauce in lower shelves
-    (43, 10,16), -- butter in refridgerator
-    (46, 11, 12), -- onion in refridgerator
-    (167, 12, 4), -- potato in main kitchen
-    (54, 13, 8), -- chicken in freezer
-    (88, 14, 17), -- pork in freezer
-    (12, 15, 7), -- vinegar in lower shelves
-    (9, 16, 10), -- sugar in pantry
-    (149, 17, 12), -- milk in refridgerator
-    (105, 18, 11), -- cheese in upper shelves
-    (12, 19, 13), -- ginger in main kitchen
-    (197, 1, 18), -- tomatoes in main kitchen
-    (24, 9, 19), -- soy sauce in lower shelves
-    (192, 5, 20), -- salt in plastic container
-    (180, 6, 13), -- garlic in main kitchen
-    (171, 14, 2), -- pork in freezer
-    (39, 3, 4), -- rice in main kitchen
-    (7, 13, 2), -- chicken in freezer
-    (81, 17, 1), -- milk in main kitchen
-    (36, 4, 5), -- beef in freezer
-    (177, 15, 1), -- vinegar in main kitchen
-    (162, 8, 2); -- sugar in main kitchen
-
+    (50, '2025-11-01 08:00:00', NULL, 3, 1),   -- tomato in Main Kitchen
+    (30, '2025-11-02 09:00:00', NULL, 1, 2),   -- cooking oil in Lower Shelves
+    (100, '2025-11-03 10:00:00', NULL, 7, 3),  -- rice in Pantry
+    (20, '2025-11-04 11:00:00', NULL, 2, 4),   -- beef in Walk-in Freezer
+    (15, '2025-11-05 12:00:00', NULL, 4, 5),   -- salt in Main Kitchen
+    (40, '2025-11-06 13:00:00', NULL, 6, 6),   -- garlic in Refrigerator
+    (25, '2025-11-07 14:00:00', NULL, 9, 7),   -- curry in Upper Shelves
+    (10, '2025-11-08 15:00:00', NULL, 5, 8),   -- fish in Walk-in Freezer
+    (30, '2025-11-09 16:00:00', NULL, 1, 9),   -- soy sauce in Lower Shelves
+    (12, '2025-11-10 17:00:00', NULL, 6, 10), -- butter in Refrigerator
+    (18, '2025-11-11 08:00:00', NULL, 10, 11), -- onion in Refrigerator
+    (40, '2025-11-12 09:00:00', NULL, 7, 12),  -- potato in Pantry
+    (10, '2025-11-12 09:00:00', NULL, 8, 13), -- chicken in Freezer
+    (10, '2025-11-12 09:00:00', NULL, 2, 14); -- pork in Freezer
 
 -- PURCHASES
 INSERT INTO purchases (order_date, receive_date, total_cost, supplier_id)
 VALUES
-    ('2025-11-01', '2025-11-03', 1000.00, 1),
-    ('2025-11-02', '2025-11-04', 1000.00, 2),
-    ('2025-11-05', '2025-11-06', 900.00, 3),
-    ('2025-10-31', '2025-11-07', 5450.00, 4),
-    ('2025-10-30', '2025-11-09', 1200.00, 5),
-    ('2025-10-25', '2025-11-03', 224.00, 6),
-    ('2025-10-21', '2025-11-07', 1600.00, 7),
-    ('2025-10-12', '2025-11-11', 1900.00, 8),
-    ('2025-10-29', '2025-11-10', 900.00, 9),
-    ('2025-10-27', '2025-11-01', 550.00, 10);
+    ('2025-11-01','2025-11-02',4060.00,1),
+    ('2025-11-02','2025-11-03',900.00,2),
+    ('2025-11-03','2025-11-04',3000.00,3),
+    ('2025-11-04','2025-11-05',7250.00,4),
+    ('2025-11-05','2025-11-06',720.00,5),
+    ('2025-11-06','2025-11-07',1120.00,6),
+    ('2025-11-07','2025-11-08',800.00,7),
+    ('2025-11-08','2025-11-09',1800.00,8),
+    ('2025-11-09','2025-11-10',3300.00,9),
+    ('2025-11-10','2025-11-11',3000.00,10);
 
-
-
--- PURCHASE LINE (link purchases to items + inventory)
+-- PURCHASE LINE
 INSERT INTO purchase_line (quantity, purchase_id, item_id, inventory_id)
 VALUES
-    (20, 1,  1,  1),
-    (10, 2,  2,  2),
-    (30, 3,  3,  3),
-    (15, 4,  8,  8),
-    (5, 4,  4,  4),
-    (8, 4,  14,  14),
-    (16, 4,  13,  13),
-    (25, 5,  5,  5),
-    (8, 6,  6,  6),
-    (50, 7,  7,  7),
-    (10, 8,  8,  8),
-    (15, 9,  9,  9),
-    (5, 10, 10, 10);
+    (50, 1, 1, 1),   -- tomato
+    (30, 2, 2, 2),   -- cooking oil
+    (100, 3, 3, 3),  -- rice
+    (20, 4, 4, 4),   -- beef
+    (15, 5, 5, 5),   -- salt
+    (40, 6, 6, 6),   -- garlic
+    (25, 7, 7, 7),   -- curry
+    (10, 8, 8, 8),   -- fish
+    (30, 9, 9, 9),   -- soy sauce
+    (12, 10, 10, 10),-- butter
+    (18, 1, 11, 11), -- onion
+    (40, 1, 12, 12), -- potato
+    (10, 4, 13, 13), -- chicken
+    (10, 4, 14, 14); -- pork
 
--- SUPPLIER PRODUCTS (price lists)
-INSERT INTO supplier_products (amount, unit_cost, supplier_id, item_id)
+-- STOCK MOVEMENTS
+INSERT INTO stock_movement (quantity, moved_at, transaction_type, item_id, location_id, inventory_id)
 VALUES
-    (100,  50.00, 1, 1),
-    (200, 100.00, 2, 2),
-    (500,  30.00, 3, 3),
-    (50,  200.00, 4, 4),
-    (80,   48.00, 5, 5),
-    (300,  28.00, 6, 6),
-    (400,  32.00, 7, 7),
-    (100, 190.00, 8, 8),
-    (150,  60.00, 9, 9),
-    (120, 110.00, 10,10),
-    (94, 30.00, 11, 11),
-    (197, 45.00, 12, 12),
-    (182, 60.00, 13, 13),
-    (20, 80.00, 14, 14),
-    (173, 50.00, 15, 15),
-    (105, 20.00, 16, 16),
-    (14, 80.00, 17, 17),
-    (200, 110.00, 18, 18),
-    (176, 40.00, 19, 19),
-    (200, 100.00, 4, 8),
-    (500,  30.00, 4, 13),
-    (80,   48.00, 4, 14);
+    (50, '2025-11-02 08:00:00', 'RESTOCK', 1, 3, 1),   -- tomato
+    (30, '2025-11-03 09:00:00', 'RESTOCK', 2, 1, 2),   -- cooking oil
+    (100, '2025-11-04 10:00:00', 'RESTOCK', 3, 7, 3),  -- rice
+    (20, '2025-11-05 11:00:00', 'RESTOCK', 4, 2, 4),   -- beef
+    (15, '2025-11-06 12:00:00', 'RESTOCK', 5, 4, 5),   -- salt
+    (40, '2025-11-07 13:00:00', 'RESTOCK', 6, 6, 6),   -- garlic
+    (25, '2025-11-08 14:00:00', 'RESTOCK', 7, 9, 7),   -- curry
+    (10, '2025-11-09 15:00:00', 'RESTOCK', 8, 5, 8),   -- fish
+    (30, '2025-11-10 16:00:00', 'RESTOCK', 9, 1, 9),   -- soy sauce
+    (12, '2025-11-11 17:00:00', 'RESTOCK', 10, 6, 10), -- butter
+    (18, '2025-11-12 08:00:00', 'RESTOCK', 11, 10, 11),-- onion
+    (40, '2025-11-12 09:00:00', 'RESTOCK', 12, 7, 12), -- potato
+    (5, '2025-11-13 09:00:00', 'RESTOCK', 13, 8, 13),  -- chicken
+    (5, '2025-11-13 10:00:00', 'RESTOCK', 14, 2, 14);  -- pork
 
--- STOCK MOVEMENT (ledger: restock / consumption / disposal)
-INSERT INTO stock_movement (quantity, transaction_type, item_id, location_id, inventory_id)
-VALUES
-    (20, 'RESTOCK',      1, 1, 1),   -- tomato restock in Main Kitchen
-    (5,  'CONSUMPTION',  2, 2, 2),   -- cooking oil used
-    (10, 'RESTOCK',      3, 2, 3),   -- rice restock
-    (3,  'CONSUMPTION',  5, 4, 5),   -- salt used
-    (50, 'RESTOCK',      6, 5, 6),   -- garlic restock
-    (20, 'CONSUMPTION',  7, 6, 7),   -- curry used
-    (15, 'RESTOCK',      4, 3, 4),   -- beef restock
-    (10, 'CONSUMPTION',  8, 7, 8),   -- fish used
-    (30, 'CONSUMPTION',  9, 8, 9),   -- soy sauce used
-    (2,  'DISPOSAL',    10, 9,10);   -- butter disposed (spoilage)
+
+
 
