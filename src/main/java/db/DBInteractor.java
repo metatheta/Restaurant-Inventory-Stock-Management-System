@@ -1,7 +1,7 @@
 package db;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
+import gui.view.ScreenManager;  
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
@@ -103,9 +103,10 @@ public class DBInteractor {
         catch (Exception e)
         {
             System.out.println(e.getMessage());
-            closeConnection();
-            return null;
         }
+        closeConnection();
+        
+        return null;
     }
 
     public ResultSet transaction1()
@@ -172,9 +173,10 @@ public class DBInteractor {
         catch (Exception e)
         {
             System.out.println(e.getMessage());
-            closeConnection();
-            return null;
         }
+        closeConnection();
+        
+        return null;
     }
 
     public ResultSet report1()
@@ -244,16 +246,17 @@ public class DBInteractor {
         catch (Exception e)
         {
             System.out.println(e.getMessage());
-            closeConnection();
-            return null;
         }
+        closeConnection();
+        
+        return null;
     }
 
     private void createConnection()
     {
         try
         {
-            c = DriverManager.getConnection("jdbc:mysql://localhost/crisms_db?" + "user=root&password=p@ssword");
+            c = ScreenManager.getConnection();
             s = c.createStatement();
         }
         catch (Exception e)
