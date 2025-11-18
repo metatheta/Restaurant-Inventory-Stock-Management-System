@@ -5,7 +5,10 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -16,17 +19,8 @@ import java.util.Map;
 public class SQLTableController {
     @FXML
     private TableView<Map<String, Object>> table;
-    @FXML
-    private Button addButton;
-    @FXML
-    private Button deleteButton;
-    @FXML
-    private Button saveButton;
-    @FXML
-    private Button refreshButton;
 
     private String tableName;
-    // TODO pascalcase column and table names
 
     private ObservableList<Map<String, Object>> data = FXCollections.observableArrayList();
     private Connection conn;
@@ -107,7 +101,7 @@ public class SQLTableController {
     }
 
     public void addRowPopup() {
-        AddRowDialog dialog = new AddRowDialog(tableName, columnStructures);
+        AddRowDialog dialog = new AddRowDialog(tableName, columnStructures, columnNames);
         dialog.showAndWait().ifPresent(this::addRowToDb);
     }
 
@@ -167,7 +161,7 @@ public class SQLTableController {
 
     private void editRowPopup(Map<String, Object> originalRowData) {
         Object targetId = originalRowData.get(columnStructures.getFirst().name());
-        EditRowDialog dialog = new EditRowDialog(tableName, columnStructures, originalRowData);
+        EditRowDialog dialog = new EditRowDialog(tableName, columnStructures, originalRowData, columnNames);
         dialog.showAndWait().ifPresent(editedData -> {
             editRowInDb(editedData, targetId);
         });

@@ -18,10 +18,11 @@ public class EditRowDialog extends Dialog<Map<String, String>> {
     private Map<String, Object> originalData;
     private final String STYLE = "-fx-font-size: 16px";
 
-    public EditRowDialog(String tableName, List<ColumnStructure> columns, Map<String, Object> originalData) {
+    public EditRowDialog(String tableName, List<ColumnStructure> columns, Map<String, Object> originalData,
+                         String[] columnNames) {
         this.originalData = originalData;
         buildUI(tableName);
-        initializeInputFields(columns);
+        initializeInputFields(columns, columnNames);
         this.getDialogPane().setMinHeight(400);
         this.getDialogPane().setMinWidth(600);
     }
@@ -43,14 +44,14 @@ public class EditRowDialog extends Dialog<Map<String, String>> {
         grid.setVgap(10);
     }
 
-    private void initializeInputFields(List<ColumnStructure> columns) {
+    private void initializeInputFields(List<ColumnStructure> columns, String columnNames[]) {
         inputFields = new HashMap<>();
         int row = 0;
 
         for (ColumnStructure column : columns) {
             if (column.isHidden()) continue;
 
-            Label columnNameLabel = new Label(column.name() + ":");
+            Label columnNameLabel = new Label(columnNames[row] + ":");
             columnNameLabel.setStyle(STYLE);
             grid.add(columnNameLabel, 0, row);
 
@@ -62,7 +63,6 @@ public class EditRowDialog extends Dialog<Map<String, String>> {
             if (originalValue != null && !originalValue.toString().equals("NULL")) {
                 input.setText(String.valueOf(originalValue));
             }
-            // --- END OF CHANGE ---
 
             grid.add(input, 1, row);
             inputFields.put(column.name(), input);

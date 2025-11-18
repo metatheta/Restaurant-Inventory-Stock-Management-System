@@ -15,9 +15,10 @@ public class AddRowDialog extends Dialog<Map<String, String>> {
     private GridPane grid;
     private Map<String, TextField> inputFields;
     private final String STYLE = "-fx-font-size: 16px";
-    public AddRowDialog(String tableName, List<ColumnStructure> columns) {
+
+    public AddRowDialog(String tableName, List<ColumnStructure> columns, String[] columnNames) {
         buildUI(tableName);
-        initializeInputFields(columns);
+        initializeInputFields(columns, columnNames);
         this.getDialogPane().setMinHeight(400);
         this.getDialogPane().setMinWidth(600);
     }
@@ -38,13 +39,13 @@ public class AddRowDialog extends Dialog<Map<String, String>> {
         grid.setVgap(10);
     }
 
-    private void initializeInputFields(List<ColumnStructure> columns) {
+    private void initializeInputFields(List<ColumnStructure> columns, String[] columnNames) {
         inputFields = new HashMap<>();
         int row = 0;
 
         for (ColumnStructure column : columns) {
             if (column.isHidden()) continue;
-            Label columnNameLabel = new Label(column.name() + ":");
+            Label columnNameLabel = new Label(columnNames[row] + ":");
             columnNameLabel.setStyle(STYLE);
             grid.add(columnNameLabel, 0, row);
 
