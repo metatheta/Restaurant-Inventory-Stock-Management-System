@@ -1,4 +1,4 @@
-package gui.view;
+package gui;
 
 import gui.controllers.tables.SQLTableController;
 import javafx.fxml.FXMLLoader;

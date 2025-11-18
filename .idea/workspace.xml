@@ -5,10 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="feat: edited table CSS">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/gui/view/transaction-menu.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/Driver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/MainMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/MainMenuController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/TableSelectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/TableSelectController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/SQLTableController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/SQLTableController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/view/ScreenManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/view/ScreenManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/view/MainMenu.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/view/ScreenManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/ScreenManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,8 +82,8 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "deletionFromPopupRequiresConfirmation": "false",
-    "git-widget-placeholder": "gui/base-tables",
-    "last_opened_file_path": "C:/Users/allen/projects/Java/try/Restaurant-Inventory-Stock-Management-System/src/main/resources/fonts",
+    "git-widget-placeholder": "gui/transaction-interface",
+    "last_opened_file_path": "C:/Users/allen/projects/Java/try/Restaurant-Inventory-Stock-Management-System/src/main/resources/gui/view",
     "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.28582203",
@@ -88,16 +92,20 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\resources\gui\view" />
       <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\resources\fonts" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\resources\gui\view" />
       <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\resources\gui" />
+      <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\resources\gui\view" />
       <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\resources" />
       <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\java" />
     </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="gui" />
+    </key>
   </component>
-  <component name="RunManager" selected="Maven.Main Menu">
+  <component name="RunManager" selected="Application.Db Test">
     <list>
       <item itemvalue="Application.Db Test" />
       <item itemvalue="Maven.Main Menu" />

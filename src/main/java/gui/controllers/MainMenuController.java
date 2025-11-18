@@ -1,12 +1,13 @@
 package gui.controllers;
 
-import gui.view.ScreenManager;
+import gui.ScreenManager;
 import java.io.IOException;
 
 public class MainMenuController {
     public void tableSelectMenu() {
         try {
             ScreenManager.SINGLETON.displayScreen("/gui/view/tables/table-selection.fxml");
+            // TODO do viewing of a record with related records
         } catch (IOException e) {
             e.printStackTrace();
         }

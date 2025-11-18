@@ -1,6 +1,6 @@
 package gui.controllers.tables;
 
-import gui.view.ScreenManager;
+import gui.ScreenManager;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -203,7 +203,7 @@ public class SQLTableController {
 
     public void returnToMainMenu() {
         try {
-            gui.view.ScreenManager.SINGLETON.displayScreen("/gui/view/main-menu.fxml");
+            ScreenManager.SINGLETON.displayScreen("/gui/view/main-menu.fxml");
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }

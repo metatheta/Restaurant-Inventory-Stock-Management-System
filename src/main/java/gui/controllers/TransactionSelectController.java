@@ -2,9 +2,8 @@ package gui.controllers;
 
 import gui.ScreenManager;
 
-public class TableSelectController {
-
-    public void inventoryTable() {
+public class TransactionSelectController {
+    public void restockItems() {
         try {
             String[] columnNames = {"Running Balance", "Last Restock Date", "Expiry Date"};
             ScreenManager.SINGLETON.loadTableScreen("inventory", columnNames);
@@ -13,7 +12,7 @@ public class TableSelectController {
         }
     }
 
-    public void stockItemsTable() {
+    public void purchaseNewStock() {
         try {
             String[] columnNames = {"Item Name", "Unit of Measure", "Category"};
             ScreenManager.SINGLETON.loadTableScreen("stock_items", columnNames);
@@ -22,7 +21,7 @@ public class TableSelectController {
         }
     }
 
-    public void stockLocationsTable() {
+    public void disposeUnusedStock() {
         try {
             String[] columnNames = {"Storage Name", "Address", "Storage Type"};
             ScreenManager.SINGLETON.loadTableScreen("stock_locations", columnNames);
@@ -31,7 +30,7 @@ public class TableSelectController {
         }
     }
 
-    public void suppliersTable() {
+    public void createDish() {
         try {
             String[] columnNames = {"Name", "Contact Person", "Contact Info"};
             ScreenManager.SINGLETON.loadTableScreen("suppliers", columnNames);
