@@ -67,7 +67,7 @@ public class Query {
               AND sp.visible = 1
               AND si.visible = 1
               AND s.supplier_id = ?
-            ORDER BY si.item_name
+             ORDER BY s.supplier_id, si.item_id
             """;
     }
 
