@@ -97,7 +97,7 @@ public class DBInteractor {
         try
         {
             String sql = query.supplierAndProducts();
-            PreparedStatement ps = c.prepareStatement(sql);
+            PreparedStatement ps = ScreenManager.getConnection().prepareStatement(sql);
             ps.setInt(1, supplierId);   // binds s.supplier_id = ?
             return ps.executeQuery();
         }
@@ -158,7 +158,7 @@ public class DBInteractor {
         try
         {
             String sql = query.createDish(numberOfDishes);
-            PreparedStatement ps = c.prepareStatement(sql);
+            PreparedStatement ps = ScreenManager.getConnection().prepareStatement(sql);
             ps.setInt(1, dishId);   // binds dr.dish_id = ?
             return ps.executeQuery();
         }
@@ -219,7 +219,7 @@ public class DBInteractor {
         try
         {
             String sql = query.expiryReport();
-            PreparedStatement ps = c.prepareStatement(sql);
+            PreparedStatement ps = ScreenManager.getConnection().prepareStatement(sql);
             ps.setInt(1, year);   // purchases.order_year
             ps.setInt(2, month);  // purchases.order_month
             ps.setInt(3, year);   // YEAR(moved_at)
