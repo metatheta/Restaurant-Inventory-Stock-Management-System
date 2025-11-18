@@ -1,5 +1,7 @@
 package db;
 
+import gui.view.ScreenManager;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -29,19 +31,24 @@ import java.sql.PreparedStatement;
 public class DBInteractor {
 
     private final Query query;
-    private Connection c;
     private Statement s;
 
     public DBInteractor(Query q)
     {
         query = q;
-        c = null;
-        s = null;
+        try
+        {
+            s = ScreenManager.getConnection().createStatement();
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+
     }
 
     public ResultSet recordManagement1()
     {
-        createConnection();
         try
         {
             ResultSet rs = s.executeQuery(query.stockItemAndSuppliers());
@@ -51,14 +58,12 @@ public class DBInteractor {
         {
             System.out.println(e.getMessage());
         }
-        closeConnection();
 
         return null;
     }
 
     public ResultSet recordManagement2()
     {
-        createConnection();
         try
         {
             ResultSet rs = s.executeQuery(query.storedItemAndLocations());
@@ -68,14 +73,12 @@ public class DBInteractor {
         {
             System.out.println(e.getMessage());
         }
-        closeConnection();
 
         return null;
     }
 
     public ResultSet recordManagement3()
     {
-        createConnection();
         try
         {
             ResultSet rs = s.executeQuery(query.locationAndStoredItems());
@@ -85,14 +88,12 @@ public class DBInteractor {
         {
             System.out.println(e.getMessage());
         }
-        closeConnection();
 
         return null;
     }
 
     public ResultSet recordManagement4(int supplierId)
     {
-        createConnection();
         try
         {
             String sql = query.supplierAndProducts();
@@ -103,14 +104,12 @@ public class DBInteractor {
         catch (Exception e)
         {
             System.out.println(e.getMessage());
-            closeConnection();
             return null;
         }
     }
 
     public ResultSet transaction1()
     {
-        createConnection();
         try
         {
             ResultSet rs = s.executeQuery(query.restockingItem());
@@ -120,14 +119,12 @@ public class DBInteractor {
         {
             System.out.println(e.getMessage());
         }
-        closeConnection();
 
         return null;
     }
 
     public ResultSet transaction2(String name, String unitOfMeasure, String category)
     {
-        createConnection();
         try
         {
             ResultSet rs = s.executeQuery(query.buyNewStockItem(name, unitOfMeasure, category));
@@ -137,14 +134,12 @@ public class DBInteractor {
         {
             System.out.println(e.getMessage());
         }
-        closeConnection();
 
         return null;
     }
 
     public ResultSet transaction3()
     {
-        createConnection();
         try
         {
             ResultSet rs = s.executeQuery(query.disposeUnusedStock());
@@ -154,14 +149,12 @@ public class DBInteractor {
         {
             System.out.println(e.getMessage());
         }
-        closeConnection();
 
         return null;
     }
 
     public ResultSet transaction4(int dishId, int numberOfDishes)
     {
-        createConnection();
         try
         {
             String sql = query.createDish(numberOfDishes);
@@ -172,14 +165,12 @@ public class DBInteractor {
         catch (Exception e)
         {
             System.out.println(e.getMessage());
-            closeConnection();
             return null;
         }
     }
 
     public ResultSet report1()
     {
-        createConnection();
         try
         {
             ResultSet rs = s.executeQuery(query.preferredSuppliersReport());
@@ -189,14 +180,12 @@ public class DBInteractor {
         {
             System.out.println(e.getMessage());
         }
-        closeConnection();
 
         return null;
     }
 
     public ResultSet report2()
     {
-        createConnection();
         try
         {
             ResultSet rs = s.executeQuery(query.storageDistributionReport());
@@ -206,14 +195,12 @@ public class DBInteractor {
         {
             System.out.println(e.getMessage());
         }
-        closeConnection();
 
         return null;
     }
 
     public ResultSet report3()
     {
-        createConnection();
         try
         {
             ResultSet rs = s.executeQuery(query.seasonalStockReport());
@@ -223,14 +210,12 @@ public class DBInteractor {
         {
             System.out.println(e.getMessage());
         }
-        closeConnection();
 
         return null;
     }
 
     public ResultSet report4(int year, int month)
     {
-        createConnection();
         try
         {
             String sql = query.expiryReport();
@@ -244,33 +229,9 @@ public class DBInteractor {
         catch (Exception e)
         {
             System.out.println(e.getMessage());
-            closeConnection();
             return null;
         }
     }
 
-    private void createConnection()
-    {
-        try
-        {
-            c = DriverManager.getConnection("jdbc:mysql://localhost/crisms_db?" + "user=root&password=p@ssword");
-            s = c.createStatement();
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
-    }
 
-    private void closeConnection()
-    {
-        try
-        {
-            c.close();
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
-    }
 }

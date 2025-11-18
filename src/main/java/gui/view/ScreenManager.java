@@ -29,6 +29,14 @@ public class ScreenManager {
         return connection;
     }
 
+    public static void closeConnection() throws SQLException
+    {
+        if (connection != null && !connection.isClosed())
+        {
+            connection.close();
+        }
+    }
+
     public void displayScreen(String fxml) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource(fxml));
         if (stage.getScene() == null) {
