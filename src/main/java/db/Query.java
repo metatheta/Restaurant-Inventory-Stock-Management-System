@@ -158,6 +158,72 @@ public class Query {
            "WHERE dr.dish_id = ?";
     }
 
+        // Get inventory batches for an item at a location, FEFO (earliest expiry first)
+    public static String getInventoryForItemAtLocationFEFO()
+    {
+        return """
+            SELECT inventory_id,
+                   running_balance,
+                   expiry_date
+            FROM inventory
+            WHERE item_id = ?
+              AND location_id = ?
+              AND visible = 1
+              AND running_balance > 0
+            ORDER BY (expiry_date IS NULL), expiry_date, inventory_id
+            """;
+    }
+
+    // Deduct a quantity from a single inventory row
+    public static String deductFromInventoryBatch()
+    {
+        return """
+            UPDATE inventory
+            SET running_balance = running_balance - ?
+            WHERE inventory_id = ?
+              AND visible = 1
+            """;
+    }
+
+    // Remove inventory rows whose balance is now zero or negative
+    public static String deleteZeroInventoryRows()
+    {
+        return """
+            DELETE FROM inventory
+            WHERE running_balance <= 0
+              AND visible = 1
+            """;
+    }
+
+        // Log one dish consumption transaction
+    public static String recordDishConsumption()
+    {
+        return """
+            INSERT INTO dish_consumption (dish_id, servings, location_id)
+            VALUES (?, ?, ?)
+            """;
+    }
+
+    // Read-only history of dish consumption transactions
+    public static String dishConsumptionHistory()
+    {
+        return """
+            SELECT
+                dc.consumption_id,
+                dc.consumed_at,
+                d.dish_name,
+                dc.servings,
+                sl.storage_name AS location_name
+            FROM dish_consumption dc
+            JOIN dishes d
+              ON dc.dish_id = d.dish_id
+            JOIN stock_locations sl
+              ON dc.location_id = sl.location_id
+            WHERE dc.visible = 1
+            ORDER BY dc.consumed_at DESC, dc.consumption_id DESC
+            """;
+    }
+
     /*
         ###############
         # section 5.0 #
