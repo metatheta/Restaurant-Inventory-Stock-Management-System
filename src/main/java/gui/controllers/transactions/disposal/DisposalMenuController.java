@@ -32,6 +32,7 @@ public class DisposalMenuController {
     }
 
     // TODO write a listview for the items that are expired just so the user can see
+    // TODO add manual disposal selection option
 
     public void disposeItems() {
         DB.enteringTransaction3();

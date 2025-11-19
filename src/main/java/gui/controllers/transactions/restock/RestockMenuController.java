@@ -8,10 +8,7 @@ import org.controlsfx.control.ListSelectionView;
 
 import java.io.IOException;
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class RestockMenuController {
     @FXML
@@ -21,6 +18,8 @@ public class RestockMenuController {
     public void initialize() {
         loadItems();
     }
+
+    // TODO rework into tableview
 
     private void loadItems() {
         Connection conn = ScreenManager.getConnection();
@@ -60,7 +59,7 @@ public class RestockMenuController {
         dialog.showAndWait().ifPresent(this::processOrders);
     }
 
-    private void processOrders(List<RestockEntry> entries) {
+    public void processOrders(List<RestockEntry> entries) {
         List<RestockEntry> validOrders = entries.stream()
                 .filter(e -> e.getQuantityInt() > 0)
                 .toList();
@@ -70,80 +69,55 @@ public class RestockMenuController {
             return;
         }
 
-        Map<SupplierOption, List<RestockEntry>> ordersBySupplier = validOrders.stream()
-                .collect(Collectors.groupingBy(RestockEntry::getSelectedSupplier));
-
         Connection conn = ScreenManager.getConnection();
 
         try {
             conn.setAutoCommit(false);
+            String insertLogSql = "INSERT INTO item_restocks " +
+                    "(item_name, supplier_name, cost_per_unit, quantity, total_cost, storage_location, address) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-            String createPurchaseSql = "INSERT INTO purchases (order_date, receive_date, total_cost, supplier_id) VALUES (?, ?, ?, ?)";
-            String purchaseLineSql = "INSERT INTO purchase_line (quantity, purchase_id, item_id, inventory_id) VALUES (?, ?, ?, ?)";
             String updateInventorySql = "UPDATE inventory SET running_balance = running_balance + ? WHERE inventory_id = ?";
-            String insertMovementSql = "INSERT INTO stock_movement (quantity, transaction_type, item_id, location_id, inventory_id) " +
-                    "SELECT ?, 'RESTOCK', item_id, location_id, inventory_id FROM inventory WHERE inventory_id = ?";
 
-            try (PreparedStatement psPurchase = conn.prepareStatement(createPurchaseSql, Statement.RETURN_GENERATED_KEYS);
-                 PreparedStatement psLine = conn.prepareStatement(purchaseLineSql);
-                 PreparedStatement psInv = conn.prepareStatement(updateInventorySql);
-                 PreparedStatement psMove = conn.prepareStatement(insertMovementSql)) {
+            try (PreparedStatement psLog = conn.prepareStatement(insertLogSql);
+                 PreparedStatement psInv = conn.prepareStatement(updateInventorySql)) {
 
-                for (Map.Entry<SupplierOption, List<RestockEntry>> entry : ordersBySupplier.entrySet()) {
-                    SupplierOption supplier = entry.getKey();
-                    List<RestockEntry> items = entry.getValue();
+                for (RestockEntry order : validOrders) {
+                    String itemName = order.getOriginal().name();
+                    String supplierName = order.getSelectedSupplier().name();
+                    double unitCost = order.getSelectedSupplier().unitCost();
+                    int quantity = order.getQuantityInt();
+                    double totalCost = unitCost * quantity;
+                    String location = order.getOriginal().storage();
+                    String address = order.getOriginal().address();
+                    int inventoryId = order.getOriginal().inventoryId();
 
+                    psLog.setString(1, itemName);
+                    psLog.setString(2, supplierName);
+                    psLog.setDouble(3, unitCost);
+                    psLog.setInt(4, quantity);
+                    psLog.setDouble(5, totalCost);
+                    psLog.setString(6, location);
+                    psLog.setString(7, address);
+                    psLog.addBatch();
 
-                    double totalCost = items.stream()
-                            .mapToDouble(e -> e.getQuantityInt() * supplier.unitCost())
-                            .sum();
-
-                    psPurchase.setDate(1, Date.valueOf(LocalDate.now()));
-                    psPurchase.setDate(2, Date.valueOf(LocalDate.now()));
-                    psPurchase.setDouble(3, totalCost);
-                    psPurchase.setInt(4, supplier.id());
-                    psPurchase.executeUpdate();
-
-                    int purchaseId;
-                    try (ResultSet generatedKeys = psPurchase.getGeneratedKeys()) {
-                        if (generatedKeys.next()) {
-                            purchaseId = generatedKeys.getInt(1);
-                        } else {
-                            throw new SQLException("Creating purchase failed, no ID obtained.");
-                        }
-                    }
-
-                    for (RestockEntry item : items) {
-                        int qty = item.getQuantityInt();
-                        int invId = item.getOriginal().inventoryId();
-                        int itemId = item.getOriginal().itemId();
-
-                        psLine.setInt(1, qty);
-                        psLine.setInt(2, purchaseId);
-                        psLine.setInt(3, itemId);
-                        psLine.setInt(4, invId);
-                        psLine.addBatch();
-
-                        psInv.setDouble(1, qty);
-                        psInv.setInt(2, invId);
-                        psInv.addBatch();
-
-                        psMove.setInt(1, qty);
-                        psMove.setInt(2, invId);
-                        psMove.addBatch();
-                    }
+                    psInv.setDouble(1, quantity);
+                    psInv.setInt(2, inventoryId);
+                    psInv.addBatch();
                 }
 
-                psLine.executeBatch();
+
+                psLog.executeBatch();
                 psInv.executeBatch();
-                psMove.executeBatch();
 
                 conn.commit();
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Restock recorded successfully!");
                 loadItems();
 
             } catch (SQLException e) {
                 conn.rollback();
                 e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Transaction Failed", "An error occurred. No changes saved.");
             } finally {
                 conn.setAutoCommit(true);
             }

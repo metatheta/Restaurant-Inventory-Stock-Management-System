@@ -4,17 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="feat: changed font size of restock list selection">
+    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="feat: edited UI for add / editing">
+      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/purchase/AddLocationDialog.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/purchase/AssignSupplierDialog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_schema.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/db/DBInteractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/db/DBInteractor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/AddRowDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/AddRowDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/CoreTableSQLController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/CoreTableSQLController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/EditRowDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/EditRowDialog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/disposal/DisposalMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/disposal/DisposalMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/tables/core-sql-table.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/tables/core-sql-table.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/tables/table-style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/tables/table-style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/dish-menu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/dish-menu.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/purchase/PurchaseMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/purchase/PurchaseMenuController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/restock/RestockDetailsDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/restock/RestockDetailsDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/restock/RestockMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/restock/RestockMenuController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/purchase-menu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/purchase-menu.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -269,7 +267,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763551937645</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="feat: edited UI for add / editing">
+      <option name="closed" value="true" />
+      <created>1763568433034</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1763568433034</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -314,7 +320,8 @@
     <MESSAGE value="feat: disable edit and add for primary key columns" />
     <MESSAGE value="feat: changed disposal menu layout and made it properly exit the recently disposed table" />
     <MESSAGE value="feat: changed font size of restock list selection" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: changed font size of restock list selection" />
+    <MESSAGE value="feat: edited UI for add / editing" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: edited UI for add / editing" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
