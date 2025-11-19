@@ -176,7 +176,22 @@ public class Query {
 
     public String seasonalStockReport()
     {
-        return "";
+        return "SELECT si.item_id, si.item_name, \n" +
+                "\t\tCOUNT(sm.movement_id) AS totalTransactions,\n" +
+                "        (COUNT(sm.movement_id) / DAY(LAST_DAY(CURRENT_TIMESTAMP))) AS averagePerDayTransactions,\n" +
+                "        CASE \n" +
+                "        WHEN MONTH(CURRENT_TIMESTAMP) BETWEEN 6 AND 11 \n" +
+                "            THEN CONCAT(MONTHNAME(CURRENT_TIMESTAMP()), ', ','Rainy Season')\n" +
+                "\t\t\tELSE CONCAT(MONTHNAME(CURRENT_TIMESTAMP()), ', ','Dry Season')\n" +
+                "\t\tEND AS season\n" +
+                "FROM stock_items si\n" +
+                "\tLEFT JOIN stock_movement sm\n" +
+                "\t\tON si.item_id = sm.item_id\n" +
+                "\tAND MONTH(sm.moved_at) = MONTH(CURRENT_TIMESTAMP()) \n" +
+                "    AND YEAR(sm.moved_at) = YEAR(CURRENT_TIMESTAMP())\n" +
+                "WHERE si.visible = 1 AND sm.visible = 1\n" +
+                "GROUP BY (sm.item_id)\n" +
+                "ORDER BY totalTransactions, averagePerDayTransactions;";
     }
 
     public String expiryReport()
