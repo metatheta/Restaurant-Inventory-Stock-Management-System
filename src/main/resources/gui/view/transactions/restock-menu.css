@@ -1,9 +1,9 @@
-.list-selection-view {
+.check-list-view {
     -fx-font-family: "Inter_FXH";
     -fx-font-size: 18px;
 }
 
-.list-selection-view .list-cell {
+.check-list-view .list-cell {
     -fx-font-family: "Inter_FXH";
     -fx-font-size: 18px;
 }

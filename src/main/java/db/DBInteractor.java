@@ -93,11 +93,11 @@ public class DBInteractor {
         }
     }
 
-    public ResultSet transaction1()
+    public ResultSet getItemsToRestock()
     {
         try
         {
-            ResultSet rs = s.executeQuery(Query.restockingItem());
+            ResultSet rs = s.executeQuery(Query.selectItemsToRestock());
             return rs;
         } catch (Exception e) {
             System.out.println(e.getMessage());

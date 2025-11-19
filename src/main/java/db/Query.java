@@ -79,22 +79,11 @@ public class Query {
     */
 
     public static String selectItemsToRestock() {
-        return "SELECT \n" +
-                "\tinventory_id,\n" +
-                "    item_id,\n" +
-                "    item_name AS 'Item',\n" +
-                "    storage_name AS 'Storage',\n" +
-                "    address AS 'Address',\n" +
-                "    running_balance AS 'Running Balance'\n" +
-                "FROM\n" +
-                "    inventory\n" +
-                "        LEFT JOIN\n" +
-                "    stock_items USING (item_id)\n" +
-                "        LEFT JOIN\n" +
-                "    stock_locations USING (location_id)\n" +
-                "WHERE\n" +
-                "    running_balance = 0\n" +
-                "        AND inventory.visible = 1;";
+        return "SELECT inventory_id, item_id, item_name, storage_name, address, running_balance " +
+                "FROM inventory " +
+                "LEFT JOIN stock_items USING (item_id) " +
+                "LEFT JOIN stock_locations USING (location_id) " +
+                "WHERE inventory.visible = 1";
     }
 
     public static String restockingItem() {
@@ -105,16 +94,14 @@ public class Query {
         return "";
     }
 
-    public static String disposingExpiredItems()
-    {
+    public static String disposingExpiredItems() {
         return "INSERT INTO disposed_items(quantity_disposed, inventory_id)\n" +
                 "SELECT running_balance, inventory_id\n" +
                 "FROM inventory\n" +
                 "WHERE expiry_date < CURRENT_TIMESTAMP() AND running_balance  > 0;";
     }
 
-    public static String recordingDisposedItemsInStockMovement()
-    {
+    public static String recordingDisposedItemsInStockMovement() {
         return "INSERT INTO stock_movement(quantity, transaction_type, item_id, inventory_id, location_id)\n" +
                 "SELECT d.quantity_disposed, 'DISPOSAL', i.item_id, i.inventory_id, i.location_id\n" +
                 "FROM disposed_items d\n" +
@@ -123,8 +110,7 @@ public class Query {
                 "WHERE d.should_update_inventory = 1;";
     }
 
-    public static String updateInventoryAfterDisposing()
-    {
+    public static String updateInventoryAfterDisposing() {
         return "UPDATE inventory i\n" +
                 "\tJOIN disposed_items d\n" +
                 "\t\tON i.inventory_id = d.inventory_id\n" +
@@ -132,8 +118,7 @@ public class Query {
                 "WHERE d.should_update_inventory = 1;";
     }
 
-    public static String displayAllDisposedItems()
-    {
+    public static String displayAllDisposedItems() {
         return "SELECT si.item_name, si.category, sl.storage_name, sl.address\n" +
                 "FROM disposed_items d\n" +
                 "\tJOIN inventory i\n" +
@@ -144,8 +129,7 @@ public class Query {
                 "\t\tON i.location_id = sl.location_id;";
     }
 
-    public static String displayRecentlyDisposedItems()
-    {
+    public static String displayRecentlyDisposedItems() {
         return "SELECT si.item_name, si.category, sl.storage_name, sl.address\n" +
                 "FROM disposed_items d\n" +
                 "\tJOIN inventory i\n" +
@@ -157,16 +141,14 @@ public class Query {
                 "WHERE d.should_update_inventory = 1;";
     }
 
-    public static String updateNewlyDisposedToPreviouslyDisposed()
-    {
+    public static String updateNewlyDisposedToPreviouslyDisposed() {
         return "UPDATE disposed_items\n" +
                 "SET should_update_inventory = 0\n" +
                 "WHERE should_update_inventory = 1;";
     }
 
 
-    public static String createDish(int quantity)
-    {
+    public static String createDish(int quantity) {
         return "SELECT " +
                 "  dr.item_id, " +
                 "  si.item_name, " +
