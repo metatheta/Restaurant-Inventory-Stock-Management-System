@@ -4,11 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="feat: made table IDs visible">
+    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="feat: created disposal menu">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/db_schema.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/AddRowDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/AddRowDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/ColumnStructure.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/ColumnStructure.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/CoreTableSQLController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/CoreTableSQLController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/EditRowDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/EditRowDialog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/disposal/DisposalMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/disposal/DisposalMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/tables/core-sql-table.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/tables/core-sql-table.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/disposal-menu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/disposal-menu.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -232,7 +234,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763544572880</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="feat: created disposal menu">
+      <option name="closed" value="true" />
+      <created>1763549685650</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1763549685650</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -273,7 +283,8 @@
     <MESSAGE value="feat: created 2 types of sql tables the main and the read only" />
     <MESSAGE value="fix: merge from other branch and removed unused button in core tables" />
     <MESSAGE value="feat: made table IDs visible" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: made table IDs visible" />
+    <MESSAGE value="feat: created disposal menu" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: created disposal menu" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

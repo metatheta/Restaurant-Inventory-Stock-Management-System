@@ -45,6 +45,10 @@ public class AddRowDialog extends Dialog<Map<String, String>> {
 
         for (ColumnStructure column : columns) {
             if (column.isHidden()) continue;
+            if (!column.isEditable()) {
+                row++; continue;
+            }
+
             Label columnNameLabel = new Label(columnNames[row] + ":");
             columnNameLabel.setStyle(STYLE);
             grid.add(columnNameLabel, 0, row);

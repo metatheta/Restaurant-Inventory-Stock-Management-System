@@ -45,6 +45,9 @@ public class EditRowDialog extends Dialog<Map<String, String>> {
 
         for (ColumnStructure column : columns) {
             if (column.isHidden()) continue;
+            if (!column.isEditable()) {
+                row++; continue;
+            }
 
             Label columnNameLabel = new Label(columnNames[row] + ":");
             columnNameLabel.setStyle(STYLE);
