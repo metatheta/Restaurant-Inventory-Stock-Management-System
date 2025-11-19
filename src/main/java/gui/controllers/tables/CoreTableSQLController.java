@@ -63,10 +63,8 @@ public class CoreTableSQLController {
                 String columnName = metaData.getColumnName(i);
                 ColumnStructure currentStructure = new ColumnStructure(columnName, metaData.getColumnTypeName(i),
                         metaData.getColumnName(i).equals("visible"), !metaData.isAutoIncrement(i));
-                // We don't have a default foreign key value so I'm gonna include them in the display / add prompt
-                // TODO ask sir about this
-                columnStructures.add(currentStructure);
 
+                columnStructures.add(currentStructure);
                 if (currentStructure.isHidden()) continue;
 
                 TableColumn<Map<String, Object>, Object> tableCol = new TableColumn<>(columnNames[visibleColIndex]);

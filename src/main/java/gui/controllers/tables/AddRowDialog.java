@@ -1,11 +1,17 @@
 package gui.controllers.tables;
 
+import gui.ScreenManager;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +21,12 @@ public class AddRowDialog extends Dialog<Map<String, String>> {
     private GridPane grid;
     private Map<String, Node> inputControls;
     private final String STYLE = "-fx-font-size: 16px";
+    private final String tableName;
+
+    private final List<DateTimePicker> datePickers = new ArrayList<>();
 
     public AddRowDialog(String tableName, List<ColumnStructure> columns, String[] columnNames) {
+        this.tableName = tableName;
         buildUI(tableName);
         initializeInputFields(columns, columnNames);
         this.getDialogPane().setMinHeight(400);
@@ -25,7 +35,7 @@ public class AddRowDialog extends Dialog<Map<String, String>> {
 
     private void buildUI(String tableName) {
         this.setTitle("Add New Row to " + tableName);
-        this.setHeaderText("Enter the details for the new row: ");
+        this.setHeaderText("Enter details: ");
         this.setOnShown(e -> {
             Node header = getDialogPane().getHeader();
             header.setStyle(STYLE);
@@ -41,6 +51,7 @@ public class AddRowDialog extends Dialog<Map<String, String>> {
 
     private void initializeInputFields(List<ColumnStructure> columns, String[] columnNames) {
         inputControls = new HashMap<>();
+        datePickers.clear();
         int row = 0;
 
         for (ColumnStructure column : columns) {
@@ -57,14 +68,25 @@ public class AddRowDialog extends Dialog<Map<String, String>> {
             String colType = column.type().toLowerCase();
 
             if (colType.contains("date") || colType.contains("time") || colType.contains("stamp")) {
-                DateTimePicker dateTimePicker = new DateTimePicker();
-                dateTimePicker.setStyle(STYLE);
-                inputNode = dateTimePicker;
+                DateTimePicker picker = new DateTimePicker();
+                picker.setStyle(STYLE);
+
+                if (datePickers.isEmpty()) {
+                    picker.setCurrentTime();
+                }
+
+                datePickers.add(picker);
+                inputNode = picker;
             } else {
-                TextField textField = new TextField();
-                textField.setStyle(STYLE);
-                textField.setPromptText(column.type());
-                inputNode = textField;
+                ComboBox<String> comboBox = new ComboBox<>();
+                comboBox.setEditable(true);
+                comboBox.setStyle(STYLE);
+                comboBox.setPromptText("Select or type " + column.type());
+                comboBox.setPrefWidth(300);
+
+                List<String> existingValues = fetchDistinctValues(column.name());
+                comboBox.getItems().addAll(existingValues);
+                inputNode = comboBox;
             }
 
             grid.add(inputNode, 1, row);
@@ -72,35 +94,65 @@ public class AddRowDialog extends Dialog<Map<String, String>> {
             row++;
         }
 
-        // TODO make choosing date a proper datepicker
-
         this.getDialogPane().setContent(grid);
         setupValidation();
         setupResultConverter();
+    }
+
+    private List<String> fetchDistinctValues(String columnName) {
+        List<String> values = new ArrayList<>();
+        String sql = "SELECT DISTINCT " + columnName + " FROM " + tableName + " ORDER BY " + columnName + " ASC LIMIT 100";
+        try (Connection conn = ScreenManager.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                String val = rs.getString(1);
+                if (val != null && !val.isBlank()) values.add(val);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return values;
     }
 
     private void setupValidation() {
         this.setOnShown(e -> {
             Button confirmAddButton = (Button) getDialogPane().lookupButton(confirmAddButtonType);
             confirmAddButton.disableProperty().bind(
-                    Bindings.createBooleanBinding(
-                            () -> inputControls.values().stream().anyMatch(node -> {
-                                if (node instanceof TextField) {
-                                    return ((TextField) node).getText().isBlank();
-                                } else if (node instanceof DateTimePicker) {
-                                    return ((DateTimePicker) node).isEmpty();
+                    Bindings.createBooleanBinding(() -> {
+                                boolean hasEmptyFields = inputControls.values().stream().anyMatch(node -> {
+                                    if (node instanceof ComboBox) {
+                                        String text = ((ComboBox<?>) node).getEditor().getText();
+                                        return text == null || text.isBlank();
+                                    } else if (node instanceof DateTimePicker) {
+                                        return ((DateTimePicker) node).isEmpty();
+                                    }
+                                    return true;
+                                });
+
+                                if (hasEmptyFields) return true;
+
+                                if (datePickers.size() >= 2) {
+                                    DateTimePicker restockPicker = datePickers.get(0);
+                                    DateTimePicker expiryPicker = datePickers.get(1);
+
+                                    LocalDateTime restockDate = restockPicker.getDateTimeValue();
+                                    LocalDateTime expiryDate = expiryPicker.getDateTimeValue();
+
+
+                                    if (restockDate != null && expiryDate != null) {
+                                        return expiryDate.isBefore(restockDate);
+                                    }
                                 }
-                                return true;
-                            }),
+
+                                return false;
+                            },
+
                             inputControls.values().stream().map(node -> {
-                                if (node instanceof TextField) {
-                                    return ((TextField) node).textProperty();
-                                } else if (node instanceof DateTimePicker) {
-                                    return ((DateTimePicker) node).getDatePicker().valueProperty();
-                                }
+                                if (node instanceof ComboBox) return ((ComboBox<?>) node).getEditor().textProperty();
+                                if (node instanceof DateTimePicker) return ((DateTimePicker) node).getDateProperty();
                                 return null;
-                            }).toArray(Observable[]::new)
-                    )
+                            }).toArray(Observable[]::new))
             );
         });
     }
@@ -110,10 +162,9 @@ public class AddRowDialog extends Dialog<Map<String, String>> {
             if (dialogButton.equals(confirmAddButtonType)) {
                 Map<String, String> results = new HashMap<>();
                 inputControls.forEach((columnName, node) -> {
-                    if (node instanceof TextField) {
-                        results.put(columnName, ((TextField) node).getText());
+                    if (node instanceof ComboBox) {
+                        results.put(columnName, ((ComboBox<?>) node).getEditor().getText());
                     } else if (node instanceof DateTimePicker) {
-                        // Use the custom getTimestamp method
                         results.put(columnName, ((DateTimePicker) node).getTimestamp());
                     }
                 });

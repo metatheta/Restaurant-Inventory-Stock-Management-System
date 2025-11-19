@@ -179,7 +179,7 @@ public class DBInteractor {
         {
             String sql = Query.createDish(numberOfDishes);
             PreparedStatement ps = ScreenManager.getConnection().prepareStatement(sql);
-            ps.setInt(1, dishId);   // binds dr.dish_id = ?
+            ps.setInt(1, dishId);
             return ps.executeQuery();
         } catch (Exception e) {
             System.out.println(e.getMessage());

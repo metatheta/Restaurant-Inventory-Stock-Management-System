@@ -72,3 +72,18 @@
     .delete-button:hover {
         -fx-background-color: #d96245;
     }
+
+    .combo-box {
+        -fx-font-family: "Inter FHX";
+        -fx-font-size: 18px;
+    }
+
+    .combo-box .list-cell {
+        -fx-font-family: "Inter FHX";
+        -fx-font-size: 16px;
+    }
+
+    .combo-box .button-cell {
+        -fx-font-family: "Inter FHX";
+        -fx-font-size: 16px;
+    }

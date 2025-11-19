@@ -1,11 +1,17 @@
 package gui.controllers.tables;
 
+import gui.ScreenManager;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +21,11 @@ public class EditRowDialog extends Dialog<Map<String, String>> {
     private GridPane grid;
     private Map<String, Node> inputControls;
     private final String STYLE = "-fx-font-size: 16px";
+    private final String tableName;
+    private final List<DateTimePicker> datePickers = new ArrayList<>();
 
     public EditRowDialog(String tableName, List<ColumnStructure> columns, String[] columnNames, Map<String, Object> originalData) {
+        this.tableName = tableName;
         buildUI(tableName);
         initializeInputFields(columns, columnNames, originalData);
         this.getDialogPane().setMinHeight(400);
@@ -41,6 +50,7 @@ public class EditRowDialog extends Dialog<Map<String, String>> {
 
     private void initializeInputFields(List<ColumnStructure> columns, String[] columnNames, Map<String, Object> originalData) {
         inputControls = new HashMap<>();
+        datePickers.clear();
         int row = 0;
 
         for (ColumnStructure column : columns) {
@@ -60,19 +70,26 @@ public class EditRowDialog extends Dialog<Map<String, String>> {
             if (colType.contains("date") || colType.contains("time") || colType.contains("stamp")) {
                 DateTimePicker picker = new DateTimePicker();
                 picker.setStyle(STYLE);
-
                 if (originalValue != null) {
                     picker.setTimestamp(originalValue.toString());
                 }
+
+                datePickers.add(picker);
                 inputNode = picker;
             } else {
-                TextField textField = new TextField();
-                textField.setStyle(STYLE);
-                textField.setPromptText(column.type());
+                ComboBox<String> comboBox = new ComboBox<>();
+                comboBox.setEditable(true);
+                comboBox.setStyle(STYLE);
+                comboBox.setPromptText("Select or type " + column.type());
+                comboBox.setPrefWidth(300);
+
+                List<String> existingValues = fetchDistinctValues(column.name());
+                comboBox.getItems().addAll(existingValues);
+
                 if (originalValue != null && !originalValue.toString().equals("NULL")) {
-                    textField.setText(originalValue.toString());
+                    comboBox.setValue(originalValue.toString());
                 }
-                inputNode = textField;
+                inputNode = comboBox;
             }
 
             grid.add(inputNode, 1, row);
@@ -85,28 +102,57 @@ public class EditRowDialog extends Dialog<Map<String, String>> {
         setupResultConverter();
     }
 
+    private List<String> fetchDistinctValues(String columnName) {
+        List<String> values = new ArrayList<>();
+        String sql = "SELECT DISTINCT " + columnName + " FROM " + tableName + " ORDER BY " + columnName + " ASC LIMIT 100";
+        try (Connection conn = ScreenManager.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                String val = rs.getString(1);
+                if (val != null && !val.isBlank()) values.add(val);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return values;
+    }
+
     private void setupValidation() {
         this.setOnShown(e -> {
             Button confirmButton = (Button) getDialogPane().lookupButton(confirmSaveButtonType);
             confirmButton.disableProperty().bind(
-                    Bindings.createBooleanBinding(
-                            () -> inputControls.values().stream().anyMatch(node -> {
-                                if (node instanceof TextField) {
-                                    return ((TextField) node).getText().isBlank();
-                                } else if (node instanceof DateTimePicker) {
-                                    return ((DateTimePicker) node).isEmpty();
+                    Bindings.createBooleanBinding(() -> {
+                                boolean hasEmptyFields = inputControls.values().stream().anyMatch(node -> {
+                                    if (node instanceof ComboBox) {
+                                        String text = ((ComboBox<?>) node).getEditor().getText();
+                                        return text == null || text.isBlank();
+                                    } else if (node instanceof DateTimePicker) {
+                                        return ((DateTimePicker) node).isEmpty();
+                                    }
+                                    return true;
+                                });
+
+                                if (hasEmptyFields) return true;
+
+                                if (datePickers.size() >= 2) {
+                                    DateTimePicker restockPicker = datePickers.get(0);
+                                    DateTimePicker expiryPicker = datePickers.get(1);
+
+                                    LocalDateTime restockDate = restockPicker.getDateTimeValue();
+                                    LocalDateTime expiryDate = expiryPicker.getDateTimeValue();
+
+                                    if (restockDate != null && expiryDate != null) {
+                                        return expiryDate.isBefore(restockDate);
+                                    }
                                 }
-                                return true;
-                            }),
+                                return false;
+                            },
                             inputControls.values().stream().map(node -> {
-                                if (node instanceof TextField) {
-                                    return ((TextField) node).textProperty();
-                                } else if (node instanceof DateTimePicker) {
-                                    return ((DateTimePicker) node).getDatePicker().valueProperty();
-                                }
+                                if (node instanceof ComboBox) return ((ComboBox<?>) node).getEditor().textProperty();
+                                if (node instanceof DateTimePicker) return ((DateTimePicker) node).getDateProperty();
                                 return null;
-                            }).toArray(Observable[]::new)
-                    )
+                            }).toArray(Observable[]::new))
             );
         });
     }
@@ -116,8 +162,8 @@ public class EditRowDialog extends Dialog<Map<String, String>> {
             if (dialogButton.equals(confirmSaveButtonType)) {
                 Map<String, String> results = new HashMap<>();
                 inputControls.forEach((columnName, node) -> {
-                    if (node instanceof TextField) {
-                        results.put(columnName, ((TextField) node).getText());
+                    if (node instanceof ComboBox) {
+                        results.put(columnName, ((ComboBox<?>) node).getEditor().getText());
                     } else if (node instanceof DateTimePicker) {
                         results.put(columnName, ((DateTimePicker) node).getTimestamp());
                     }

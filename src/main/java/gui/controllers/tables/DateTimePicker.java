@@ -1,5 +1,6 @@
 package gui.controllers.tables;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -29,11 +30,11 @@ public class DateTimePicker extends HBox {
 
     public void setTimestamp(String timestamp) {
         if (timestamp == null || timestamp.equals("NULL") || timestamp.isEmpty()) {
+            datePicker.setValue(null);
+            timeField.setText("");
             return;
         }
         try {
-            // Expecting format: 2025-11-12 09:00:00.0
-            // Split date and time
             String[] parts = timestamp.split(" ");
             datePicker.setValue(LocalDate.parse(parts[0]));
 
@@ -49,6 +50,12 @@ public class DateTimePicker extends HBox {
         } catch (Exception e) {
             System.err.println("Error parsing timestamp: " + timestamp);
         }
+    }
+
+    public void setCurrentTime() {
+        LocalDateTime now = LocalDateTime.now();
+        datePicker.setValue(now.toLocalDate());
+        timeField.setText(now.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
     }
 
     public String getTimestamp() {
@@ -68,8 +75,24 @@ public class DateTimePicker extends HBox {
         }
     }
 
+    public LocalDateTime getDateTimeValue() {
+        LocalDate d = datePicker.getValue();
+        if (d == null) return null;
+        String t = timeField.getText();
+        if (t == null || t.isBlank()) t = "00:00:00";
+        try {
+            return LocalDateTime.of(d, LocalTime.parse(t));
+        } catch (Exception e) {
+            return d.atStartOfDay();
+        }
+    }
+
     public boolean isEmpty() {
         return datePicker.getValue() == null;
+    }
+
+    public ObjectProperty<LocalDate> getDateProperty() {
+        return datePicker.valueProperty();
     }
 
     public DatePicker getDatePicker() {

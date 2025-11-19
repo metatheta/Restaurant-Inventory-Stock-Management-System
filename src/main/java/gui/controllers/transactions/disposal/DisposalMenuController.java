@@ -31,6 +31,8 @@ public class DisposalMenuController {
         });
     }
 
+    // TODO write a listview for the items that are expired just so the user can see
+
     public void disposeItems() {
         DB.enteringTransaction3();
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
