@@ -5,6 +5,8 @@ import gui.ScreenManager;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -18,27 +20,75 @@ import java.util.Map;
 public class CoreTableSQLController {
     @FXML
     private TableView<Map<String, Object>> table;
-
-    private String tableName;
-
     @FXML
     private Label tableTitle;
 
-    private ObservableList<Map<String, Object>> data = FXCollections.observableArrayList();
+    @FXML
+    private ComboBox<String> filterColumnComboBox;
+    @FXML
+    private TextField filterField;
+
+    private String tableName;
+
+    private ObservableList<Map<String, Object>> masterData = FXCollections.observableArrayList();
+    private FilteredList<Map<String, Object>> filteredData;
+    private SortedList<Map<String, Object>> sortedData;
+
+    private Map<String, String> displayToRealColumnNameMap = new HashMap<>();
+
     private List<ColumnStructure> columnStructures = new ArrayList<>();
     private String[] columnNames;
 
     @FXML
     public void initialize() {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+
+        filteredData = new FilteredList<>(masterData, p -> true);
+        sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(table.comparatorProperty());
+        table.setItems(sortedData);
+        filterField.textProperty().addListener((observable, oldValue, newValue) -> updateFilter());
+        filterColumnComboBox.valueProperty().addListener((observable, oldValue, newValue) -> updateFilter());
+    }
+
+    private void updateFilter() {
+        String filterText = filterField.getText();
+        String selectedDisplayCol = filterColumnComboBox.getValue();
+
+        filteredData.setPredicate(row -> {
+            if (filterText == null || filterText.isEmpty()) {
+                return true;
+            }
+
+            String lowerCaseFilter = filterText.toLowerCase();
+
+            if (selectedDisplayCol == null) {
+                return row.values().stream()
+                        .filter(val -> val != null)
+                        .anyMatch(val -> val.toString().toLowerCase().contains(lowerCaseFilter));
+            }
+
+            String dbColumnKey = displayToRealColumnNameMap.get(selectedDisplayCol);
+            if (dbColumnKey != null) {
+                Object val = row.get(dbColumnKey);
+                return val != null && val.toString().toLowerCase().contains(lowerCaseFilter);
+            }
+
+            return false;
+        });
     }
 
     public void loadTable(String tableName, String... columnNames) {
         this.tableName = tableName;
         this.columnNames = columnNames;
+
         table.getColumns().clear();
-        data.clear();
+        masterData.clear();
         columnStructures.clear();
+
+        filterColumnComboBox.getItems().clear();
+        displayToRealColumnNameMap.clear();
+        filterField.clear();
 
         TableColumn<Map<String, Object>, Void> actionCol = new TableColumn<>("Actions");
         actionCol.setMinWidth(300);
@@ -60,19 +110,30 @@ public class CoreTableSQLController {
             int cols = metaData.getColumnCount();
             int visibleColIndex = 0;
             for (int i = 1; i <= cols; i++) {
-                String columnName = metaData.getColumnName(i);
-                ColumnStructure currentStructure = new ColumnStructure(columnName, metaData.getColumnTypeName(i),
+                String dbColumnName = metaData.getColumnName(i);
+
+                ColumnStructure currentStructure = new ColumnStructure(dbColumnName, metaData.getColumnTypeName(i),
                         metaData.getColumnName(i).equals("visible"), !metaData.isAutoIncrement(i));
 
                 columnStructures.add(currentStructure);
                 if (currentStructure.isHidden()) continue;
 
-                TableColumn<Map<String, Object>, Object> tableCol = new TableColumn<>(columnNames[visibleColIndex]);
-                visibleColIndex++;
-                tableCol.setCellValueFactory(cellData ->
-                        new SimpleObjectProperty<>(cellData.getValue().get(columnName))
-                );
-                columnHolder.add(tableCol);
+                if (visibleColIndex < columnNames.length) {
+                    String displayName = columnNames[visibleColIndex];
+                    displayToRealColumnNameMap.put(displayName, dbColumnName);
+                    filterColumnComboBox.getItems().add(displayName);
+
+                    TableColumn<Map<String, Object>, Object> tableCol = new TableColumn<>(displayName);
+                    visibleColIndex++;
+                    tableCol.setCellValueFactory(cellData ->
+                            new SimpleObjectProperty<>(cellData.getValue().get(dbColumnName))
+                    );
+                    columnHolder.add(tableCol);
+                }
+            }
+
+            if (!filterColumnComboBox.getItems().isEmpty()) {
+                filterColumnComboBox.getSelectionModel().selectFirst();
             }
 
             table.getColumns().add(actionCol);
@@ -87,11 +148,12 @@ public class CoreTableSQLController {
                     }
                     row.put(metaData.getColumnName(i), object);
                 }
-                if (row.get("visible").equals(true)) {
-                    data.add(row);
+
+                if (row.get("visible").equals(true) || row.get("visible").equals(1)) {
+                    masterData.add(row);
                 }
             }
-            table.setItems(data);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -137,7 +199,6 @@ public class CoreTableSQLController {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm Deletion");
-
         alert.setHeaderText("Delete row with ID: " + targetId);
         alert.setContentText("This will delete the row. Are you sure?");
 
@@ -233,20 +294,17 @@ public class CoreTableSQLController {
 
         if (idValue == null) return;
 
-        try (
-                Connection conn = ScreenManager.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = ScreenManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setObject(1, idValue);
             ResultSet rs = stmt.executeQuery();
 
             ScreenManager.SINGLETON.loadReadOnlyTableScreen(rs, tableTitle, relatedColumnNames);
 
-        } catch (
-                SQLException | IOException e) {
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
     }
-
 
     public void refreshData() {
         loadTable(tableName, columnNames);

@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="feat: created purchase menu">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/ReportsMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/ReportsMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/reports-menu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/reports-menu.fxml" afterDir="false" />
-    </list>
+    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="feat: reports menu skeleton" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -278,7 +274,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763572146840</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="feat: reports menu skeleton">
+      <option name="closed" value="true" />
+      <created>1763573830212</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1763573830212</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -325,7 +329,8 @@
     <MESSAGE value="feat: changed font size of restock list selection" />
     <MESSAGE value="feat: edited UI for add / editing" />
     <MESSAGE value="feat: created purchase menu" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: created purchase menu" />
+    <MESSAGE value="feat: reports menu skeleton" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: reports menu skeleton" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
