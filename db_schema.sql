@@ -86,7 +86,7 @@ CREATE TABLE purchases(
 
 CREATE TABLE purchase_line(
                               purchase_line_id 	INT				AUTO_INCREMENT			PRIMARY KEY,
-                              quantity 			INT			    NOT NULL				CHECK (quantity >= 0),
+                              quantity 			DECIMAL(12,3)	    NOT NULL				CHECK (quantity >= 0),
                               purchase_id			INT			    NOT NULL,
                               item_id				INT			    NOT NULL,
                               inventory_id		INT,
