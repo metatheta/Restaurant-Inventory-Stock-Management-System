@@ -25,6 +25,8 @@ public class RestockMenuController {
         Connection conn = ScreenManager.getConnection();
         String sql = Query.selectItemsToRestock();
 
+        if (selectionView == null) return;
+
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             selectionView.getSourceItems().clear();

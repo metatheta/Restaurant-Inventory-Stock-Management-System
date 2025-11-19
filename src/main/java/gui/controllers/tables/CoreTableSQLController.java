@@ -264,28 +264,28 @@ public class CoreTableSQLController {
                 idValue = rowData.get("item_id");
                 relatedColumnNames = new String[]{"Item Name", "Unit of Measure", "Category", "Supplier Name",
                         "Contact Person", "Contact Info"};
-                tableTitle = "Stock Item and Suppliers Providing It";
+                tableTitle = "Stock Item and Providing Suppliers";
                 break;
             case "inventory":
                 sql = Query.storedItemAndLocations();
                 idValue = rowData.get("inventory_id");
                 relatedColumnNames = new String[]{"Stored Item", "Running Balance", "Last Restocked", "Expiry Date",
                         "Storage Name", "Address", "Storage Type"};
-                tableTitle = "Inventory Item and Locations It is Present In";
+                tableTitle = "Inventory Item and Storage Locations";
                 break;
             case "stock_locations":
                 sql = Query.locationAndStoredItems();
                 idValue = rowData.get("location_id");
                 relatedColumnNames = new String[]{"Storage Name", "Storage Type", "Address", "Stored Item",
                         "Unit of Measure", "Running Balance", "Item Category"};
-                tableTitle = "Storage Location and Inventory Items Stored There";
+                tableTitle = "Storage Location and Stored Items";
                 break;
             case "suppliers":
                 sql = Query.supplierAndProducts();
                 idValue = rowData.get("supplier_id");
                 relatedColumnNames = new String[]{"Supplier Name", "Contact Person", "Contact Info", "Item Name",
                         "Amount", "Unit Cost"};
-                tableTitle = "Supplier and Products They Provide";
+                tableTitle = "Supplier and Products Provided";
                 break;
             default:
                 System.out.println("Not a core table: " + tableName);
