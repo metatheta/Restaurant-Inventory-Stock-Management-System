@@ -20,7 +20,7 @@
 
     <!-- Return Button Row -->
     <HBox alignment="CENTER">
-        <children>
+        <children> <!-- TODO: maybe change returnButton to a more appropriate back button-->
             <Button fx:id="returnButton"
                     text="Return"
                     onAction="#returnToMainMenu">
