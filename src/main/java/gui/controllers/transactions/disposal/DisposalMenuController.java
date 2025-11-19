@@ -3,8 +3,11 @@ package gui.controllers.transactions.disposal;
 import db.DBInteractor;
 import gui.ScreenManager;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -12,11 +15,20 @@ import java.util.Optional;
 
 public class DisposalMenuController {
 
+    @FXML
+    private AnchorPane root;
+
     private static DBInteractor DB;
 
     @FXML
     public void initialize() {
         DB = new DBInteractor();
+        root.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (oldScene != null && newScene == null) {
+                System.out.println("Running exit code");
+                DB.exitingTransaction3();
+            }
+        });
     }
 
     public void disposeItems() {
@@ -54,7 +66,6 @@ public class DisposalMenuController {
 
     public void returnToMainMenu() {
         try {
-            DB.exitingTransaction3();
             ScreenManager.SINGLETON.displayScreen("/gui/view/main-menu.fxml");
         } catch (IOException e) {
             e.printStackTrace();

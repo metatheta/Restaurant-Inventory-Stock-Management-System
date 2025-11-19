@@ -10,14 +10,14 @@
 
 <VBox prefHeight="900" prefWidth="1300" spacing="8" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.tables.ReadOnlySQLTableController">
 
-    <HBox alignment="CENTER" spacing="130.0">
+    <HBox alignment="CENTER" spacing="150.0">
         <children>
-         <Label fx:id="tableTitle" prefHeight="35.0" prefWidth="770.0" text="Table Title">
+         <Label fx:id="tableTitle" prefHeight="35.0" prefWidth="629.0" text="Table Title">
             <font>
                <Font name="Inter_FXH Regular" size="28.0" />
             </font>
          </Label>
-            <Button fx:id="returnButton" onAction="#returnToMainMenu" text="Return">
+            <Button fx:id="returnButton" onAction="#returnToMainMenu" prefHeight="51.0" prefWidth="290.0" text="Return To Main Menu">
                 <font>
                     <Font name="System Bold" size="24.0" />
                 </font>
