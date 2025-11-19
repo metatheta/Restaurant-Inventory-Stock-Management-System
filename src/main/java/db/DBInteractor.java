@@ -138,7 +138,7 @@ public class DBInteractor {
         return null;
     }
 
-    public void transaction3Part1()
+    public void enteringTransaction3()
     {
         try
         {
@@ -182,7 +182,7 @@ public class DBInteractor {
         return null;
     }
 
-    public void transaction3Part2()
+    public void exitingTransaction3()
     {
         try
         {
