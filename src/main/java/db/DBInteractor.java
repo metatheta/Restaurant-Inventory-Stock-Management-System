@@ -140,7 +140,6 @@ public class DBInteractor {
         try
         {
             s.executeUpdate(Query.disposingExpiredItems());
-            s.executeUpdate(Query.recordingDisposedItemsInStockMovement());
             s.executeUpdate(Query.updateInventoryAfterDisposing());
         }
         catch (Exception e)
