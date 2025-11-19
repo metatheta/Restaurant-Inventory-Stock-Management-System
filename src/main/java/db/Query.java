@@ -77,17 +77,17 @@ public class Query {
         ###############
     */
 
-    public String restockingItem()
+    public static String restockingItem()
     {
         return "";
     }
 
-    public String buyNewStockItem(String name, String unitOfMeasure, String category)
+    public static String buyNewStockItem(String name, String unitOfMeasure, String category)
     {
         return "";
     }
 
-    public String disposingExpiredItems()
+    public static String disposingExpiredItems()
     {
         return "INSERT INTO disposed_items(quantity_disposed, inventory_id)\n" +
                 "SELECT running_balance, inventory_id\n" +
@@ -95,7 +95,7 @@ public class Query {
                 "WHERE expiry_date < CURRENT_TIMESTAMP() AND running_balance  > 0;";
     }
 
-    public String recordingDisposedItemsInStockMovement()
+    public static String recordingDisposedItemsInStockMovement()
     {
         return "INSERT INTO stock_movement(quantity, transaction_type, item_id, inventory_id, location_id)\n" +
                 "SELECT d.quantity_disposed, 'DISPOSAL', i.item_id, i.inventory_id, i.location_id\n" +
@@ -105,7 +105,7 @@ public class Query {
                 "WHERE d.should_update_inventory = 1;";
     }
 
-    public String updateInventoryAfterDisposing()
+    public static String updateInventoryAfterDisposing()
     {
         return "UPDATE inventory i\n" +
                 "\tJOIN disposed_items d\n" +
@@ -114,7 +114,7 @@ public class Query {
                 "WHERE d.should_update_inventory = 1;";
     }
 
-    public String displayAllDisposedItems()
+    public static String displayAllDisposedItems()
     {
         return "SELECT si.item_name, si.category, sl.storage_name, sl.address\n" +
                 "FROM disposed_items d\n" +
@@ -126,7 +126,7 @@ public class Query {
                 "\t\tON i.location_id = sl.location_id;";
     }
 
-    public String displayRecentlyDisposedItems()
+    public static String displayRecentlyDisposedItems()
     {
         return "SELECT si.item_name, si.category, sl.storage_name, sl.address\n" +
                 "FROM disposed_items d\n" +
@@ -139,7 +139,7 @@ public class Query {
                 "WHERE d.should_update_inventory = 1;";
     }
 
-    public String updateNewlyDisposedToPreviouslyDisposed()
+    public static String updateNewlyDisposedToPreviouslyDisposed()
     {
         return "UPDATE disposed_items\n" +
                 "SET should_update_inventory = 0\n" +
@@ -147,7 +147,7 @@ public class Query {
     }
 
 
-    public String createDish(int quantity)
+    public static String createDish(int quantity)
     {
         return "SELECT " +
            "  dr.item_id, " +
@@ -164,17 +164,17 @@ public class Query {
         ###############
     */
 
-    public String preferredSuppliersReport()
+    public static String preferredSuppliersReport()
     {
         return "";
     }
 
-    public String storageDistributionReport()
+    public static String storageDistributionReport()
     {
         return "";
     }
 
-    public String seasonalStockReport()
+    public static String seasonalStockReport()
     {
         return "SELECT si.item_id, si.item_name, \n" +
                 "\t\tCOUNT(sm.movement_id) AS totalTransactions,\n" +
@@ -194,7 +194,7 @@ public class Query {
                 "ORDER BY totalTransactions, averagePerDayTransactions;";
     }
 
-    public String expiryReport()
+    public static String expiryReport()
     {
         return """
             SELECT
