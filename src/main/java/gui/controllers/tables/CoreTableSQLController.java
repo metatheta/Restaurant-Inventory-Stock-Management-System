@@ -6,10 +6,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 
 import java.io.IOException;
 import java.sql.*;
@@ -23,6 +20,9 @@ public class CoreTableSQLController {
     private TableView<Map<String, Object>> table;
 
     private String tableName;
+
+    @FXML
+    private Label tableTitle;
 
     private ObservableList<Map<String, Object>> data = FXCollections.observableArrayList();
     private List<ColumnStructure> columnStructures = new ArrayList<>();
@@ -62,8 +62,7 @@ public class CoreTableSQLController {
             for (int i = 1; i <= cols; i++) {
                 String columnName = metaData.getColumnName(i);
                 ColumnStructure currentStructure = new ColumnStructure(columnName, metaData.getColumnTypeName(i),
-                        metaData.getColumnName(i).equals("visible") ||
-                                metaData.isAutoIncrement(i));
+                        metaData.getColumnName(i).equals("visible"));
                 // We don't have a default foreign key value so I'm gonna include them in the display / add prompt
                 // TODO ask sir about this
                 columnStructures.add(currentStructure);
@@ -253,6 +252,12 @@ public class CoreTableSQLController {
 
     public void refreshData() {
         loadTable(tableName, columnNames);
+    }
+
+    public void setTableTitle(String title) {
+        if (tableTitle != null) {
+            tableTitle.setText(title);
+        }
     }
 
     public void returnToMainMenu() {

@@ -51,12 +51,12 @@ public class ScreenManager {
         }
     }
 
-    public void loadCoreTableScreen(String tableName, String... columnNames) throws IOException {
+    public void loadCoreTableScreen(String tableName, String tableDisplayName, String... columnNames) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/view/tables/core-sql-table.fxml"));
         Parent root = loader.load();
         CoreTableSQLController controller = loader.getController();
         controller.loadTable(tableName, columnNames);
-
+        controller.setTableTitle(tableDisplayName);
         if (stage.getScene() == null) {
             stage.setScene(new Scene(root));
         } else {
