@@ -17,7 +17,7 @@ public class Query {
     {
     }
 
-    public String stockItemAndSuppliers()
+    public static String stockItemAndSuppliers()
     {
         return "SELECT si.item_name, si.unit_of_measure, si.category, s.name, s.contact_person, s.contact_info\n" +
                 "FROM stock_items si\n" +
@@ -29,12 +29,12 @@ public class Query {
                 "ORDER BY si.item_id, s.supplier_id;";
     }
 
-    public String storedItemAndLocations()
+    public static String storedItemAndLocations()
     {
         return "";
     }
 
-    public String locationAndStoredItems()
+    public static String locationAndStoredItems()
     {
         return "SELECT sl.location_id, sl.storage_name, sl.storage_type, sl.address, si.item_id, si.item_name, si.unit_of_measure, si.category\n" +
                 "FROM stock_locations sl\n" +
@@ -46,7 +46,7 @@ public class Query {
                 "ORDER BY sl.location_id, si.item_id;";
     }
 
-    public String supplierAndProducts()
+    public static String supplierAndProducts()
     {
         return """
             SELECT
