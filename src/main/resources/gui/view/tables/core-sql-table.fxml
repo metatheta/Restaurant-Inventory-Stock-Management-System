@@ -16,11 +16,6 @@
                     <Font name="System Bold" size="24.0" />
                 </font>
             </Button>
-            <Button fx:id="returnButton" onAction="#returnToMainMenu" text="View with Related Records">
-                <font>
-                    <Font name="System Bold" size="24.0" />
-                </font>
-            </Button>
          <Button fx:id="returnButton1" layoutX="710.0" layoutY="10.0" onAction="#returnToMainMenu" text="Return">
             <font>
                <Font name="System Bold" size="24.0" />

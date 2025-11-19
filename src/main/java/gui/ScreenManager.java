@@ -64,19 +64,6 @@ public class ScreenManager {
         }
     }
 
-    public void loadReadOnlyTableScreen(String tableName, String... columnNames) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/view/tables/read-only-sql-table.fxml"));
-        Parent root = loader.load();
-        ReadOnlySQLTableController controller = loader.getController();
-        controller.loadTable(tableName, columnNames);
-
-        if (stage.getScene() == null) {
-            stage.setScene(new Scene(root));
-        } else {
-            stage.getScene().setRoot(root);
-        }
-    }
-
     public void loadReadOnlyTableScreen(ResultSet resultSet, String tableTitle, String... columnNames) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/view/tables/read-only-sql-table.fxml"));
         Parent root = loader.load();
