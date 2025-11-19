@@ -101,6 +101,16 @@ public class Query {
                 "WHERE expiry_date < CURRENT_TIMESTAMP() AND running_balance  > 0;";
     }
 
+    public static String setExpiredToZero() {
+        return "UPDATE inventory " +
+                "SET running_balance = 0 " +
+                "WHERE expiry_date < CURRENT_TIMESTAMP() AND running_balance > 0;";
+    }
+
+    public static String getRestockRecords() {
+        return "SELECT * from item_restocks";
+    }
+
     public static String recordingDisposedItemsInStockMovement() {
         return "INSERT INTO stock_movement(quantity, transaction_type, item_id, inventory_id, location_id)\n" +
                 "SELECT d.quantity_disposed, 'DISPOSAL', i.item_id, i.inventory_id, i.location_id\n" +
@@ -120,25 +130,27 @@ public class Query {
 
     public static String displayAllDisposedItems() {
         return "SELECT si.item_name, si.category, sl.storage_name, sl.address\n" +
-                "FROM disposed_items d\n" +
-                "\tJOIN inventory i\n" +
-                "\t\tON d.inventory_id = i.inventory_id\n" +
-                "\tJOIN stock_items si\n" +
-                "\t\tON i.item_id = si.item_id\n" +
-                "\tJOIN stock_locations sl\n" +
-                "\t\tON i.location_id = sl.location_id;";
+                "\tFROM disposed_items d\n" +
+                "\t\tJOIN inventory i\n" +
+                "\t\t\tON d.inventory_id = i.inventory_id\n" +
+                "\t\tJOIN stock_items si\n" +
+                "\t\t\tON i.item_id = si.item_id\n" +
+                "\t\tJOIN stock_locations sl\n" +
+                "\t\t\tON i.location_id = sl.location_id\n" +
+                "\tWHERE d.visible = 1 AND i.visible = 1 AND si.visible = 1 AND sl.visible = 1;";
     }
 
     public static String displayRecentlyDisposedItems() {
         return "SELECT si.item_name, si.category, sl.storage_name, sl.address\n" +
-                "FROM disposed_items d\n" +
-                "\tJOIN inventory i\n" +
-                "\t\tON d.inventory_id = i.inventory_id\n" +
-                "\tJOIN stock_items si\n" +
-                "\t\tON i.item_id = si.item_id\n" +
-                "\tJOIN stock_locations sl\n" +
-                "\t\tON i.location_id = sl.location_id\n" +
-                "WHERE d.should_update_inventory = 1;";
+                "\tFROM disposed_items d\n" +
+                "\t\tJOIN inventory i\n" +
+                "\t\t\tON d.inventory_id = i.inventory_id\n" +
+                "\t\tJOIN stock_items si\n" +
+                "\t\t\tON i.item_id = si.item_id\n" +
+                "\t\tJOIN stock_locations sl\n" +
+                "\t\t\tON i.location_id = sl.location_id\n" +
+                "\tWHERE d.should_update_inventory = 1 AND d.visible = 1 AND i.visible = 1 AND si.visible = 1 AND sl" +
+                ".visible = 1;";
     }
 
     public static String updateNewlyDisposedToPreviouslyDisposed() {
@@ -169,8 +181,51 @@ public class Query {
         return "";
     }
 
-    public static String storageDistributionReport() {
-        return "";
+    public static String storageDistributionReport(int year, int month) {
+        return "SELECT\n" +
+                "    si.item_name,\n" +
+                "    sl.storage_name,\n" +
+                "    sl.address,\n" +
+                "    SUM(t.restocked) AS total_restocked,\n" +
+                "    SUM(t.consumed_or_disposed) AS total_consumed_or_disposed\n" +
+                "FROM (\n" +
+                "    -- 1. DISH CONSUMPTION\n" +
+                "    SELECT\n" +
+                "        dr.item_id,\n" +
+                "        dc.location_id,\n" +
+                "        0 AS restocked,\n" +
+                "        SUM(dr.quantity * dc.servings) AS consumed_or_disposed\n" +
+                "    FROM dish_consumption dc\n" +
+                "    INNER JOIN dish_requirements dr ON dc.dish_id = dr.dish_id\n" +
+                "    WHERE YEAR(dc.consumed_at) = " + year + " AND MONTH(dc.consumed_at) = " + month + "\n" +
+                "    GROUP BY dr.item_id, dc.location_id\n" +
+                "    UNION ALL\n" +
+                "    -- 2. DISPOSED ITEMS\n" +
+                "    SELECT\n" +
+                "        i.item_id,\n" +
+                "        i.location_id,\n" +
+                "        0 AS restocked,\n" +
+                "        SUM(di.quantity_disposed) AS consumed_or_disposed\n" +
+                "    FROM disposed_items di\n" +
+                "    INNER JOIN inventory i ON di.inventory_id = i.inventory_id\n" +
+                "    WHERE YEAR(di.disposed_date) = " + year + " AND MONTH(di.disposed_date) = " + month + "\n" +
+                "    GROUP BY i.item_id, i.location_id\n" +
+                "    UNION ALL\n" +
+                "    -- 3. ITEM RESTOCKS (FIXED: Joined with Inventory to get Location)\n" +
+                "    SELECT\n" +
+                "        i.item_id,\n" +
+                "        i.location_id,\n" +
+                "        SUM(ir.quantity) AS restocked,\n" +
+                "        0 AS consumed_or_disposed\n" +
+                "    FROM item_restocks ir\n" +
+                "    INNER JOIN inventory i ON ir.inventory_id = i.inventory_id\n" +
+                "    WHERE YEAR(ir.restocked_at) = " + year + " AND MONTH(ir.restocked_at) = " + month + "\n" +
+                "    GROUP BY i.item_id, i.location_id\n" +
+                ") t\n" +
+                "INNER JOIN stock_items si ON t.item_id = si.item_id\n" +
+                "INNER JOIN stock_locations sl ON t.location_id = sl.location_id\n" +
+                "GROUP BY t.item_id, t.location_id\n" +
+                "ORDER BY total_restocked DESC;";
     }
 
     public static String seasonalStockReport() {

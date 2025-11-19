@@ -106,6 +106,18 @@ public class DBInteractor {
         return null;
     }
 
+    public ResultSet getRestockRecords() {
+        try
+        {
+            ResultSet rs = s.executeQuery(Query.getRestockRecords());
+            return rs;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return null;
+    }
+
     public ResultSet transaction2(String name, String unitOfMeasure, String category)
     {
         try
@@ -126,6 +138,7 @@ public class DBInteractor {
         try
         {
             s.executeUpdate(Query.disposingExpiredItems());
+            s.executeUpdate(Query.setExpiredToZero());
             s.executeUpdate(Query.recordingDisposedItemsInStockMovement());
             s.executeUpdate(Query.updateInventoryAfterDisposing());
         }
@@ -200,11 +213,11 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet report2()
+    public ResultSet report2(int year, int month)
     {
         try
         {
-            ResultSet rs = s.executeQuery(Query.storageDistributionReport());
+            ResultSet rs = s.executeQuery(Query.storageDistributionReport(year, month));
             return rs;
         } catch (Exception e) {
             System.out.println(e.getMessage());

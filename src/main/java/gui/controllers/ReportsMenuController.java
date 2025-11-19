@@ -2,6 +2,8 @@ package gui.controllers;
 
 import gui.ScreenManager;
 
+import java.io.IOException;
+
 public class ReportsMenuController {
 
     public void preferredSuppliers() {
@@ -9,7 +11,11 @@ public class ReportsMenuController {
     }
 
     public void storageTypeDistribution() {
-
+        try {
+            ScreenManager.SINGLETON.displayScreen("/gui/view/reports/storage-type-distribution.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void seasonalStock() {

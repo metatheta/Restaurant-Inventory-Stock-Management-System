@@ -53,7 +53,7 @@
                </VBox.margin>
                <children>
             
-                    <Button mnemonicParsing="false" onAction="#returnToMainMenu" text="View Records">
+                    <Button mnemonicParsing="false" onAction="#viewRecords" text="View Records">
                         <font>
                             <Font name="System Bold" size="28.0" />
                         </font>

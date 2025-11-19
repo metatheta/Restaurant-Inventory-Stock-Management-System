@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ReadOnlySQLTableController {
+public class ReadOnlyScrollSQLTableController {
 
     @FXML
     private TableView<Map<String, Object>> table;
@@ -37,7 +37,7 @@ public class ReadOnlySQLTableController {
 
     @FXML
     public void initialize() {
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+        table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
         filteredData = new FilteredList<>(masterData, p -> true);
         sortedData = new SortedList<>(filteredData);
@@ -85,7 +85,7 @@ public class ReadOnlySQLTableController {
 
         try {
             ResultSetMetaData metaData = rs.getMetaData();
-            java.util.List<TableColumn<Map<String, Object>, Object>> columnHolder = new java.util.ArrayList<>();
+            List<TableColumn<Map<String, Object>, Object>> columnHolder = new ArrayList<>();
 
             int cols = metaData.getColumnCount();
             int visibleColIndex = 0;
@@ -139,10 +139,6 @@ public class ReadOnlySQLTableController {
         if (tableTitle != null) {
             tableTitle.setText(title);
         }
-    }
-
-    public void setScrollTable() {
-        table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
     }
 
     public void returnToMainMenu() {

@@ -4,13 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="feat: add filtering to read only tables too">
+    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="feat: change restock to use custom check mark table UI">
+      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/reports/StorageTypeDistributionReportController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/reports/YearMonthReportController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/ReadOnlyScrollSQLTableController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/purchase/AddItemDialog.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/purchase/AddSupplierDialog.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/gui/view/reports/expiry-and-waste.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/gui/view/reports/preferred-suppliers.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/gui/view/reports/seasonal-stock.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/gui/view/reports/storage-type-distribution.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/gui/view/tables/read-only-scroll-sql-table.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/db/DBInteractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/db/DBInteractor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/db/Query.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/db/Query.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/ScreenManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/ScreenManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/ReportsMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/ReportsMenuController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/ReadOnlySQLTableController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/ReadOnlySQLTableController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/restock/RestockMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/restock/RestockMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/restock/RestockSelection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/restock/RestockSelection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/restock-list-select.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/restock-menu.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/restock-menu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/restock-menu.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -22,8 +33,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Record" />
-        <option value="FxmlFile" />
         <option value="Class" />
+        <option value="FxmlFile" />
       </list>
     </option>
   </component>
@@ -82,7 +93,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "deletionFromPopupRequiresConfirmation": "false",
     "git-widget-placeholder": "gui/transaction-interface",
-    "last_opened_file_path": "C:/Users/allen/projects/Java/try/Restaurant-Inventory-Stock-Management-System/src/main/resources/fonts",
+    "last_opened_file_path": "C:/Users/allen/projects/Java/try/Restaurant-Inventory-Stock-Management-System/src/main/resources/gui/view/tables",
     "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.28582203",
@@ -91,6 +102,8 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\resources\gui\view\tables" />
+      <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\resources\gui\view\reports" />
       <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\resources\fonts" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -98,6 +111,10 @@
       <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\resources\gui" />
       <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\resources" />
       <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\java" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="gui.controllers.tables" />
+      <recent name="gui.controllers.reports" />
     </key>
   </component>
   <component name="RunManager" selected="Maven.Main Menu">
@@ -306,7 +323,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763575975387</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="feat: change restock to use custom check mark table UI">
+      <option name="closed" value="true" />
+      <created>1763577830818</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1763577830818</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -356,7 +381,8 @@
     <MESSAGE value="feat: reports menu skeleton" />
     <MESSAGE value="feat: made the filtering functional" />
     <MESSAGE value="feat: add filtering to read only tables too" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: add filtering to read only tables too" />
+    <MESSAGE value="feat: change restock to use custom check mark table UI" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: change restock to use custom check mark table UI" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

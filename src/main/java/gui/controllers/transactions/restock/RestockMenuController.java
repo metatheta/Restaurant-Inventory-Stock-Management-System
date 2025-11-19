@@ -9,18 +9,23 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class RestockMenuController {
 
-    @FXML private TableView<RestockSelection> table;
-    @FXML private ComboBox<String> filterColumnComboBox;
-    @FXML private TextField filterField;
+    @FXML
+    private TableView<RestockSelection> table;
+    @FXML
+    private ComboBox<String> filterColumnComboBox;
+    @FXML
+    private TextField filterField;
 
     private ObservableList<RestockSelection> masterData = FXCollections.observableArrayList();
     private FilteredList<RestockSelection> filteredData;
@@ -73,7 +78,6 @@ public class RestockMenuController {
 
     private void setupSortingDefault() {
         TableColumn<RestockSelection, ?> col = table.getColumns().get(4);
-        // Sort by running balance asc
 
         col.setSortType(TableColumn.SortType.ASCENDING);
 
@@ -109,7 +113,7 @@ public class RestockMenuController {
     private void loadItems() {
         if (table == null) return;
 
-        try{
+        try {
             DBInteractor dbInteractor = new DBInteractor();
             ResultSet rs = dbInteractor.getItemsToRestock();
             masterData.clear();
@@ -159,20 +163,25 @@ public class RestockMenuController {
 
         try {
             conn.setAutoCommit(false);
-            String insertLogSql = "INSERT INTO item_restocks (item_name, supplier_name, cost_per_unit, quantity, total_cost, storage_location, address) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+            String insertLogSql = "INSERT INTO item_restocks (inventory_id, item_id, item_name, supplier_name, " +
+                    "cost_per_unit, quantity, total_cost, storage_location, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             String updateInventorySql = "UPDATE inventory SET running_balance = running_balance + ? WHERE inventory_id = ?";
 
             try (PreparedStatement psLog = conn.prepareStatement(insertLogSql);
                  PreparedStatement psInv = conn.prepareStatement(updateInventorySql)) {
 
                 for (RestockEntry order : validOrders) {
-                    psLog.setString(1, order.getOriginal().name());
-                    psLog.setString(2, order.getSelectedSupplier().name());
-                    psLog.setDouble(3, order.getSelectedSupplier().unitCost());
-                    psLog.setInt(4, order.getQuantityInt());
-                    psLog.setDouble(5, order.getSelectedSupplier().unitCost() * order.getQuantityInt());
-                    psLog.setString(6, order.getOriginal().storage());
-                    psLog.setString(7, order.getOriginal().address());
+                    psLog.setInt(1, order.getOriginal().inventoryId());
+                    psLog.setInt(2, order.getOriginal().itemId());
+
+                    psLog.setString(3, order.getOriginal().name());
+                    psLog.setString(4, order.getSelectedSupplier().name());
+                    psLog.setDouble(5, order.getSelectedSupplier().unitCost());
+                    psLog.setInt(6, order.getQuantityInt());
+                    psLog.setDouble(7, order.getSelectedSupplier().unitCost() * order.getQuantityInt());
+                    psLog.setString(8, order.getOriginal().storage());
+                    psLog.setString(9, order.getOriginal().address());
                     psLog.addBatch();
 
                     psInv.setDouble(1, order.getQuantityInt());
@@ -195,6 +204,30 @@ public class RestockMenuController {
                 conn.setAutoCommit(true);
             }
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void viewRecords() {
+        DBInteractor db = new DBInteractor();
+        ResultSet rs = db.getRestockRecords();
+
+        String[] columnNames = {
+                "Item ID",
+                "Inventory ID",
+                "Item Name",
+                "Supplier Name",
+                "Cost per Unit",
+                "Quantity",
+                "Total Cost",
+                "Storage Location",
+                "Address",
+                "Restock Date"
+        };
+
+        try {
+            ScreenManager.SINGLETON.loadReadOnlyTableScreenScroll(rs, "Restock Records", columnNames);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

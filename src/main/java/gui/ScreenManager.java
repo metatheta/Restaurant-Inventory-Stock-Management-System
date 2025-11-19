@@ -2,6 +2,7 @@ package gui;
 
 import gui.controllers.tables.CoreTableSQLController;
 import gui.controllers.tables.ReadOnlySQLTableController;
+import gui.controllers.tables.ReadOnlyScrollSQLTableController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -68,6 +69,19 @@ public class ScreenManager {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/view/tables/read-only-sql-table.fxml"));
         Parent root = loader.load();
         ReadOnlySQLTableController controller = loader.getController();
+        controller.loadTable(resultSet, tableTitle, columnNames);
+
+        if (stage.getScene() == null) {
+            stage.setScene(new Scene(root));
+        } else {
+            stage.getScene().setRoot(root);
+        }
+    }
+
+    public void loadReadOnlyTableScreenScroll(ResultSet resultSet, String tableTitle, String... columnNames) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/view/tables/read-only-scroll-sql-table.fxml"));
+        Parent root = loader.load();
+        ReadOnlyScrollSQLTableController controller = loader.getController();
         controller.loadTable(resultSet, tableTitle, columnNames);
 
         if (stage.getScene() == null) {
