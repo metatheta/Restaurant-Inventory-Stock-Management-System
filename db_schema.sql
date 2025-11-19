@@ -145,6 +145,18 @@ CREATE TABLE disposed_items(
                                FOREIGN KEY (inventory_id)  REFERENCES inventory (inventory_id)	ON DELETE CASCADE
 );
 
+CREATE TABLE dish_consumption(
+    consumption_id INT AUTO_INCREMENT PRIMARY KEY,
+    dish_id        INT           NOT NULL,
+    servings       INT           NOT NULL CHECK (servings > 0),
+    consumed_at    TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    location_id    INT           NOT NULL,
+    visible        TINYINT(1)    DEFAULT 1,
+    FOREIGN KEY (dish_id)     REFERENCES dishes(dish_id)              ON DELETE CASCADE,
+    FOREIGN KEY (location_id) REFERENCES stock_locations(location_id) ON DELETE CASCADE
+);
+
+
 -- STOCK ITEMS
 INSERT INTO stock_items (item_name, unit_of_measure, category)
 VALUES
