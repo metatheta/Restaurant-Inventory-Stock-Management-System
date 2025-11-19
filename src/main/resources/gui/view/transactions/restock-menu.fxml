@@ -6,30 +6,34 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.ListSelectionView?>
+<AnchorPane prefHeight="900.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="gui.controllers.transactions.restock.RestockMenuController">
+    <children>
+        <VBox alignment="CENTER" layoutX="99.0" layoutY="29.0" prefHeight="513.0" prefWidth="1102.0">
+            <children>
+                <Label alignment="CENTER" prefHeight="93.0" prefWidth="877.0" text="Select Items to Restock">
+                    <font>
+                        <Font name="System Bold" size="36.0"/>
+                    </font>
+                </Label>
 
-<AnchorPane prefHeight="900.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.transactions.restock.RestockMenuController">
-   <children>
-      <VBox alignment="CENTER" layoutX="99.0" layoutY="29.0" prefHeight="513.0" prefWidth="1102.0">
-         <children>
-            <Label alignment="CENTER" prefHeight="93.0" prefWidth="877.0" text="Select Items to Restock">
-               <font>
-                  <Font name="System Bold" size="36.0" />
-               </font>
-            </Label>
+                <ListSelectionView fx:id="selectionView" prefHeight="367.0" prefWidth="1102.0"
+                                   stylesheets="@restock-list-select.css"/>
 
-            <ListSelectionView fx:id="selectionView" prefHeight="367.0" prefWidth="1102.0" />
-
-            <Button mnemonicParsing="false" onAction="#onConfirmSelection" prefHeight="42.0" prefWidth="176.0" text="Confirm Selection">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </Button>
-         </children>
-      </VBox>
-      <Button layoutX="489.0" layoutY="669.0" mnemonicParsing="false" onAction="#returnToMainMenu" text="Return to Main Menu">
-         <font>
-            <Font name="System Bold" size="28.0" />
-         </font>
-      </Button>
-   </children>
+                <Button mnemonicParsing="false" onAction="#onConfirmSelection" prefHeight="42.0" prefWidth="176.0"
+                        text="Confirm Selection">
+                    <font>
+                        <Font name="System Bold" size="18.0"/>
+                    </font>
+                </Button>
+            </children>
+        </VBox>
+        <Button layoutX="489.0" layoutY="669.0" mnemonicParsing="false" onAction="#returnToMainMenu"
+                text="Return to Main Menu">
+            <font>
+                <Font name="System Bold" size="28.0"/>
+            </font>
+        </Button>
+    </children>
 </AnchorPane>
