@@ -196,45 +196,39 @@ public class Query {
 
     public static String expiryReport()
     {
-        return """
-            SELECT
-                si.item_id,
-                si.item_name,
-                COALESCE(p.total_purchased, 0) AS total_purchased,
-                COALESCE(d.total_disposed, 0) AS total_disposed,
-                CASE
-                    WHEN COALESCE(p.total_purchased, 0) = 0 THEN NULL
-                    ELSE (COALESCE(d.total_disposed, 0) / p.total_purchased) * 100
-                END AS waste_percentage
-            FROM stock_items si
-            LEFT JOIN (
-                SELECT
-                    pl.item_id,
-                    SUM(pl.quantity) AS total_purchased
-                FROM purchase_line pl
-                JOIN purchases pu
-                  ON pl.purchase_id = pu.purchase_id
-                WHERE pu.order_year  = ?
-                  AND pu.order_month = ?
-                  AND pu.visible     = 1
-                  AND pl.visible     = 1
-                GROUP BY pl.item_id
-            ) p
-              ON si.item_id = p.item_id
-            LEFT JOIN (
-                SELECT
-                    sm.item_id,
-                    SUM(sm.quantity) AS total_disposed
-                FROM stock_movement sm
-                WHERE sm.transaction_type = 'DISPOSAL'
-                  AND YEAR(sm.moved_at)  = ?
-                  AND MONTH(sm.moved_at) = ?
-                  AND sm.visible         = 1
-                GROUP BY sm.item_id
-            ) d
-              ON si.item_id = d.item_id
-            WHERE si.visible = 1
-            ORDER BY waste_percentage DESC IS NULL, waste_percentage DESC
-            """;
+        return "SELECT si.item_name, \n" +
+                "\t\tCASE \n" +
+                "\t\t\tWHEN d.totalQuantityDisposed IS NULL THEN 0\n" +
+                "\t\t\tELSE d.totalQuantityDisposed\n" +
+                "\t\tEND AS totalQuantityDisposed,\n" +
+                "        CASE\n" +
+                "\t\t\tWHEN p.totalQuantityPurchased IS NULL THEN 0\n" +
+                "            ELSE p.totalQuantityPurchased\n" +
+                "\t\tEND AS totalQuantityPurchased,\n" +
+                "        totalQuantityDisposed / totalQuantityPurchased AS disposedPurchasedRatio\n" +
+                "FROM stock_items si\n" +
+                "\tLEFT JOIN(\n" +
+                "\t\t\t\tSELECT SUM(di.quantity_disposed) AS totalQuantityDisposed, i.item_id\n" +
+                "                FROM disposed_items di\n" +
+                "\t\t\t\t\tJOIN inventory i\n" +
+                "\t\t\t\t\t\tON di.inventory_id = i.inventory_id\n" +
+                "\t\t\t\tWHERE YEAR(di.disposed_date) = YEAR(CURRENT_TIMESTAMP()) AND MONTH(di.disposed_date) = MONTH(CURRENT_TIMESTAMP())\n" +
+                "\t\t\t\t\tAND di.visible = 1 AND i.visible = 1\n" +
+                "\t\t\t\tGROUP BY i.item_id\n" +
+                "\t\t\t) d\n" +
+                "\t\tON si.item_id = d.item_id\n" +
+                "\tLEFT JOIN (\n" +
+                "\t\t\t\tSELECT SUM(pl.quantity) AS totalQuantityPurchased, i.item_id\n" +
+                "                FROM inventory i\n" +
+                "\t\t\t\t\tJOIN purchase_line pl\n" +
+                "\t\t\t\t\t\tON i.inventory_id = pl.inventory_id\n" +
+                "\t\t\t\t\tJOIN purchases pu\n" +
+                "\t\t\t\t\t\tON pl.purchase_id = pu.purchase_id\n" +
+                "\t\t\t\tWHERE YEAR(pu.receive_date) = YEAR(CURRENT_TIMESTAMP()) AND MONTH(pu.receive_date) = MONTH(CURRENT_TIMESTAMP())\n" +
+                "                AND i.visible = 1 AND pl.visible = 1 AND pu.visible = 1\n" +
+                "\t\t\t\tGROUP BY i.item_id\n" +
+                "\t\t\t ) p\n" +
+                "\t\tON si.item_id = p.item_id\n" +
+                "\tORDER BY totalQuantityDisposed / totalQuantityPurchased;";
     }
 }

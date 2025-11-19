@@ -252,23 +252,18 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet report4(int year, int month)
+    public ResultSet report4()
     {
         try
         {
-            String sql = Query.expiryReport();
-            PreparedStatement ps = ScreenManager.getConnection().prepareStatement(sql);
-            ps.setInt(1, year);   // purchases.order_year
-            ps.setInt(2, month);  // purchases.order_month
-            ps.setInt(3, year);   // YEAR(moved_at)
-            ps.setInt(4, month);  // MONTH(moved_at)
-            return ps.executeQuery();
+            ResultSet rs = s.executeQuery(Query.expiryReport());
+            return rs;
         }
         catch (Exception e)
         {
             System.out.println(e.getMessage());
-            return null;
         }
+        return null;
     }
 
 
