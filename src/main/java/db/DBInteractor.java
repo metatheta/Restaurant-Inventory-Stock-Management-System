@@ -27,13 +27,12 @@ import java.sql.Statement;
  */
 
 public class DBInteractor {
-
-    private final Query query;
     private Statement s;
 
-    public DBInteractor(Query q) {
-        query = q;
-        try {
+    public DBInteractor()
+    {
+        try
+        {
             s = ScreenManager.getConnection().createStatement();
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -41,9 +40,11 @@ public class DBInteractor {
 
     }
 
-    public ResultSet recordManagement1() {
-        try {
-            ResultSet rs = s.executeQuery(query.stockItemAndSuppliers());
+    public ResultSet recordManagement1()
+    {
+        try
+        {
+            ResultSet rs = s.executeQuery(Query.stockItemAndSuppliers());
             return rs;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -52,9 +53,11 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet recordManagement2() {
-        try {
-            ResultSet rs = s.executeQuery(query.storedItemAndLocations());
+    public ResultSet recordManagement2()
+    {
+        try
+        {
+            ResultSet rs = s.executeQuery(Query.storedItemAndLocations());
             return rs;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -63,9 +66,11 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet recordManagement3() {
-        try {
-            ResultSet rs = s.executeQuery(query.locationAndStoredItems());
+    public ResultSet recordManagement3()
+    {
+        try
+        {
+            ResultSet rs = s.executeQuery(Query.locationAndStoredItems());
             return rs;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -74,9 +79,11 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet recordManagement4(int supplierId) {
-        try {
-            String sql = query.supplierAndProducts();
+    public ResultSet recordManagement4(int supplierId)
+    {
+        try
+        {
+            String sql = Query.supplierAndProducts();
             PreparedStatement ps = ScreenManager.getConnection().prepareStatement(sql);
             ps.setInt(1, supplierId);   // binds s.supplier_id = ?
             return ps.executeQuery();
@@ -86,9 +93,11 @@ public class DBInteractor {
         }
     }
 
-    public ResultSet transaction1() {
-        try {
-            ResultSet rs = s.executeQuery(query.restockingItem());
+    public ResultSet transaction1()
+    {
+        try
+        {
+            ResultSet rs = s.executeQuery(Query.restockingItem());
             return rs;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -97,9 +106,40 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet transaction2(String name, String unitOfMeasure, String category) {
-        try {
-            ResultSet rs = s.executeQuery(query.buyNewStockItem(name, unitOfMeasure, category));
+    public ResultSet transaction2(String name, String unitOfMeasure, String category)
+    {
+        try
+        {
+            ResultSet rs = s.executeQuery(Query.buyNewStockItem(name, unitOfMeasure, category));
+            return rs;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+
+        return null;
+    }
+
+    public void enteringTransaction3()
+    {
+        try
+        {
+            s.executeUpdate(Query.disposingExpiredItems());
+            s.executeUpdate(Query.recordingDisposedItemsInStockMovement());
+            s.executeUpdate(Query.updateInventoryAfterDisposing());
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public ResultSet displayAllDisposedItems()
+    {
+        try
+        {
+            ResultSet rs = s.executeQuery(Query.displayAllDisposedItems());
             return rs;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -108,9 +148,11 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet transaction3() {
-        try {
-            ResultSet rs = s.executeQuery(query.disposeUnusedStock());
+    public ResultSet displayRecentlyDisposedItems()
+    {
+        try
+        {
+            ResultSet rs = s.executeQuery(Query.displayRecentlyDisposedItems());
             return rs;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -119,9 +161,23 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet transaction4(int dishId, int numberOfDishes) {
-        try {
-            String sql = query.createDish(numberOfDishes);
+    public void exitingTransaction3()
+    {
+        try
+        {
+            s.executeUpdate(Query.updateNewlyDisposedToPreviouslyDisposed());
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public ResultSet transaction4(int dishId, int numberOfDishes)
+    {
+        try
+        {
+            String sql = Query.createDish(numberOfDishes);
             PreparedStatement ps = ScreenManager.getConnection().prepareStatement(sql);
             ps.setInt(1, dishId);   // binds dr.dish_id = ?
             return ps.executeQuery();
@@ -131,9 +187,11 @@ public class DBInteractor {
         }
     }
 
-    public ResultSet report1() {
-        try {
-            ResultSet rs = s.executeQuery(query.preferredSuppliersReport());
+    public ResultSet report1()
+    {
+        try
+        {
+            ResultSet rs = s.executeQuery(Query.preferredSuppliersReport());
             return rs;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -142,9 +200,11 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet report2() {
-        try {
-            ResultSet rs = s.executeQuery(query.storageDistributionReport());
+    public ResultSet report2()
+    {
+        try
+        {
+            ResultSet rs = s.executeQuery(Query.storageDistributionReport());
             return rs;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -153,9 +213,11 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet report3() {
-        try {
-            ResultSet rs = s.executeQuery(query.seasonalStockReport());
+    public ResultSet report3()
+    {
+        try
+        {
+            ResultSet rs = s.executeQuery(Query.seasonalStockReport());
             return rs;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -164,9 +226,11 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet report4(int year, int month) {
-        try {
-            String sql = query.expiryReport();
+    public ResultSet report4(int year, int month)
+    {
+        try
+        {
+            String sql = Query.expiryReport();
             PreparedStatement ps = ScreenManager.getConnection().prepareStatement(sql);
             ps.setInt(1, year);   // purchases.order_year
             ps.setInt(2, month);  // purchases.order_month
