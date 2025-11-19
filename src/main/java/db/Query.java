@@ -177,21 +177,55 @@ public class Query {
     public static String seasonalStockReport()
     {
         return "SELECT si.item_id, si.item_name, \n" +
-                "\t\tCOUNT(sm.movement_id) AS totalTransactions,\n" +
-                "        (COUNT(sm.movement_id) / DAY(LAST_DAY(CURRENT_TIMESTAMP))) AS averagePerDayTransactions,\n" +
-                "        CASE \n" +
-                "        WHEN MONTH(CURRENT_TIMESTAMP) BETWEEN 6 AND 11 \n" +
-                "            THEN CONCAT(MONTHNAME(CURRENT_TIMESTAMP()), ', ','Rainy Season')\n" +
-                "\t\t\tELSE CONCAT(MONTHNAME(CURRENT_TIMESTAMP()), ', ','Dry Season')\n" +
-                "\t\tEND AS season\n" +
+                "\tCASE\n" +
+                "\t\tWHEN ins.totalTransactions IS NULL THEN 0 \n" +
+                "        ELSE ins.totalTransactions\n" +
+                "\tEND AS movementInTotalTransactions,\n" +
+                "    CASE\n" +
+                "\t\tWHEN ins.averagePerDayTransactions IS NULL THEN 0\n" +
+                "        ELSE ins.averagePerDayTransactions\n" +
+                "\tEND AS movementInAveragePerDayTransactions,\n" +
+                "    CASE \n" +
+                "\t\tWHEN outs.totalTransactions IS NULL THEN 0\n" +
+                "        ELSE outs.totalTransactions\n" +
+                "\tEND AS movementOutTotalTransactions,\n" +
+                "    CASE\n" +
+                "\t\tWHEN outs.averagePerDayTransactions IS NULL THEN 0\n" +
+                "        ELSE outs.averagePerDayTransactions\n" +
+                "\tEND AS movementOutAveragePerDayTransactions,\n" +
+                "\tCASE \n" +
+                "\t\tWHEN MONTH(CURRENT_TIMESTAMP) BETWEEN 6 AND 11 \n" +
+                "\t\tTHEN CONCAT(MONTHNAME(CURRENT_TIMESTAMP()), ', ','Rainy Season')\n" +
+                "\t\tELSE CONCAT(MONTHNAME(CURRENT_TIMESTAMP()), ', ','Dry Season')\n" +
+                "\tEND AS season\n" +
                 "FROM stock_items si\n" +
-                "\tLEFT JOIN stock_movement sm\n" +
-                "\t\tON si.item_id = sm.item_id\n" +
-                "\tAND MONTH(sm.moved_at) = MONTH(CURRENT_TIMESTAMP()) \n" +
-                "    AND YEAR(sm.moved_at) = YEAR(CURRENT_TIMESTAMP())\n" +
-                "WHERE si.visible = 1 AND sm.visible = 1\n" +
-                "GROUP BY (sm.item_id)\n" +
-                "ORDER BY totalTransactions, averagePerDayTransactions;";
+                "\tLEFT JOIN (\n" +
+                "\t\t\t\tSELECT si.item_id,\n" +
+                "\t\t\t\t\tCOUNT(sm.movement_id) AS totalTransactions,\n" +
+                "                    (COUNT(sm.movement_id) / DAY(LAST_DAY(CURRENT_TIMESTAMP))) AS averagePerDayTransactions\n" +
+                "                FROM stock_items si\n" +
+                "\t\t\t\t\tLEFT JOIN stock_movement sm\n" +
+                "\t\t\t\t\t\tON si.item_id = sm.item_id\n" +
+                "\t\t\t\t\tAND MONTH(sm.moved_at) = MONTH(CURRENT_TIMESTAMP())\n" +
+                "\t\t\t\t\tAND YEAR(sm.moved_at) = YEAR(CURRENT_TIMESTAMP())\n" +
+                "\t\t\t\tWHERE si.visible = 1 AND sm.visible = 1 AND sm.transaction_type IN ('RESTOCK','TRANSFER_IN')\n" +
+                "\t\t\t\tGROUP BY (sm.item_id)\n" +
+                "\t\t\t  ) ins \n" +
+                "              ON si.item_id = ins.item_id\n" +
+                "\tLEFT JOIN (\n" +
+                "\t\t\t\tSELECT si.item_id,\n" +
+                "\t\t\t\t\tCOUNT(sm.movement_id) AS totalTransactions,\n" +
+                "                    (COUNT(sm.movement_id) / DAY(LAST_DAY(CURRENT_TIMESTAMP))) AS averagePerDayTransactions\n" +
+                "                FROM stock_items si\n" +
+                "\t\t\t\t\tLEFT JOIN stock_movement sm\n" +
+                "\t\t\t\t\t\tON si.item_id = sm.item_id\n" +
+                "\t\t\t\t\tAND MONTH(sm.moved_at) = MONTH(CURRENT_TIMESTAMP())\n" +
+                "\t\t\t\t\tAND YEAR(sm.moved_at) = YEAR(CURRENT_TIMESTAMP())\n" +
+                "\t\t\t\tWHERE si.visible = 1 AND sm.visible = 1 AND sm.transaction_type IN ('CONSUMPTION','TRANSFER_OUT')\n" +
+                "\t\t\t\tGROUP BY (sm.item_id)\n" +
+                "\t\t\t  ) outs\n" +
+                "              ON si.item_id = outs.item_id\n" +
+                "ORDER BY si.item_id;";
     }
 
     public static String expiryReport()
