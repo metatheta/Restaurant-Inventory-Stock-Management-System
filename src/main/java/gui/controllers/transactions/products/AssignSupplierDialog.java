@@ -1,4 +1,4 @@
-package gui.controllers.transactions.purchase;
+package gui.controllers.transactions.products;
 
 import gui.ScreenManager;
 import javafx.geometry.Insets;
@@ -7,8 +7,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AssignSupplierDialog extends Dialog<Boolean> {
 

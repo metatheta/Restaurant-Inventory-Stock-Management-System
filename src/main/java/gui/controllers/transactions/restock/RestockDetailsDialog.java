@@ -1,7 +1,7 @@
 package gui.controllers.transactions.restock;
 
 import gui.ScreenManager;
-import gui.controllers.transactions.purchase.AssignSupplierDialog;
+import gui.controllers.transactions.products.AssignSupplierDialog;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;

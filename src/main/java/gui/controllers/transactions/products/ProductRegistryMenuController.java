@@ -1,4 +1,4 @@
-package gui.controllers.transactions.purchase;
+package gui.controllers.transactions.products;
 
 import db.DBInteractor;
 import gui.ScreenManager;
