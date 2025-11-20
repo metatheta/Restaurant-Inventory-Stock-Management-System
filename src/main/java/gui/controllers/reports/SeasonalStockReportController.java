@@ -13,23 +13,17 @@ import java.time.Year;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
-public class YearMonthReportController {
+public class SeasonalStockReportController {
 
     @FXML
     private ComboBox<Integer> yearComboBox;
     @FXML
     private ComboBox<String> monthComboBox;
 
-    private int reportType;
-
     @FXML
     public void initialize() {
         populateYears();
         populateMonths();
-    }
-
-    public void setReportType(int reportType) {
-        this.reportType = reportType;
     }
 
     private void populateYears() {
@@ -64,14 +58,14 @@ public class YearMonthReportController {
         int monthIndex = Month.valueOf(selectedMonth.toUpperCase()).getValue();
 
         DBInteractor db = new DBInteractor();
-        ResultSet rs = db.report4(selectedYear, monthIndex);
+        ResultSet rs = db.report1(selectedYear, monthIndex);
 
         try {
-            String reportTitle = "Report for " + selectedMonth + " " + selectedYear;
+            String reportTitle = "Expiry Waste Report for " + selectedMonth + " " + selectedYear;
             ScreenManager.SINGLETON.loadReadOnlyTableScreen(
                     rs,
                     reportTitle,
-                    "ID", "Date", "Description", "Amount" // <--- CHANGE THESE to match your DB columns
+                    "Item", "Total Quantity Disposed", "Total Quantity Purchased", "Disposal-Purchase Ratio"
             );
 
         } catch (IOException e) {

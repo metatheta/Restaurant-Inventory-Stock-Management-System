@@ -58,14 +58,14 @@ public class ExpiryWasteReportController {
         int monthIndex = Month.valueOf(selectedMonth.toUpperCase()).getValue();
 
         DBInteractor db = new DBInteractor();
-        ResultSet rs = db.report2(selectedYear, monthIndex);
+        ResultSet rs = db.report4(selectedYear, monthIndex);
 
         try {
-            String reportTitle = "Report for " + selectedMonth + " " + selectedYear;
+            String reportTitle = "Expiry Waste Report for " + selectedMonth + " " + selectedYear;
             ScreenManager.SINGLETON.loadReadOnlyTableScreen(
                     rs,
                     reportTitle,
-                    "Item Name", "Storage Name", "Address", "Total Restocked", "Total Consumed/Disposed"
+                    "Item", "Total Quantity Disposed", "Total Quantity Purchased", "Disposal-Purchase Ratio"
             );
 
         } catch (IOException e) {

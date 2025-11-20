@@ -23,11 +23,19 @@ public class ReportsMenuController {
     }
 
     public void seasonalStock() {
-
+        try {
+            ScreenManager.SINGLETON.displayScreen("/gui/view/reports/seasonal-stock.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void expiryAndWaste() {
-
+        try {
+            ScreenManager.SINGLETON.displayScreen("/gui/view/reports/expiry-and-waste.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void returnToMainMenu() {

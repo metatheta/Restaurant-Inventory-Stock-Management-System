@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class RestockDetailsDialog extends Dialog<List<RestockEntry>> {
 
     private final TableView<RestockEntry> table = new TableView<>();
-    private final SupplierOption ADD_NEW_OPTION = new SupplierOption(-1, "[+ Assign/Create Supplier]", "", 0, 0);
+    private final SupplierOption ADD_NEW_OPTION = new SupplierOption(-1, "[+ Assign/Create Supplier]", "", 0);
 
     public RestockDetailsDialog(List<RestockSelection> selectedItems) {
         this.setTitle("Restock Details");
@@ -124,7 +124,7 @@ public class RestockDetailsDialog extends Dialog<List<RestockEntry>> {
         String placeholders = items.stream().map(i -> "?").collect(Collectors.joining(","));
 
         String sql = "SELECT s.supplier_id, s.name, s.contact_person, " +
-                "p.item_id, p.amount, p.unit_cost " +
+                "p.item_id, p.unit_cost " +
                 "FROM suppliers s " +
                 "LEFT JOIN supplier_products p USING (supplier_id) " +
                 "WHERE p.item_id IN (" + placeholders + ")";
@@ -142,7 +142,6 @@ public class RestockDetailsDialog extends Dialog<List<RestockEntry>> {
                             rs.getInt("supplier_id"),
                             rs.getString("name"),
                             rs.getString("contact_person"),
-                            rs.getInt("amount"),
                             rs.getDouble("unit_cost")
                     );
                     map.computeIfAbsent(itemId, k -> new ArrayList<>()).add(sup);

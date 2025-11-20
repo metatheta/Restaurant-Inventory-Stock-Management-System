@@ -383,12 +383,8 @@ public class DBInteractor {
 
     public ResultSet report4(int year, int month) {
         try {
-            String sql = Query.expiryReport();
+            String sql = Query.expiryReport(year, month);
             PreparedStatement ps = ScreenManager.getConnection().prepareStatement(sql);
-            ps.setInt(1, year);   // purchases.order_year
-            ps.setInt(2, month);  // purchases.order_month
-            ps.setInt(3, year);   // YEAR(moved_at)
-            ps.setInt(4, month);  // MONTH(moved_at)
             return ps.executeQuery();
         } catch (Exception e) {
             System.out.println(e.getMessage());

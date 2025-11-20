@@ -378,46 +378,39 @@ public class Query {
         return "";
     }
 
-    public static String expiryReport() {
-        return """
-                SELECT
-                    si.item_id,
-                    si.item_name,
-                    COALESCE(p.total_purchased, 0) AS total_purchased,
-                    COALESCE(d.total_disposed, 0) AS total_disposed,
-                    CASE
-                        WHEN COALESCE(p.total_purchased, 0) = 0 THEN NULL
-                        ELSE (COALESCE(d.total_disposed, 0) / p.total_purchased) * 100
-                    END AS waste_percentage
-                FROM stock_items si
-                LEFT JOIN (
-                    SELECT
-                        pl.item_id,
-                        SUM(pl.quantity) AS total_purchased
-                    FROM purchase_line pl
-                    JOIN purchases pu
-                      ON pl.purchase_id = pu.purchase_id
-                    WHERE pu.order_year  = ?
-                      AND pu.order_month = ?
-                      AND pu.visible     = 1
-                      AND pl.visible     = 1
-                    GROUP BY pl.item_id
-                ) p
-                  ON si.item_id = p.item_id
-                LEFT JOIN (
-                    SELECT
-                        sm.item_id,
-                        SUM(sm.quantity) AS total_disposed
-                    FROM stock_movement sm
-                    WHERE sm.transaction_type = 'DISPOSAL'
-                      AND YEAR(sm.moved_at)  = ?
-                      AND MONTH(sm.moved_at) = ?
-                      AND sm.visible         = 1
-                    GROUP BY sm.item_id
-                ) d
-                  ON si.item_id = d.item_id
-                WHERE si.visible = 1
-                ORDER BY waste_percentage DESC IS NULL, waste_percentage DESC
-                """;
+    public static String expiryReport(int year, int month) {
+        return "SELECT si.item_name,\n"
+                + "       COALESCE(d.totalQuantityDisposed, 0) AS totalQuantityDisposed,\n"
+                + "       COALESCE(p.totalQuantityPurchased, 0) AS totalQuantityPurchased,\n"
+                + "       CASE\n"
+                + "           WHEN COALESCE(p.totalQuantityPurchased, 0) = 0 THEN 0.00\n"
+                + "           WHEN COALESCE(d.totalQuantityDisposed, 0) = 0 THEN 0.00\n"
+                + "           ELSE ROUND(CAST(COALESCE(d.totalQuantityDisposed, 0) AS DECIMAL(10,2)) / p.totalQuantityPurchased, 2)\n"
+                // Guarding against div by zero
+                + "       END AS disposedPurchasedRatio\n"
+                + "FROM stock_items si\n"
+                + "LEFT JOIN (\n"
+                + "       SELECT i.item_id,\n"
+                + "              SUM(di.quantity_disposed) AS totalQuantityDisposed\n"
+                + "       FROM disposed_items di\n"
+                + "       JOIN inventory i\n"
+                + "         ON di.inventory_id = i.inventory_id\n"
+                + "       WHERE di.visible = 1\n"
+                + "         AND i.visible = 1\n"
+                + "         AND YEAR(di.disposed_date) = " + year + "\n"
+                + "         AND MONTH(di.disposed_date) = " + month + "\n"
+                + "       GROUP BY i.item_id\n"
+                + ") d ON si.item_id = d.item_id\n"
+                + "LEFT JOIN (\n"
+                + "       SELECT ir.item_id,\n"
+                + "              SUM(ir.quantity) AS totalQuantityPurchased\n"
+                + "       FROM item_restocks ir\n"
+                + "       WHERE ir.visible = 1\n"
+                + "         AND YEAR(ir.restocked_at) = " + year + "\n"
+                + "         AND MONTH(ir.restocked_at) = " + month + "\n"
+                + "       GROUP BY ir.item_id\n"
+                + ") p ON si.item_id = p.item_id\n"
+                + "WHERE si.visible = 1\n"
+                + "ORDER BY disposedPurchasedRatio DESC;";
     }
 }

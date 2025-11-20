@@ -39,7 +39,6 @@ public class AssignSupplierDialog extends Dialog<Boolean> {
 
         VBox supplierBox = new VBox(5, supplierCombo, createNewSupplierBtn);
 
-        // 2. Cost and Amount defaults
         costField = new TextField();
         costField.setPromptText("Unit Cost");
         amountField = new TextField();
