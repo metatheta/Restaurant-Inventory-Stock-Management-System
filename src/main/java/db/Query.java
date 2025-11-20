@@ -159,17 +159,65 @@ public class Query {
                 "WHERE should_update_inventory = 1;";
     }
 
-
-    public static String createDish(int quantity) {
-        return "SELECT " +
-                "  dr.item_id, " +
-                "  si.item_name, " +
-                "  dr.quantity * " + quantity + " AS required_quantity " +
-                "FROM dish_requirements dr " +
-                "JOIN stock_items si ON dr.item_id = si.item_id " +
-                "WHERE dr.dish_id = ?";
+    public static String getDishIngredients() {
+        return """
+                SELECT 
+                    dish_name,
+                    item_name,
+                    quantity,
+                    unit_of_measure
+                FROM dishes d
+                JOIN dish_requirements dr ON d.dish_id = dr.dish_id
+                JOIN stock_items s ON dr.item_id = s.item_id;
+                """;
     }
 
+    public static String getAllDishes() {
+        return "SELECT dish_id, dish_name FROM dishes WHERE visible = 1 ORDER BY dish_name ASC";
+    }
+
+    public static String getDishRequirements() {
+        return "SELECT item_id, quantity FROM dish_requirements WHERE dish_id = ?";
+    }
+
+    public static String getAllLocations() {
+        return "SELECT location_id, storage_name, address FROM stock_locations WHERE visible = 1";
+    }
+
+    public static String getLocationAddress() {
+        return "SELECT address FROM stock_locations WHERE location_id = ?";
+    }
+
+    public static String getStockAtAddress() {
+        return """
+                SELECT SUM(i.running_balance) as total_stock
+                FROM inventory i
+                JOIN stock_locations sl ON i.location_id = sl.location_id
+                WHERE i.item_id = ?
+                  AND sl.address = ?
+                  AND i.visible = 1
+                  AND i.running_balance > 0
+                """;
+    }
+
+    public static String deductFromInventoryBatch() {
+        return "UPDATE inventory SET running_balance = running_balance - ? WHERE inventory_id = ?";
+    }
+
+    public static String recordDishConsumption() {
+        return "INSERT INTO dish_consumption (dish_id, servings, location_id) VALUES (?, ?, ?)";
+    }
+
+    public static String dishConsumptionHistory() {
+        return """
+                SELECT dc.consumption_id, dc.consumed_at, d.dish_name, dc.servings, sl.storage_name AS location_name, sl.address
+                FROM dish_consumption dc
+                JOIN dishes d ON dc.dish_id = d.dish_id
+                JOIN stock_locations sl ON dc.location_id = sl.location_id
+                WHERE dc.visible = 1
+                ORDER BY dc.consumed_at DESC, dc.consumption_id DESC
+                """;
+    }
 
     /*
         ###############

@@ -186,14 +186,36 @@ public class DBInteractor {
         }
     }
 
-    public ResultSet transaction4(int dishId, int numberOfDishes)
-    {
-        try
-        {
-            String sql = Query.createDish(numberOfDishes);
-            PreparedStatement ps = ScreenManager.getConnection().prepareStatement(sql);
-            ps.setInt(1, dishId);
-            return ps.executeQuery();
+    public ResultSet getAllDishes() {
+        try {
+            return s.executeQuery(Query.getAllDishes());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public ResultSet getDishIngredients() {
+        try {
+            return s.executeQuery(Query.getDishIngredients());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public ResultSet getAllLocations() {
+        try {
+            return s.executeQuery(Query.getAllLocations());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public ResultSet viewDishRecords() {
+        try {
+            return s.executeQuery(Query.dishConsumptionHistory());
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;

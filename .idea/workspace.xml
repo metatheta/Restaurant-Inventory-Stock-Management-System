@@ -4,25 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="feat: change restock to use custom check mark table UI">
-      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/reports/StorageTypeDistributionReportController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/reports/YearMonthReportController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/ReadOnlyScrollSQLTableController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/purchase/AddItemDialog.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/purchase/AddSupplierDialog.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/gui/view/reports/expiry-and-waste.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/gui/view/reports/preferred-suppliers.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/gui/view/reports/seasonal-stock.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/gui/view/reports/storage-type-distribution.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/gui/view/tables/read-only-scroll-sql-table.fxml" afterDir="false" />
+    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="fix: broken file encoding">
+      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/reports/ExpiryWasteReportController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/dish/Dish.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/dish/Requirement.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/dish/StockLocation.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/db/DBInteractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/db/DBInteractor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/db/Query.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/db/Query.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/ScreenManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/ScreenManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/ReportsMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/ReportsMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/ReadOnlySQLTableController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/ReadOnlySQLTableController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/restock/RestockMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/restock/RestockMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/restock-menu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/restock-menu.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/dish/DishMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/dish/DishMenuController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/reports/expiry-and-waste.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/reports/expiry-and-waste.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/dish-menu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/dish-menu.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,9 +24,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Record" />
-        <option value="Class" />
         <option value="FxmlFile" />
+        <option value="Class" />
+        <option value="Record" />
       </list>
     </option>
   </component>
@@ -93,7 +85,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "deletionFromPopupRequiresConfirmation": "false",
     "git-widget-placeholder": "gui/transaction-interface",
-    "last_opened_file_path": "C:/Users/allen/projects/Java/try/Restaurant-Inventory-Stock-Management-System/src/main/resources/gui/view/tables",
+    "last_opened_file_path": "C:/Users/allen/projects/Java/try/Restaurant-Inventory-Stock-Management-System",
     "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.28582203",
@@ -102,6 +94,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System" />
       <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\resources\gui\view\tables" />
       <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\resources\gui\view\reports" />
       <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\resources\fonts" />
@@ -113,8 +106,8 @@
       <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System\src\main\java" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="gui.controllers.tables" />
       <recent name="gui.controllers.reports" />
+      <recent name="gui.controllers.tables" />
     </key>
   </component>
   <component name="RunManager" selected="Maven.Main Menu">
@@ -331,7 +324,31 @@
       <option name="project" value="LOCAL" />
       <updated>1763577830818</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="feat: skeletons">
+      <option name="closed" value="true" />
+      <created>1763584382115</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1763584382115</updated>
+    </task>
+    <task id="LOCAL-00027" summary="feat: table rework and added visibility columns">
+      <option name="closed" value="true" />
+      <created>1763614164972</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1763614164972</updated>
+    </task>
+    <task id="LOCAL-00028" summary="fix: broken file encoding">
+      <option name="closed" value="true" />
+      <created>1763614523435</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1763614523435</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -358,8 +375,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="chore: fixing maven dependencies" />
-    <MESSAGE value="feat: added main menu and maven configurations" />
     <MESSAGE value="feat: added SQL table display for base tables" />
     <MESSAGE value="feat: fixed refresh button behavior" />
     <MESSAGE value="feat: created add row button + dialog" />
@@ -382,7 +397,10 @@
     <MESSAGE value="feat: made the filtering functional" />
     <MESSAGE value="feat: add filtering to read only tables too" />
     <MESSAGE value="feat: change restock to use custom check mark table UI" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: change restock to use custom check mark table UI" />
+    <MESSAGE value="feat: skeletons" />
+    <MESSAGE value="feat: table rework and added visibility columns" />
+    <MESSAGE value="fix: broken file encoding" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: broken file encoding" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
