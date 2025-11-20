@@ -9,7 +9,6 @@ public class MainMenuController {
     public void tableSelectMenu() {
         try {
             ScreenManager.SINGLETON.displayScreen("/gui/view/tables/table-selection.fxml");
-            // TODO do viewing of a record with related records
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -18,7 +17,6 @@ public class MainMenuController {
     public void transactionMenu() {
         try {
             ScreenManager.SINGLETON.displayScreen("/gui/view/transaction-menu.fxml");
-            // TODO
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -27,7 +25,6 @@ public class MainMenuController {
     public void reportsMenu() {
         try {
             ScreenManager.SINGLETON.displayScreen("/gui/view/reports-menu.fxml");
-            // TODO
         } catch (IOException e) {
             e.printStackTrace();
         }

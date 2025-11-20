@@ -7,7 +7,11 @@ import java.io.IOException;
 public class ReportsMenuController {
 
     public void preferredSuppliers() {
-
+        try {
+            ScreenManager.SINGLETON.displayScreen("/gui/view/reports/preferred-suppliers.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void storageTypeDistribution() {

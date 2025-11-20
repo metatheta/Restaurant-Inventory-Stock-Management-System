@@ -391,9 +391,9 @@ public class DBInteractor {
         }
     }
 
-    public ResultSet report1() {
+    public ResultSet report1(int year, int month) {
         try {
-            ResultSet rs = s.executeQuery(Query.preferredSuppliersReport());
+            ResultSet rs = s.executeQuery(Query.preferredSuppliersReport(year, month));
             return rs;
         } catch (Exception e) {
             System.out.println(e.getMessage());

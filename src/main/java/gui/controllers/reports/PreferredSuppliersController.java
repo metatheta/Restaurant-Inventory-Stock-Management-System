@@ -13,7 +13,7 @@ import java.time.Year;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
-public class StorageTypeDistributionReportController {
+public class PreferredSuppliersController {
 
     @FXML
     private ComboBox<Integer> yearComboBox;
@@ -58,14 +58,14 @@ public class StorageTypeDistributionReportController {
         int monthIndex = Month.valueOf(selectedMonth.toUpperCase()).getValue();
 
         DBInteractor db = new DBInteractor();
-        ResultSet rs = db.report2(selectedYear, monthIndex);
+        ResultSet rs = db.report1(selectedYear, monthIndex);
 
         try {
-            String reportTitle = "Report for " + selectedMonth + " " + selectedYear;
+            String reportTitle = "Preferred Suppliers for " + selectedMonth + " " + selectedYear;
             ScreenManager.SINGLETON.loadReadOnlyTableScreen(
                     rs,
                     reportTitle,
-                    "Item Name", "Storage Name", "Address", "Total Restocked", "Total Consumed/Disposed"
+                    "Supplier", "Total Orders", "Average Cost per Order", "Total Order Cost"
             );
 
         } catch (IOException e) {

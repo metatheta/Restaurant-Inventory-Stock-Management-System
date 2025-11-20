@@ -15,7 +15,7 @@
 
     <HBox alignment="CENTER">
         <children>
-            <Label fx:id="tableTitle" prefHeight="35.0" prefWidth="505.0" text="Table Title">
+            <Label fx:id="tableTitle" prefHeight="35.0" prefWidth="580.0" text="Table Title">
                 <font>
                     <Font name="Inter_FXH Regular" size="28.0" />
                 </font>
@@ -24,17 +24,17 @@
                 <children>
 
                     <ComboBox fx:id="filterColumnComboBox" prefHeight="40.0" prefWidth="160.0" promptText="Filter Column" />
-                    <TextField fx:id="filterField" prefHeight="40.0" prefWidth="250.0" promptText="Search..." />
+                    <TextField fx:id="filterField" prefHeight="40.0" prefWidth="196.0" promptText="Search..." />
                 </children>
             </HBox>
 
             <HBox HBox.hgrow="ALWAYS" />
-            <Button fx:id="returnButton" onAction="#returnToMainMenu" prefHeight="51.0" prefWidth="125.0" text="Return">
+            <Button fx:id="returnButton" onAction="#returnToMainMenu" prefHeight="51.0" prefWidth="155.0" text="Return">
                 <font>
                     <Font name="System Bold" size="24.0" />
                 </font>
                 <HBox.margin>
-                    <Insets right="70.0" />
+                    <Insets right="40.0" />
                 </HBox.margin>
             </Button>
         </children>

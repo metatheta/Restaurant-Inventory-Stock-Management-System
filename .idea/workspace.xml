@@ -4,15 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="fix: dish transaction">
-      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/purchase/ProductRegistryMenuController.java" afterDir="false" />
+    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="feat: changed table structure for restock logs">
+      <change afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/reports/StorageTypeDistributionController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/db/DBInteractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/db/DBInteractor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/db/Query.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/db/Query.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/TransactionSelectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/TransactionSelectController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/purchase/PurchaseMenuController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/transaction-menu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/transaction-menu.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/purchase-menu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/product-registry.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/MainMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/MainMenuController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/ReportsMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/ReportsMenuController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/reports/StorageTypeDistributionReportController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/reports/PreferredSuppliersController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/reports/preferred-suppliers.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/reports/preferred-suppliers.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/reports/storage-type-distribution.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/reports/storage-type-distribution.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/tables/read-only-scroll-sql-table.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/tables/read-only-scroll-sql-table.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/tables/read-only-sql-table.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/tables/read-only-sql-table.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -354,7 +357,23 @@
       <option name="project" value="LOCAL" />
       <updated>1763618986091</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="feat: product registry menu">
+      <option name="closed" value="true" />
+      <created>1763626391431</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1763626391431</updated>
+    </task>
+    <task id="LOCAL-00031" summary="feat: changed table structure for restock logs">
+      <option name="closed" value="true" />
+      <created>1763632726154</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1763632726154</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -381,8 +400,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat: fixed refresh button behavior" />
-    <MESSAGE value="feat: created add row button + dialog" />
     <MESSAGE value="feat: changed table font" />
     <MESSAGE value="feat: disabled add row button until all cols are non empty" />
     <MESSAGE value="feat: made edit and delete buttons per-row" />
@@ -406,7 +423,9 @@
     <MESSAGE value="feat: table rework and added visibility columns" />
     <MESSAGE value="fix: broken file encoding" />
     <MESSAGE value="fix: dish transaction" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: dish transaction" />
+    <MESSAGE value="feat: product registry menu" />
+    <MESSAGE value="feat: changed table structure for restock logs" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: changed table structure for restock logs" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

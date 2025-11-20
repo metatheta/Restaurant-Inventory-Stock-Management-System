@@ -314,8 +314,19 @@ public class Query {
         ###############
     */
 
-    public static String preferredSuppliersReport() {
-        return "";
+    public static String preferredSuppliersReport(int year, int month) {
+        return "SELECT \n" +
+                "    s.name,\n" +
+                "    COUNT(r.restock_id) AS numOrders,\n" +
+                "    COALESCE(AVG(r.total_cost), 0) AS averageOrderCost,\n" +
+                "    COALESCE(SUM(r.total_cost), 0) AS totalOrderCost\n" +
+                "FROM\n" +
+                "    suppliers s\n" +
+                "\tLEFT JOIN\n" +
+                "    item_restocks r ON s.supplier_id = r.supplier_id\n" +
+                "    AND YEAR(r.restocked_at) = " + year + "\n AND MONTH(r.restocked_at) = " + month +
+                "\nGROUP BY s.supplier_id\n" +
+                "ORDER BY numOrders DESC;";
     }
 
     public static String storageDistributionReport(int year, int month) {
