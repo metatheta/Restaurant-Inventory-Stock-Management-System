@@ -2,9 +2,8 @@ package db;
 
 
 import gui.ScreenManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+
+import java.sql.*;
 
 /*
     This class performs different SQL statements in its
@@ -29,10 +28,8 @@ import java.sql.Statement;
 public class DBInteractor {
     private Statement s;
 
-    public DBInteractor()
-    {
-        try
-        {
+    public DBInteractor() {
+        try {
             s = ScreenManager.getConnection().createStatement();
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -40,10 +37,8 @@ public class DBInteractor {
 
     }
 
-    public ResultSet recordManagement1()
-    {
-        try
-        {
+    public ResultSet recordManagement1() {
+        try {
             ResultSet rs = s.executeQuery(Query.stockItemAndSuppliers());
             return rs;
         } catch (Exception e) {
@@ -53,10 +48,8 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet recordManagement2()
-    {
-        try
-        {
+    public ResultSet recordManagement2() {
+        try {
             ResultSet rs = s.executeQuery(Query.storedItemAndLocations());
             return rs;
         } catch (Exception e) {
@@ -66,10 +59,8 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet recordManagement3()
-    {
-        try
-        {
+    public ResultSet recordManagement3() {
+        try {
             ResultSet rs = s.executeQuery(Query.locationAndStoredItems());
             return rs;
         } catch (Exception e) {
@@ -79,10 +70,8 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet recordManagement4(int supplierId)
-    {
-        try
-        {
+    public ResultSet recordManagement4(int supplierId) {
+        try {
             String sql = Query.supplierAndProducts();
             PreparedStatement ps = ScreenManager.getConnection().prepareStatement(sql);
             ps.setInt(1, supplierId);   // binds s.supplier_id = ?
@@ -93,10 +82,8 @@ public class DBInteractor {
         }
     }
 
-    public ResultSet getItemsToRestock()
-    {
-        try
-        {
+    public ResultSet getItemsToRestock() {
+        try {
             ResultSet rs = s.executeQuery(Query.selectItemsToRestock());
             return rs;
         } catch (Exception e) {
@@ -107,8 +94,7 @@ public class DBInteractor {
     }
 
     public ResultSet getRestockRecords() {
-        try
-        {
+        try {
             ResultSet rs = s.executeQuery(Query.getRestockRecords());
             return rs;
         } catch (Exception e) {
@@ -118,40 +104,229 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet transaction2(String name, String unitOfMeasure, String category)
-    {
-        try
-        {
-            ResultSet rs = s.executeQuery(Query.buyNewStockItem(name, unitOfMeasure, category));
-            return rs;
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
+    // TODO potentially refactor methods into diff classes
 
-        return null;
+    public boolean checkSupplierProductExists(int supplierId, int itemId) {
+        try (Connection conn = ScreenManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(Query.r2_checkIfSupplierProductComboExists())) {
+            ps.setInt(1, supplierId);
+            ps.setInt(2, itemId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getBoolean(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
-    public void enteringTransaction3()
-    {
-        try
-        {
+    public boolean checkInvisibleRecordExists(int supplierId, int itemId) {
+        try (Connection conn = ScreenManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(Query.r2_checkIfInvisibleRecordExists())) {
+            ps.setInt(1, supplierId);
+            ps.setInt(2, itemId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getBoolean(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public ResultSet getRegistryHistory() {
+        try {
+            Connection conn = ScreenManager.getConnection();
+            Statement stmt = conn.createStatement();
+            return stmt.executeQuery(Query.r2_showReadOnlyTable());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public void registerSupplierProduct(int supplierId, int itemId, int amount, double cost, boolean isReactivation) {
+        Connection conn = null;
+        try {
+            conn = ScreenManager.getConnection();
+            conn.setAutoCommit(false);
+
+            String actionSql = isReactivation ? Query.r2_updateToDoIfInvisibleRecordExists() : Query.r2_updateToDoIfInvisibleRecordDoesNotExist();
+
+            try (PreparedStatement ps = conn.prepareStatement(actionSql)) {
+                if (isReactivation) {
+                    ps.setInt(1, amount);
+                    ps.setDouble(2, cost);
+                    ps.setInt(3, supplierId);
+                    ps.setInt(4, itemId);
+                } else {
+                    ps.setInt(1, supplierId);
+                    ps.setInt(2, itemId);
+                    ps.setInt(3, amount);
+                    ps.setDouble(4, cost);
+                }
+                ps.executeUpdate();
+            }
+
+
+            try (PreparedStatement ps = conn.prepareStatement(Query.r2_recordAdditionInTransactionTable())) {
+                ps.setInt(1, supplierId);
+                ps.setInt(2, itemId);
+                ps.setInt(3, amount);
+                ps.setDouble(4, cost);
+                ps.executeUpdate();
+            }
+
+            conn.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void updateSupplierProduct(int supplierId, int itemId, int amount, double cost) {
+        Connection conn = null;
+        try {
+            conn = ScreenManager.getConnection();
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement ps = conn.prepareStatement(Query.r2_updateToDoIfUserSelectsChange())) {
+                ps.setInt(1, amount);
+                ps.setDouble(2, cost);
+                ps.setInt(3, supplierId);
+                ps.setInt(4, itemId);
+                ps.executeUpdate();
+            }
+
+            try (PreparedStatement ps = conn.prepareStatement(Query.r2_recordChangeInTransactionTable())) {
+                ps.setInt(1, supplierId);
+                ps.setInt(2, itemId);
+                ps.setInt(3, amount);
+                ps.setDouble(4, cost);
+                ps.executeUpdate();
+            }
+
+            conn.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void deleteSupplierProduct(int supplierId, int itemId) {
+        Connection conn = null;
+        try {
+            conn = ScreenManager.getConnection();
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement ps = conn.prepareStatement(Query.r2_updateToDoIfUserSelectsDelete())) {
+                ps.setInt(1, supplierId);
+                ps.setInt(2, itemId);
+                ps.executeUpdate();
+            }
+
+            try (PreparedStatement ps = conn.prepareStatement(Query.r2_recordDeletionInTransactionTable())) {
+                ps.setInt(1, supplierId);
+                ps.setInt(2, itemId);
+                ps.executeUpdate();
+            }
+
+            conn.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public ResultSet getActiveSuppliers() {
+        try {
+            Connection conn = ScreenManager.getConnection();
+            return conn.createStatement().executeQuery("SELECT supplier_id, name FROM suppliers WHERE visible = 1");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ResultSet getActiveStockItems() {
+        try {
+            Connection conn = ScreenManager.getConnection();
+            return conn.createStatement().executeQuery("SELECT item_id, item_name, unit_of_measure FROM stock_items WHERE visible = 1");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void addNewSupplier(String name, String contactPerson, String contactInfo) {
+        try (Connection conn = ScreenManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement("INSERT INTO suppliers (name, contact_person, contact_info) VALUES (?, ?, ?)")) {
+            ps.setString(1, name);
+            ps.setString(2, contactPerson);
+            ps.setString(3, contactInfo);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void enteringTransaction3() {
+        try {
             s.executeUpdate(Query.disposingExpiredItems());
             s.executeUpdate(Query.setExpiredToZero());
             s.executeUpdate(Query.recordingDisposedItemsInStockMovement());
             s.executeUpdate(Query.updateInventoryAfterDisposing());
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public ResultSet displayAllDisposedItems()
-    {
-        try
-        {
+    public ResultSet displayAllDisposedItems() {
+        try {
             ResultSet rs = s.executeQuery(Query.displayAllDisposedItems());
             return rs;
         } catch (Exception e) {
@@ -161,10 +336,8 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet displayRecentlyDisposedItems()
-    {
-        try
-        {
+    public ResultSet displayRecentlyDisposedItems() {
+        try {
             ResultSet rs = s.executeQuery(Query.displayRecentlyDisposedItems());
             return rs;
         } catch (Exception e) {
@@ -174,14 +347,10 @@ public class DBInteractor {
         return null;
     }
 
-    public void exitingTransaction3()
-    {
-        try
-        {
+    public void exitingTransaction3() {
+        try {
             s.executeUpdate(Query.updateNewlyDisposedToPreviouslyDisposed());
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
@@ -222,10 +391,8 @@ public class DBInteractor {
         }
     }
 
-    public ResultSet report1()
-    {
-        try
-        {
+    public ResultSet report1() {
+        try {
             ResultSet rs = s.executeQuery(Query.preferredSuppliersReport());
             return rs;
         } catch (Exception e) {
@@ -235,10 +402,8 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet report2(int year, int month)
-    {
-        try
-        {
+    public ResultSet report2(int year, int month) {
+        try {
             ResultSet rs = s.executeQuery(Query.storageDistributionReport(year, month));
             return rs;
         } catch (Exception e) {
@@ -248,10 +413,8 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet report3()
-    {
-        try
-        {
+    public ResultSet report3() {
+        try {
             ResultSet rs = s.executeQuery(Query.seasonalStockReport());
             return rs;
         } catch (Exception e) {
@@ -261,10 +424,8 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet report4(int year, int month)
-    {
-        try
-        {
+    public ResultSet report4(int year, int month) {
+        try {
             String sql = Query.expiryReport();
             PreparedStatement ps = ScreenManager.getConnection().prepareStatement(sql);
             ps.setInt(1, year);   // purchases.order_year

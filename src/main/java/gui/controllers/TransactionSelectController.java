@@ -13,7 +13,7 @@ public class TransactionSelectController {
 
     public void purchaseNewStock() {
         try {
-            ScreenManager.SINGLETON.displayScreen("/gui/view/transactions/purchase-menu.fxml");
+            ScreenManager.SINGLETON.displayScreen("/gui/view/transactions/product-registry.fxml");
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
