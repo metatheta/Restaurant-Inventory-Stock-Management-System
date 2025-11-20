@@ -283,8 +283,7 @@ public class CoreTableSQLController {
             case "suppliers":
                 sql = Query.supplierAndProducts();
                 idValue = rowData.get("supplier_id");
-                relatedColumnNames = new String[]{"Supplier Name", "Contact Person", "Contact Info", "Item Name",
-                        "Amount", "Unit Cost"};
+                relatedColumnNames = new String[]{"Supplier Name", "Contact Person", "Contact Info", "Item Name", "Unit Cost"};
                 tableTitle = "Supplier and Products Provided";
                 break;
             default:

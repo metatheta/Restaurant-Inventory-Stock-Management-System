@@ -146,7 +146,7 @@ public class DBInteractor {
     }
 
 
-    public void registerSupplierProduct(int supplierId, int itemId, int amount, double cost, boolean isReactivation) {
+    public void registerSupplierProduct(int supplierId, int itemId, double cost, boolean isReactivation) {
         Connection conn = null;
         try {
             conn = ScreenManager.getConnection();
@@ -156,25 +156,23 @@ public class DBInteractor {
 
             try (PreparedStatement ps = conn.prepareStatement(actionSql)) {
                 if (isReactivation) {
-                    ps.setInt(1, amount);
-                    ps.setDouble(2, cost);
-                    ps.setInt(3, supplierId);
-                    ps.setInt(4, itemId);
+                    // Update existing invisible record
+                    ps.setDouble(1, cost);       // unit_cost
+                    ps.setInt(2, supplierId);    // WHERE supplier_id
+                    ps.setInt(3, itemId);        // AND item_id
                 } else {
+                    // Insert new record
                     ps.setInt(1, supplierId);
                     ps.setInt(2, itemId);
-                    ps.setInt(3, amount);
-                    ps.setDouble(4, cost);
+                    ps.setDouble(3, cost);
                 }
                 ps.executeUpdate();
             }
 
-
             try (PreparedStatement ps = conn.prepareStatement(Query.r2_recordAdditionInTransactionTable())) {
                 ps.setInt(1, supplierId);
                 ps.setInt(2, itemId);
-                ps.setInt(3, amount);
-                ps.setDouble(4, cost);
+                ps.setDouble(3, cost);
                 ps.executeUpdate();
             }
 
@@ -199,64 +197,23 @@ public class DBInteractor {
         }
     }
 
-    public void updateSupplierProduct(int supplierId, int itemId, int amount, double cost) {
+    public void updateSupplierProduct(int supplierId, int itemId, double cost) {
         Connection conn = null;
         try {
             conn = ScreenManager.getConnection();
             conn.setAutoCommit(false);
 
             try (PreparedStatement ps = conn.prepareStatement(Query.r2_updateToDoIfUserSelectsChange())) {
-                ps.setInt(1, amount);
-                ps.setDouble(2, cost);
-                ps.setInt(3, supplierId);
-                ps.setInt(4, itemId);
+                ps.setDouble(1, cost);        // SET unit_cost
+                ps.setInt(2, supplierId);     // WHERE supplier_id
+                ps.setInt(3, itemId);         // AND item_id
                 ps.executeUpdate();
             }
 
             try (PreparedStatement ps = conn.prepareStatement(Query.r2_recordChangeInTransactionTable())) {
                 ps.setInt(1, supplierId);
                 ps.setInt(2, itemId);
-                ps.setInt(3, amount);
-                ps.setDouble(4, cost);
-                ps.executeUpdate();
-            }
-
-            conn.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (conn != null) {
-                try {
-                    conn.rollback();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.setAutoCommit(true);
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
-    }
-
-    public void deleteSupplierProduct(int supplierId, int itemId) {
-        Connection conn = null;
-        try {
-            conn = ScreenManager.getConnection();
-            conn.setAutoCommit(false);
-
-            try (PreparedStatement ps = conn.prepareStatement(Query.r2_updateToDoIfUserSelectsDelete())) {
-                ps.setInt(1, supplierId);
-                ps.setInt(2, itemId);
-                ps.executeUpdate();
-            }
-
-            try (PreparedStatement ps = conn.prepareStatement(Query.r2_recordDeletionInTransactionTable())) {
-                ps.setInt(1, supplierId);
-                ps.setInt(2, itemId);
+                ps.setDouble(3, cost);
                 ps.executeUpdate();
             }
 

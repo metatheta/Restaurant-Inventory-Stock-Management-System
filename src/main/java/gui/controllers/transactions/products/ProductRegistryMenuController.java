@@ -20,8 +20,6 @@ public class ProductRegistryMenuController {
     private SearchableComboBox<StockItemOption> itemSelector;
     @FXML
     private TextField unitCostField;
-    @FXML
-    private TextField amountField;
 
     private final DBInteractor db = new DBInteractor();
 
@@ -29,8 +27,6 @@ public class ProductRegistryMenuController {
     public void initialize() {
         loadSuppliers();
         loadStockItems();
-
-        addNumericListener(amountField, true);
         addNumericListener(unitCostField, false);
     }
 
@@ -145,31 +141,29 @@ public class ProductRegistryMenuController {
         RegistrySupplierOption selectedSupplier = supplierSelector.getValue();
         StockItemOption selectedItem = itemSelector.getValue();
         String costText = unitCostField.getText();
-        String amountText = amountField.getText();
 
-        if (selectedSupplier == null || selectedItem == null || costText.isEmpty() || amountText.isEmpty()) {
+        if (selectedSupplier == null || selectedItem == null || costText.isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Missing Input", "Please fill in all fields.");
             return;
         }
 
         double unitCost = Double.parseDouble(costText);
-        int amount = Integer.parseInt(amountText);
 
         if (db.checkSupplierProductExists(selectedSupplier.id, selectedItem.itemId)) {
             boolean confirm = showConfirm("Update Existing",
-                    "This supplier already sells this item.\nDo you want to update the price/amount?");
+                    "This supplier already sells this item.\nDo you want to update the price?");
 
             if (confirm) {
-                db.updateSupplierProduct(selectedSupplier.id, selectedItem.itemId, amount, unitCost);
+                db.updateSupplierProduct(selectedSupplier.id, selectedItem.itemId, unitCost);
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Product details updated.");
                 clearFields();
             }
         } else if (db.checkInvisibleRecordExists(selectedSupplier.id, selectedItem.itemId)) {
-            db.registerSupplierProduct(selectedSupplier.id, selectedItem.itemId, amount, unitCost, true);
+            db.registerSupplierProduct(selectedSupplier.id, selectedItem.itemId, unitCost, true);
             showAlert(Alert.AlertType.INFORMATION, "Success", "Product re-registered (was previously deleted).");
             clearFields();
         } else {
-            db.registerSupplierProduct(selectedSupplier.id, selectedItem.itemId, amount, unitCost, false);
+            db.registerSupplierProduct(selectedSupplier.id, selectedItem.itemId, unitCost, false);
             showAlert(Alert.AlertType.INFORMATION, "Success", "New product registered to supplier.");
             clearFields();
         }
@@ -184,7 +178,7 @@ public class ProductRegistryMenuController {
                 crs.populate(rs);
                 ScreenManager.SINGLETON.loadReadOnlyTableScreen(crs,
                         "Product Registry History",
-                        "Supplier", "Item", "New Amount", "New Cost", "Action", "Date");
+                        "Supplier", "Item", "New Cost", "Action", "Date");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -202,7 +196,6 @@ public class ProductRegistryMenuController {
 
     private void clearFields() {
         unitCostField.clear();
-        amountField.clear();
     }
 
     private void addNumericListener(TextField tf, boolean integerOnly) {

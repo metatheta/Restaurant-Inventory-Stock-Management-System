@@ -57,7 +57,6 @@ public class Query {
                     s.contact_person,
                     s.contact_info,
                     si.item_name,
-                    sp.amount,
                     sp.unit_cost
                 FROM suppliers s
                 JOIN supplier_products sp
@@ -90,8 +89,8 @@ public class Query {
     public static String r2_checkIfSupplierProductComboExists() {
         return "SELECT EXISTS (\n" +
                 "    SELECT 1 FROM supplier_products\n" +
-                "    WHERE supplier_id = ?\n" + // supplier id
-                "    AND item_id = ?\n" + // item id
+                "    WHERE supplier_id = ?\n" +
+                "    AND item_id = ?\n" +
                 "    AND visible = 1\n" +
                 ");";
     }
@@ -100,42 +99,42 @@ public class Query {
     public static String r2_checkIfInvisibleRecordExists() {
         return "SELECT EXISTS (\n" +
                 "    SELECT 1 FROM supplier_products\n" +
-                "    WHERE supplier_id = ?\n" + // supplier id
-                "    AND item_id = ?\n" + // item id
+                "    WHERE supplier_id = ?\n" +
+                "    AND item_id = ?\n" +
                 "    AND visible = 0\n" +
                 ");";
     }
 
-    // params: amount, unit_cost, supplier_id, item_id
+    // params: unit_cost, supplier_id, item_id
     public static String r2_updateToDoIfInvisibleRecordExists() {
         return "UPDATE supplier_products\n" +
-                "SET amount = ?, unit_cost = ?, visible = 1\n" +
+                "SET unit_cost = ?, visible = 1\n" +
                 "WHERE supplier_id = ? AND item_id = ?;";
     }
 
-    // params: supplier_id, item_id, amount, unit_cost
+    // params: supplier_id, item_id, unit_cost
     public static String r2_updateToDoIfInvisibleRecordDoesNotExist() {
-        return "INSERT INTO supplier_products (supplier_id, item_id, amount, unit_cost)\n" +
-                "VALUES (?, ?, ?, ?);";
+        return "INSERT INTO supplier_products (supplier_id, item_id, unit_cost)\n" +
+                "VALUES (?, ?, ?);";
     }
 
-    // params: supplier_id, item_id, amount, unit_cost
+    // params: supplier_id, item_id, unit_cost
     public static String r2_recordAdditionInTransactionTable() {
-        return "INSERT INTO product_registry_history (supplier_id, item_id, updated_amount, updated_cost, category)\n" +
-                "VALUES (?, ?, ?, ?, 'addition');";
+        return "INSERT INTO product_registry_history (supplier_id, item_id, updated_cost, category)\n" +
+                "VALUES (?, ?, ?, 'addition');";
     }
 
-    // params: amount, unit_cost, supplier_id, item_id
+    // params: unit_cost, supplier_id, item_id
     public static String r2_updateToDoIfUserSelectsChange() {
         return "UPDATE supplier_products\n" +
-                "SET amount = ?, unit_cost = ?\n" +
+                "SET unit_cost = ?\n" +
                 "WHERE supplier_id = ? AND item_id = ?;";
     }
 
-    // params: supplier_id, item_id, amount, unit_cost
+    // params: supplier_id, item_id, unit_cost
     public static String r2_recordChangeInTransactionTable() {
-        return "INSERT INTO product_registry_history (supplier_id, item_id, updated_amount, updated_cost, category)\n" +
-                "VALUES (?, ?, ?, ?, 'change');";
+        return "INSERT INTO product_registry_history (supplier_id, item_id, updated_cost, category)\n" +
+                "VALUES (?, ?, ?, 'change');";
     }
 
     // params: supplier_id, item_id
@@ -156,14 +155,13 @@ public class Query {
         return "SELECT\n" +
                 "    s.name AS supplier_name,\n" +
                 "    si.item_name,\n" +
-                "    IFNULL(prh.updated_amount, 'N/A') AS updated_amount,\n" +
                 "    IFNULL(prh.updated_cost, 'N/A') AS updated_cost,\n" +
                 "    prh.category,\n" +
                 "    prh.changed_at\n" +
                 "FROM product_registry_history prh\n" +
                 "INNER JOIN suppliers s ON prh.supplier_id = s.supplier_id\n" +
                 "INNER JOIN stock_items si ON prh.item_id = si.item_id\n" +
-                "ORDER BY prh.changed_at DESC;"; // prioritize showing newest?
+                "ORDER BY prh.changed_at DESC;";
     }
 
     public static String buyNewStockItem(String name, String unitOfMeasure, String category) {
