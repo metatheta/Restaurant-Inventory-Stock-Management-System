@@ -92,10 +92,11 @@ public class SeasonalStockReportController {
             ScreenManager.SINGLETON.loadReadOnlyTableScreen(
                     rs,
                     reportTitle,
-                    "Item",
-                    "Total Quantity Disposed",
-                    "Total Quantity Used",
-                    "Disposal-Used Ratio"
+                    "Item Name",
+                    "Total Restocks",
+                    "Restocks per Day",
+                    "Total Usages",
+                    "Usages per Day"
             );
 
         } catch (IOException e) {
