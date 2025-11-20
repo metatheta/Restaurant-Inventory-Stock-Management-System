@@ -1,9 +1,8 @@
 package gui.controllers.transactions.dish;
 
 import db.DBInteractor;
-import db.Query;
+import db.TransactionQueries;
 import gui.ScreenManager;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Spinner;
@@ -91,7 +90,7 @@ public class DishMenuController {
                 deductInventoryFromSelectedLocationsFEFO(conn, req.itemId(), locationIds, totalNeeded);
             }
 
-            try (PreparedStatement ps = conn.prepareStatement(Query.recordDishConsumption())) {
+            try (PreparedStatement ps = conn.prepareStatement(TransactionQueries.recordDishConsumption())) {
                 ps.setInt(1, selectedDish.id());
                 ps.setInt(2, quantityToMake);
                 ps.setInt(3, locationIds.get(0));
@@ -160,7 +159,7 @@ public class DishMenuController {
                         remainingToDeduct -= currentBalance;
                     }
 
-                    try (PreparedStatement updatePs = conn.prepareStatement(Query.deductFromInventoryBatch())) {
+                    try (PreparedStatement updatePs = conn.prepareStatement(TransactionQueries.deductFromInventoryBatch())) {
                         updatePs.setDouble(1, deductAmount);
                         updatePs.setInt(2, inventoryId);
                         updatePs.executeUpdate();
@@ -176,7 +175,7 @@ public class DishMenuController {
 
     private List<Requirement> getRequirementsForDish(Connection conn, int dishId) throws SQLException {
         List<Requirement> list = new ArrayList<>();
-        try (PreparedStatement ps = conn.prepareStatement(Query.getDishRequirements())) {
+        try (PreparedStatement ps = conn.prepareStatement(TransactionQueries.getDishRequirements())) {
             ps.setInt(1, dishId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {

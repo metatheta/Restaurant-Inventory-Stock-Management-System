@@ -1,6 +1,6 @@
 package gui.controllers.tables;
 
-import db.Query;
+import db.RelatedRecordsQueries;
 import gui.ScreenManager;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -260,28 +260,28 @@ public class CoreTableSQLController {
         String tableTitle = null;
         switch (tableName) {
             case "stock_items":
-                sql = Query.stockItemAndSuppliers();
+                sql = RelatedRecordsQueries.stockItemAndSuppliers();
                 idValue = rowData.get("item_id");
                 relatedColumnNames = new String[]{"Item Name", "Unit of Measure", "Category", "Supplier Name",
                         "Contact Person", "Contact Info"};
                 tableTitle = "Stock Item and Providing Suppliers";
                 break;
             case "inventory":
-                sql = Query.storedItemAndLocations();
+                sql = RelatedRecordsQueries.storedItemAndLocations();
                 idValue = rowData.get("inventory_id");
                 relatedColumnNames = new String[]{"Stored Item", "Running Balance", "Last Restocked", "Expiry Date",
                         "Storage Name", "Address", "Storage Type"};
                 tableTitle = "Inventory Item and Storage Locations";
                 break;
             case "stock_locations":
-                sql = Query.locationAndStoredItems();
+                sql = RelatedRecordsQueries.locationAndStoredItems();
                 idValue = rowData.get("location_id");
                 relatedColumnNames = new String[]{"Storage Name", "Storage Type", "Address", "Stored Item",
                         "Unit of Measure", "Running Balance", "Item Category"};
                 tableTitle = "Storage Location and Stored Items";
                 break;
             case "suppliers":
-                sql = Query.supplierAndProducts();
+                sql = RelatedRecordsQueries.supplierAndProducts();
                 idValue = rowData.get("supplier_id");
                 relatedColumnNames = new String[]{"Supplier Name", "Contact Person", "Contact Info", "Item Name", "Unit Cost"};
                 tableTitle = "Supplier and Products Provided";
