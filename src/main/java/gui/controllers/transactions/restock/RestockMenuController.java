@@ -11,10 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -165,8 +162,14 @@ public class RestockMenuController {
             conn.setAutoCommit(false);
 
             String insertLogSql = "INSERT INTO item_restocks (inventory_id, item_id, supplier_id, item_name, supplier_name, " +
-                    "cost_per_unit, quantity, total_cost, storage_location, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            String updateInventorySql = "UPDATE inventory SET running_balance = running_balance + ? WHERE inventory_id = ?";
+                    "cost_per_unit, quantity, total_cost, storage_location, address, restocked_at) VALUES (?, ?, ?, " +
+                    "?, ?, ?, ?, " +
+                    "?, " +
+                    "?, ?, ?)";
+            String updateInventorySql = "UPDATE inventory SET running_balance = running_balance + ?, " +
+                    "last_restock_date = ? WHERE " +
+                    "inventory_id = ?";
+            Timestamp now = new Timestamp(System.currentTimeMillis());
 
             try (PreparedStatement psLog = conn.prepareStatement(insertLogSql);
                  PreparedStatement psInv = conn.prepareStatement(updateInventorySql)) {
@@ -182,10 +185,12 @@ public class RestockMenuController {
                     psLog.setDouble(8, order.getSelectedSupplier().unitCost() * order.getQuantityInt());
                     psLog.setString(9, order.getOriginal().storage());
                     psLog.setString(10, order.getOriginal().address());
+                    psLog.setTimestamp(11, now);
                     psLog.addBatch();
 
                     psInv.setDouble(1, order.getQuantityInt());
-                    psInv.setInt(2, order.getOriginal().inventoryId());
+                    psInv.setTimestamp(2, now);
+                    psInv.setInt(3, order.getOriginal().inventoryId());
                     psInv.addBatch();
                 }
 
