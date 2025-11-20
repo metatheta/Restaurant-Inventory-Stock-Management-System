@@ -164,8 +164,8 @@ public class RestockMenuController {
         try {
             conn.setAutoCommit(false);
 
-            String insertLogSql = "INSERT INTO item_restocks (inventory_id, item_id, item_name, supplier_name, " +
-                    "cost_per_unit, quantity, total_cost, storage_location, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String insertLogSql = "INSERT INTO item_restocks (inventory_id, item_id, supplier_id, item_name, supplier_name, " +
+                    "cost_per_unit, quantity, total_cost, storage_location, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             String updateInventorySql = "UPDATE inventory SET running_balance = running_balance + ? WHERE inventory_id = ?";
 
             try (PreparedStatement psLog = conn.prepareStatement(insertLogSql);
@@ -174,14 +174,14 @@ public class RestockMenuController {
                 for (RestockEntry order : validOrders) {
                     psLog.setInt(1, order.getOriginal().inventoryId());
                     psLog.setInt(2, order.getOriginal().itemId());
-
-                    psLog.setString(3, order.getOriginal().name());
-                    psLog.setString(4, order.getSelectedSupplier().name());
-                    psLog.setDouble(5, order.getSelectedSupplier().unitCost());
-                    psLog.setInt(6, order.getQuantityInt());
-                    psLog.setDouble(7, order.getSelectedSupplier().unitCost() * order.getQuantityInt());
-                    psLog.setString(8, order.getOriginal().storage());
-                    psLog.setString(9, order.getOriginal().address());
+                    psLog.setInt(3, order.getSelectedSupplier().id());
+                    psLog.setString(4, order.getOriginal().name());
+                    psLog.setString(5, order.getSelectedSupplier().name());
+                    psLog.setDouble(6, order.getSelectedSupplier().unitCost());
+                    psLog.setInt(7, order.getQuantityInt());
+                    psLog.setDouble(8, order.getSelectedSupplier().unitCost() * order.getQuantityInt());
+                    psLog.setString(9, order.getOriginal().storage());
+                    psLog.setString(10, order.getOriginal().address());
                     psLog.addBatch();
 
                     psInv.setDouble(1, order.getQuantityInt());
@@ -213,7 +213,6 @@ public class RestockMenuController {
         ResultSet rs = db.getRestockRecords();
 
         String[] columnNames = {
-                "Item ID",
                 "Inventory ID",
                 "Item Name",
                 "Supplier Name",

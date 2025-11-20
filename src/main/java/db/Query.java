@@ -184,7 +184,20 @@ public class Query {
     }
 
     public static String getRestockRecords() {
-        return "SELECT * from item_restocks";
+        return "SELECT\n" +
+                "    inventory_id,\n" +
+                "    item_name,\n" +
+                "    supplier_name,\n" +
+                "    cost_per_unit,\n" +
+                "    quantity,\n" +
+                "    total_cost,\n" +
+                "    storage_location,\n" +
+                "    address,\n" +
+                "    restocked_at\n" +
+                "FROM\n" +
+                "    item_restocks\n" +
+                "WHERE\n" +
+                "    visible = 1;";
     }
 
     public static String recordingDisposedItemsInStockMovement() {
