@@ -1,11 +1,7 @@
 package gui;
 
-import gui.view.ScreenManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
 
 public class Driver extends Application {
     @Override

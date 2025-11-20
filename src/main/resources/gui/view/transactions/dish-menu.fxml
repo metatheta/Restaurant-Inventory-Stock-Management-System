@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.SearchableComboBox?>
+
+<AnchorPane prefHeight="900.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.transactions.dish.DishMenuController">
+   <children>
+      <VBox alignment="TOP_CENTER" prefHeight="900.0" prefWidth="1300.0" spacing="20.0">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="120.0" prefWidth="363.0" text="Create Dish" textAlignment="CENTER">
+               <font>
+                  <Font name="Inter_FXH Regular" size="48.0" />
+               </font>
+            </Label>
+
+            <!-- Dish Selection -->
+            <HBox alignment="CENTER" prefHeight="80.0" prefWidth="200.0" spacing="100.0">
+               <children>
+                  <Label contentDisplay="CENTER" prefWidth="350.0" text="Select Dish:" textAlignment="RIGHT">
+                     <font>
+                        <Font name="Inter_FXH Regular" size="36.0" />
+                     </font>
+                  </Label>
+                  <SearchableComboBox fx:id="dishComboBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="45.0" prefWidth="400.0" />
+               </children>
+            </HBox>
+
+            <HBox alignment="CENTER" prefHeight="80.0" prefWidth="200.0" spacing="100.0">
+               <children>
+                  <Label contentDisplay="CENTER" prefWidth="350.0" text="Source Kitchens:" textAlignment="RIGHT">
+                     <font>
+                        <Font name="Inter_FXH Regular" size="36.0" />
+                     </font>
+                  </Label>
+                  <org.controlsfx.control.CheckComboBox fx:id="locationCheckComboBox" prefHeight="45.0" prefWidth="400.0" />
+               </children>
+            </HBox>
+
+            <!-- Quantity Selection -->
+            <HBox alignment="CENTER" layoutX="10.0" layoutY="167.0" prefHeight="80.0" prefWidth="200.0" spacing="100.0">
+               <children>
+                  <Label contentDisplay="CENTER" prefWidth="350.0" text="Quantity:" textAlignment="RIGHT">
+                     <font>
+                        <Font name="Inter_FXH Regular" size="36.0" />
+                     </font>
+                  </Label>
+                  <Spinner fx:id="quantitySpinner" editable="true" prefHeight="45.0" prefWidth="400.0" />
+               </children>
+            </HBox>
+
+            <!-- Buttons -->
+            <VBox alignment="CENTER" prefHeight="400.0" prefWidth="1300.0" spacing="80.0">
+               <children>
+                  <HBox alignment="CENTER" prefWidth="1300.0" spacing="200.0">
+                     <children>
+                        <Button alignment="TOP_CENTER" mnemonicParsing="false" onAction="#onViewDishes" prefHeight="69.0" prefWidth="383.0" text="View Dishes">
+                           <font>
+                              <Font size="32.0" />
+                           </font>
+                        </Button>
+                        <Button alignment="TOP_CENTER" mnemonicParsing="false" onAction="#onConfirmSelection" prefHeight="65.0"
+                                prefWidth="381.0" text="Confirm Selection">
+                           <font>
+                              <Font size="32.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefWidth="1300.0" spacing="200.0">
+                     <children>
+                        <Button alignment="TOP_CENTER" mnemonicParsing="false" onAction="#onViewRecords" prefHeight="69.0" prefWidth="383.0" text="View Records">
+                           <font>
+                              <Font size="32.0" />
+                           </font>
+                        </Button>
+                        <Button alignment="TOP_CENTER" mnemonicParsing="false" onAction="#returnToMainMenu" prefHeight="65.0" prefWidth="381.0" text="Return to Main Menu">
+                           <font>
+                              <Font size="32.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

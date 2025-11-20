@@ -1,0 +1,9 @@
+.check-list-view {
+    -fx-font-family: "Inter_FXH";
+    -fx-font-size: 18px;
+}
+
+.check-list-view .list-cell {
+    -fx-font-family: "Inter_FXH";
+    -fx-font-size: 18px;
+}

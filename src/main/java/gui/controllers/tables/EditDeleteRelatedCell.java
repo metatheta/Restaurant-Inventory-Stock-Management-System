@@ -9,27 +9,32 @@ import javafx.scene.layout.HBox;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class EditDeleteCell extends TableCell<Map<String, Object>, Void> {
+public class EditDeleteRelatedCell extends TableCell<Map<String, Object>, Void> {
     private final HBox pane;
     private final Button editButton;
     private final Button deleteButton;
+    private final Button viewButton;
 
     private final Consumer<Map<String, Object>> onEdit;
     private final Consumer<Map<String, Object>> onDelete;
+    private final Consumer<Map<String, Object>> onView;
 
-    public EditDeleteCell(Consumer<Map<String, Object>> onEdit, Consumer<Map<String, Object>> onDelete) {
+    public EditDeleteRelatedCell(Consumer<Map<String, Object>> onEdit, Consumer<Map<String, Object>> onDelete, Consumer<Map<String, Object>> onView) {
         this.onEdit = onEdit;
         this.onDelete = onDelete;
+        this.onView = onView;
 
         this.editButton = new Button("Edit");
         this.deleteButton = new Button("Delete");
+        this.viewButton = new Button("View Related");
 
         this.editButton.getStyleClass().add("edit-button");
         this.deleteButton.getStyleClass().add("delete-button");
-        // TODO CSS
+        this.viewButton.getStyleClass().add("view-button");
 
-        this.pane = new HBox(8, editButton, deleteButton);
+        this.pane = new HBox(8, editButton, viewButton, deleteButton);
         HBox.setMargin(editButton, new Insets(10, 0, 10, 0));
+        HBox.setMargin(viewButton, new Insets(10, 0, 10, 0));
         HBox.setMargin(deleteButton, new Insets(10, 0, 10, 0));
         this.pane.setAlignment(Pos.CENTER);
 
@@ -48,6 +53,12 @@ public class EditDeleteCell extends TableCell<Map<String, Object>, Void> {
             if (onDelete != null) {
                 Map<String, Object> rowData = getTableView().getItems().get(getIndex());
                 onDelete.accept(rowData);
+            }
+        });
+        viewButton.setOnAction(event -> {
+            if (onView != null) {
+                Map<String, Object> rowData = getTableView().getItems().get(getIndex());
+                onView.accept(rowData);
             }
         });
     }

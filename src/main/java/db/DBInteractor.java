@@ -1,12 +1,9 @@
 package db;
 
-import gui.view.ScreenManager;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.PreparedStatement;
+import gui.ScreenManager;
+
+import java.sql.*;
 
 /*
     This class performs different SQL statements in its
@@ -31,238 +28,368 @@ import java.sql.PreparedStatement;
 public class DBInteractor {
     private Statement s;
 
-    public DBInteractor()
-    {
-        try
-        {
+    public DBInteractor() {
+        try {
             s = ScreenManager.getConnection().createStatement();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
     }
 
-    public ResultSet recordManagement1()
-    {
-        try
-        {
-            ResultSet rs = s.executeQuery(Query.stockItemAndSuppliers());
+    public ResultSet recordManagement1() {
+        try {
+            ResultSet rs = s.executeQuery(RelatedRecordsQueries.stockItemAndSuppliers());
             return rs;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
         return null;
     }
 
-    public ResultSet recordManagement2()
-    {
-        try
-        {
-            ResultSet rs = s.executeQuery(Query.storedItemAndLocations());
+    public ResultSet recordManagement2() {
+        try {
+            ResultSet rs = s.executeQuery(RelatedRecordsQueries.storedItemAndLocations());
             return rs;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
         return null;
     }
 
-    public ResultSet recordManagement3()
-    {
-        try
-        {
-            ResultSet rs = s.executeQuery(Query.locationAndStoredItems());
+    public ResultSet recordManagement3() {
+        try {
+            ResultSet rs = s.executeQuery(RelatedRecordsQueries.locationAndStoredItems());
             return rs;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
         return null;
     }
 
-    public ResultSet recordManagement4(int supplierId)
-    {
-        try
-        {
-            String sql = Query.supplierAndProducts();
+    public ResultSet recordManagement4(int supplierId) {
+        try {
+            String sql = RelatedRecordsQueries.supplierAndProducts();
             PreparedStatement ps = ScreenManager.getConnection().prepareStatement(sql);
             ps.setInt(1, supplierId);   // binds s.supplier_id = ?
             return ps.executeQuery();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
     }
 
-    public ResultSet transaction1()
-    {
-        try
-        {
-            ResultSet rs = s.executeQuery(Query.restockingItem());
+    public ResultSet getItemsToRestock() {
+        try {
+            ResultSet rs = s.executeQuery(TransactionQueries.selectItemsToRestock());
             return rs;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
         return null;
     }
 
-    public ResultSet transaction2(String name, String unitOfMeasure, String category)
-    {
-        try
-        {
-            ResultSet rs = s.executeQuery(Query.buyNewStockItem(name, unitOfMeasure, category));
+    public ResultSet getRestockRecords() {
+        try {
+            ResultSet rs = s.executeQuery(TransactionQueries.getRestockRecords());
             return rs;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
         return null;
     }
 
-    public void enteringTransaction3()
-    {
-        try
-        {
-            s.executeUpdate(Query.disposingExpiredItems());
-            s.executeUpdate(Query.updateInventoryAfterDisposing());
+    // TODO potentially refactor methods into diff classes
+
+    public boolean checkSupplierProductExists(int supplierId, int itemId) {
+        try (Connection conn = ScreenManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(TransactionQueries.r2_checkIfSupplierProductComboExists())) {
+            ps.setInt(1, supplierId);
+            ps.setInt(2, itemId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getBoolean(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
-        catch (Exception e)
-        {
+    }
+
+    public boolean checkInvisibleRecordExists(int supplierId, int itemId) {
+        try (Connection conn = ScreenManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(TransactionQueries.r2_checkIfInvisibleRecordExists())) {
+            ps.setInt(1, supplierId);
+            ps.setInt(2, itemId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getBoolean(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public ResultSet getRegistryHistory() {
+        try {
+            Connection conn = ScreenManager.getConnection();
+            Statement stmt = conn.createStatement();
+            return stmt.executeQuery(TransactionQueries.r2_showReadOnlyTable());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public void registerSupplierProduct(int supplierId, int itemId, double cost, boolean isReactivation) {
+        Connection conn = null;
+        try {
+            conn = ScreenManager.getConnection();
+            conn.setAutoCommit(false);
+
+            String actionSql = isReactivation ? TransactionQueries.r2_updateToDoIfInvisibleRecordExists() : TransactionQueries.r2_updateToDoIfInvisibleRecordDoesNotExist();
+
+            try (PreparedStatement ps = conn.prepareStatement(actionSql)) {
+                if (isReactivation) {
+                    // Update existing invisible record
+                    ps.setDouble(1, cost);       // unit_cost
+                    ps.setInt(2, supplierId);    // WHERE supplier_id
+                    ps.setInt(3, itemId);        // AND item_id
+                } else {
+                    // Insert new record
+                    ps.setInt(1, supplierId);
+                    ps.setInt(2, itemId);
+                    ps.setDouble(3, cost);
+                }
+                ps.executeUpdate();
+            }
+
+            try (PreparedStatement ps = conn.prepareStatement(TransactionQueries.r2_recordAdditionInTransactionTable())) {
+                ps.setInt(1, supplierId);
+                ps.setInt(2, itemId);
+                ps.setDouble(3, cost);
+                ps.executeUpdate();
+            }
+
+            conn.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void updateSupplierProduct(int supplierId, int itemId, double cost) {
+        Connection conn = null;
+        try {
+            conn = ScreenManager.getConnection();
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement ps = conn.prepareStatement(TransactionQueries.r2_updateToDoIfUserSelectsChange())) {
+                ps.setDouble(1, cost);        // SET unit_cost
+                ps.setInt(2, supplierId);     // WHERE supplier_id
+                ps.setInt(3, itemId);         // AND item_id
+                ps.executeUpdate();
+            }
+
+            try (PreparedStatement ps = conn.prepareStatement(TransactionQueries.r2_recordChangeInTransactionTable())) {
+                ps.setInt(1, supplierId);
+                ps.setInt(2, itemId);
+                ps.setDouble(3, cost);
+                ps.executeUpdate();
+            }
+
+            conn.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public ResultSet getActiveSuppliers() {
+        try {
+            Connection conn = ScreenManager.getConnection();
+            return conn.createStatement().executeQuery("SELECT supplier_id, name FROM suppliers WHERE visible = 1");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ResultSet getActiveStockItems() {
+        try {
+            Connection conn = ScreenManager.getConnection();
+            return conn.createStatement().executeQuery("SELECT item_id, item_name, unit_of_measure FROM stock_items WHERE visible = 1");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void addNewSupplier(String name, String contactPerson, String contactInfo) {
+        try (Connection conn = ScreenManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement("INSERT INTO suppliers (name, contact_person, contact_info) VALUES (?, ?, ?)")) {
+            ps.setString(1, name);
+            ps.setString(2, contactPerson);
+            ps.setString(3, contactInfo);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void enteringTransaction3() {
+        try {
+            s.executeUpdate(TransactionQueries.disposingExpiredItems());
+            s.executeUpdate(TransactionQueries.setExpiredToZero());
+            s.executeUpdate(TransactionQueries.recordingDisposedItemsInStockMovement());
+            s.executeUpdate(TransactionQueries.updateInventoryAfterDisposing());
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public ResultSet displayAllDisposedItems()
-    {
-        try
-        {
-            ResultSet rs = s.executeQuery(Query.displayAllDisposedItems());
+    public ResultSet displayAllDisposedItems() {
+        try {
+            ResultSet rs = s.executeQuery(TransactionQueries.displayAllDisposedItems());
             return rs;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
         return null;
     }
 
-    public ResultSet displayRecentlyDisposedItems()
-    {
-        try
-        {
-            ResultSet rs = s.executeQuery(Query.displayRecentlyDisposedItems());
+    public ResultSet displayRecentlyDisposedItems() {
+        try {
+            ResultSet rs = s.executeQuery(TransactionQueries.displayRecentlyDisposedItems());
             return rs;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
         return null;
     }
 
-    public void exitingTransaction3()
-    {
-        try
-        {
-            s.executeUpdate(Query.updateNewlyDisposedToPreviouslyDisposed());
-        }
-        catch (Exception e)
-        {
+    public void exitingTransaction3() {
+        try {
+            s.executeUpdate(TransactionQueries.updateNewlyDisposedToPreviouslyDisposed());
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public ResultSet transaction4(int dishId, int numberOfDishes)
-    {
-        try
-        {
-            String sql = Query.createDish(numberOfDishes);
+    public ResultSet getAllDishes() {
+        try {
+            return s.executeQuery(TransactionQueries.getAllDishes());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public ResultSet getDishIngredients() {
+        try {
+            return s.executeQuery(TransactionQueries.getDishIngredients());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public ResultSet getAllLocations() {
+        try {
+            return s.executeQuery(TransactionQueries.getAllLocations());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public ResultSet viewDishRecords() {
+        try {
+            return s.executeQuery(TransactionQueries.dishConsumptionHistory());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public ResultSet report1(int year, int month) {
+        try {
+            ResultSet rs = s.executeQuery(ReportQueries.preferredSuppliersReport(year, month));
+            return rs;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return null;
+    }
+
+    public ResultSet report2(int year, int month) {
+        try {
+            ResultSet rs = s.executeQuery(ReportQueries.storageDistributionReport(year, month));
+            return rs;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return null;
+    }
+
+    public ResultSet report3(int startMonth, int endMonth, int startYear) {
+        try {
+            ResultSet rs = s.executeQuery(ReportQueries.seasonalStockReport(startMonth, endMonth, startYear));
+            return rs;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return null;
+    }
+
+    public ResultSet report4(int year, int month) {
+        try {
+            String sql = ReportQueries.expiryReport(year, month);
             PreparedStatement ps = ScreenManager.getConnection().prepareStatement(sql);
-            ps.setInt(1, dishId);   // binds dr.dish_id = ?
             return ps.executeQuery();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
-    }
-
-    public ResultSet report1()
-    {
-        try
-        {
-            ResultSet rs = s.executeQuery(Query.preferredSuppliersReport());
-            return rs;
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
-
-        return null;
-    }
-
-    public ResultSet report2()
-    {
-        try
-        {
-            ResultSet rs = s.executeQuery(Query.storageDistributionReport());
-            return rs;
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
-
-        return null;
-    }
-
-    public ResultSet report3()
-    {
-        try
-        {
-            ResultSet rs = s.executeQuery(Query.seasonalStockReport());
-            return rs;
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
-
-        return null;
-    }
-
-    public ResultSet report4()
-    {
-        try
-        {
-            ResultSet rs = s.executeQuery(Query.expiryReport());
-            return rs;
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
-        return null;
     }
 
 

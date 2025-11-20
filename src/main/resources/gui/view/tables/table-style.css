@@ -42,13 +42,21 @@
         -fx-background-color: rgba(0,0,0,.12);
     }
 
-    .edit-button, .delete-button {
+    .edit-button, .delete-button, .view-button {
         -fx-font-size: 16px;
         -fx-text-fill: white;
         -fx-padding: 5px 12px;
         -fx-border-radius: 6px;
         -fx-background-radius: 6px;
         -fx-cursor: hand;
+    }
+
+    .view-button {
+        -fx-background-color: #9b5de5;
+    }
+
+    .view-button:hover {
+        -fx-background-color: #7f3ac9;
     }
 
     .edit-button {
@@ -63,4 +71,19 @@
     }
     .delete-button:hover {
         -fx-background-color: #d96245;
+    }
+
+    .combo-box {
+        -fx-font-family: "Inter FHX";
+        -fx-font-size: 18px;
+    }
+
+    .combo-box .list-cell {
+        -fx-font-family: "Inter FHX";
+        -fx-font-size: 16px;
+    }
+
+    .combo-box .button-cell {
+        -fx-font-family: "Inter FHX";
+        -fx-font-size: 16px;
     }

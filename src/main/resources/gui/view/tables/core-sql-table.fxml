@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="900" prefWidth="1300" spacing="10" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.tables.CoreTableSQLController"
+      stylesheets="@table-style.css">
+
+    <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="1300.0" spacing="15.0">
+        <children>
+            <Label fx:id="tableTitle" text="Table Title">
+                <font>
+                    <Font name="System Bold" size="28.0" />
+                </font>
+            </Label>
+
+            <HBox HBox.hgrow="ALWAYS" />
+
+            <ComboBox fx:id="filterColumnComboBox" prefHeight="40.0" prefWidth="160.0" promptText="Filter Column" />
+            <TextField fx:id="filterField" prefHeight="40.0" prefWidth="250.0" promptText="Search..." />
+
+            <HBox HBox.hgrow="ALWAYS" />
+
+            <Button fx:id="addButton" onAction="#addRowPopup" prefHeight="40.0" prefWidth="140.0" text="Add Item">
+                <font>
+                    <Font name="System Bold" size="18.0" />
+                </font>
+            </Button>
+
+            <Button fx:id="returnButton1" onAction="#returnToMainMenu" prefHeight="40.0" prefWidth="140.0" text="Return">
+                <font>
+                    <Font name="System Bold" size="18.0" />
+                </font>
+            </Button>
+        </children>
+
+        <padding>
+            <Insets left="30.0" right="30.0" top="20.0" bottom="10.0" />
+        </padding>
+    </HBox>
+
+    <TableView fx:id="table" editable="true" VBox.vgrow="ALWAYS">
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+        </columnResizePolicy>
+    </TableView>
+
+</VBox>

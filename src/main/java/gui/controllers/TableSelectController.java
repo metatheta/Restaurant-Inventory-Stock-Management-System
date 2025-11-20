@@ -1,11 +1,14 @@
 package gui.controllers;
 
+import gui.ScreenManager;
+
 public class TableSelectController {
 
     public void inventoryTable() {
         try {
-            String[] columnNames = {"Running Balance", "Last Restock Date", "Expiry Date"};
-            gui.view.ScreenManager.SINGLETON.loadTableScreen("inventory", columnNames);
+            String[] columnNames = {"Inventory ID", "Running Balance", "Last Restock Date", "Expiry Date", "Location " +
+                    "ID", "Item ID"};
+            ScreenManager.SINGLETON.loadCoreTableScreen("inventory", "Inventory", columnNames);
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
@@ -13,8 +16,8 @@ public class TableSelectController {
 
     public void stockItemsTable() {
         try {
-            String[] columnNames = {"Item Name", "Unit of Measure", "Category"};
-            gui.view.ScreenManager.SINGLETON.loadTableScreen("stock_items", columnNames);
+            String[] columnNames = {"Item ID", "Item Name", "Unit of Measure", "Category"};
+            ScreenManager.SINGLETON.loadCoreTableScreen("stock_items", "Stock Items", columnNames);
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
@@ -22,8 +25,8 @@ public class TableSelectController {
 
     public void stockLocationsTable() {
         try {
-            String[] columnNames = {"Storage Name", "Address", "Storage Type"};
-            gui.view.ScreenManager.SINGLETON.loadTableScreen("stock_locations", columnNames);
+            String[] columnNames = {"Location ID", "Storage Name", "Address", "Storage Type"};
+            ScreenManager.SINGLETON.loadCoreTableScreen("stock_locations", "Stock Locations", columnNames);
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
@@ -31,8 +34,8 @@ public class TableSelectController {
 
     public void suppliersTable() {
         try {
-            String[] columnNames = {"Name", "Contact Person", "Contact Info"};
-            gui.view.ScreenManager.SINGLETON.loadTableScreen("suppliers", columnNames);
+            String[] columnNames = {"Supplier ID", "Name", "Contact Person", "Contact Info"};
+            ScreenManager.SINGLETON.loadCoreTableScreen("suppliers", "Suppliers", columnNames);
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
@@ -40,7 +43,7 @@ public class TableSelectController {
 
     public void returnToMainMenu() {
         try {
-            gui.view.ScreenManager.SINGLETON.displayScreen("/gui/view/main-menu.fxml");
+            ScreenManager.SINGLETON.displayScreen("/gui/view/main-menu.fxml");
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
