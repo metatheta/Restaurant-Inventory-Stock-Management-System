@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 public class RestockDetailsDialog extends Dialog<List<RestockEntry>> {
 
     private final TableView<RestockEntry> table = new TableView<>();
-    private final SupplierOption ADD_NEW_OPTION = new SupplierOption(-1, "[+ Assign/Create Supplier]", "", 0);
 
     public RestockDetailsDialog(List<RestockSelection> selectedItems) {
         this.setTitle("Restock Details");
@@ -53,7 +52,6 @@ public class RestockDetailsDialog extends Dialog<List<RestockEntry>> {
 
         for (RestockSelection item : selectedItems) {
             List<SupplierOption> opts = supplierMap.getOrDefault(item.itemId(), new ArrayList<>());
-            opts.add(ADD_NEW_OPTION);
             data.add(new RestockEntry(item, opts));
         }
         table.setItems(data);
