@@ -97,15 +97,6 @@ public class TransactionQueries {
                 "    visible = 1;";
     }
 
-    public static String recordingDisposedItemsInStockMovement() {
-        return "INSERT INTO stock_movement(quantity, transaction_type, item_id, inventory_id, location_id)\n" +
-                "SELECT d.quantity_disposed, 'DISPOSAL', i.item_id, i.inventory_id, i.location_id\n" +
-                "FROM disposed_items d\n" +
-                "\tJOIN inventory i\n" +
-                "\t\tON d.inventory_id = i.inventory_id\n" +
-                "WHERE d.should_update_inventory = 1;";
-    }
-
     public static String updateInventoryAfterDisposing() {
         return "UPDATE inventory i\n" +
                 "\tJOIN disposed_items d\n" +

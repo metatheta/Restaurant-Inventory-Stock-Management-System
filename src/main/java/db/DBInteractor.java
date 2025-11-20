@@ -275,7 +275,6 @@ public class DBInteractor {
         try {
             s.executeUpdate(TransactionQueries.disposingExpiredItems());
             s.executeUpdate(TransactionQueries.setExpiredToZero());
-            s.executeUpdate(TransactionQueries.recordingDisposedItemsInStockMovement());
             s.executeUpdate(TransactionQueries.updateInventoryAfterDisposing());
         } catch (Exception e) {
             System.out.println(e.getMessage());
