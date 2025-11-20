@@ -4,7 +4,6 @@ import db.DBInteractor;
 import gui.ScreenManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 import org.controlsfx.control.SearchableComboBox;
 
 import javax.sql.rowset.CachedRowSet;
@@ -31,7 +30,10 @@ public class ProductRegistryMenuController {
     }
 
     private void loadSuppliers() {
+        RegistrySupplierOption current = supplierSelector.getValue();
+        supplierSelector.getSelectionModel().clearSelection();
         supplierSelector.getItems().clear();
+
         ResultSet rs = db.getActiveSuppliers();
         if (rs != null) {
             try {
@@ -44,6 +46,13 @@ public class ProductRegistryMenuController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+
+        if (current != null) {
+            supplierSelector.getItems().stream()
+                    .filter(s -> s.id() == current.id())
+                    .findFirst()
+                    .ifPresent(s -> supplierSelector.setValue(s));
         }
     }
 
@@ -77,43 +86,17 @@ public class ProductRegistryMenuController {
 
     @FXML
     private void onAddSupplier() {
-        Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Add New Supplier");
-        dialog.setHeaderText("Enter Supplier Details");
+        AddSupplierDialog dialog = new AddSupplierDialog();
+        Optional<AddSupplierDialog.SupplierDBItem> result = dialog.showAndWait();
 
-        ButtonType loginButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
-
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-
-        TextField name = new TextField();
-        TextField person = new TextField();
-        TextField info = new TextField();
-
-        grid.add(new Label("Company Name:"), 0, 0);
-        grid.add(name, 1, 0);
-        grid.add(new Label("Contact Person:"), 0, 1);
-        grid.add(person, 1, 1);
-        grid.add(new Label("Contact Info:"), 0, 2);
-        grid.add(info, 1, 2);
-
-        dialog.getDialogPane().setContent(grid);
-
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == loginButtonType) {
-                return name.getText();
-            }
-            return null;
-        });
-
-        Optional<String> result = dialog.showAndWait();
-
-        result.ifPresent(companyName -> {
-            db.addNewSupplier(name.getText(), person.getText(), info.getText());
+        result.ifPresent(newSupplier -> {
             loadSuppliers();
-            showAlert(Alert.AlertType.INFORMATION, "Success", "Supplier added successfully.");
+            supplierSelector.getItems().stream()
+                    .filter(s -> s.id() == newSupplier.id())
+                    .findFirst()
+                    .ifPresent(s -> supplierSelector.setValue(s));
+
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Supplier added: " + newSupplier.name());
         });
     }
 
@@ -124,13 +107,10 @@ public class ProductRegistryMenuController {
 
         result.ifPresent(newItem -> {
             loadStockItems();
-
-            for (StockItemOption option : itemSelector.getItems()) {
-                if (option.itemId() == newItem.id()) {
-                    itemSelector.getSelectionModel().select(option);
-                    break;
-                }
-            }
+            itemSelector.getItems().stream()
+                    .filter(item -> item.itemId() == newItem.id())
+                    .findFirst()
+                    .ifPresent(item -> itemSelector.setValue(item));
 
             showAlert(Alert.AlertType.INFORMATION, "Success", "New stock item created: " + newItem.name());
         });
@@ -196,6 +176,7 @@ public class ProductRegistryMenuController {
 
     private void clearFields() {
         unitCostField.clear();
+        unitCostField.requestFocus();
     }
 
     private void addNumericListener(TextField tf, boolean integerOnly) {

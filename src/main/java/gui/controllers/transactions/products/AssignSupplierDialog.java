@@ -1,6 +1,7 @@
 package gui.controllers.transactions.products;
 
 import gui.ScreenManager;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -28,7 +29,6 @@ public class AssignSupplierDialog extends Dialog<Boolean> {
         grid.setVgap(10);
         grid.setPadding(new Insets(20));
 
-        // 1. Supplier Selection
         supplierCombo = new ComboBox<>();
         supplierCombo.setPromptText("Select Existing Supplier...");
         supplierCombo.setPrefWidth(300);
@@ -53,6 +53,15 @@ public class AssignSupplierDialog extends Dialog<Boolean> {
 
         this.getDialogPane().setContent(grid);
 
+        final Button btOk = (Button) this.getDialogPane().lookupButton(saveBtn);
+        btOk.addEventFilter(ActionEvent.ACTION, event -> {
+            if (supplierCombo.getValue() == null ||
+                    costField.getText().trim().isEmpty() ||
+                    amountField.getText().trim().isEmpty()) {
+                event.consume();
+            }
+        });
+
         this.setResultConverter(btn -> {
             if (btn == saveBtn) {
                 return saveLinkToDB();
@@ -75,36 +84,19 @@ public class AssignSupplierDialog extends Dialog<Boolean> {
     }
 
     private void showCreateSupplierPopup() {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("New Supplier");
-        dialog.setHeaderText("Enter Supplier Name:");
-        dialog.showAndWait().ifPresent(name -> {
-            String sql = "INSERT INTO suppliers (name, contact_person, contact_info) VALUES (?, 'TBA', 'TBA')";
-            try (Connection conn = ScreenManager.getConnection();
-                 PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setString(1, name);
-                ps.executeUpdate();
-                loadAllSuppliers(); // Refresh list
-                // Auto-select the new one
-                ResultSet keys = ps.getGeneratedKeys();
-                if (keys.next()) {
-                    int newId = keys.getInt(1);
-                    supplierCombo.getItems().stream()
-                            .filter(s -> s.id == newId)
-                            .findFirst()
-                            .ifPresent(supplierCombo::setValue);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+        new AddSupplierDialog().showAndWait().ifPresent(newSupplier -> {
+            loadAllSuppliers();
+            supplierCombo.getItems().stream()
+                    .filter(s -> s.id == newSupplier.id())
+                    .findFirst()
+                    .ifPresent(supplierCombo::setValue);
         });
     }
 
     private boolean saveLinkToDB() {
-        if (supplierCombo.getValue() == null) return false;
         try {
-            double cost = Double.parseDouble(costField.getText());
-            int amount = Integer.parseInt(amountField.getText());
+            double cost = Double.parseDouble(costField.getText().trim());
+            int amount = Integer.parseInt(amountField.getText().trim());
             int supplierId = supplierCombo.getValue().id;
 
             String sql = "INSERT INTO supplier_products (supplier_id, item_id, unit_cost, amount) VALUES (?, ?, ?, ?) " +
@@ -116,7 +108,7 @@ public class AssignSupplierDialog extends Dialog<Boolean> {
                 ps.setInt(2, itemId);
                 ps.setDouble(3, cost);
                 ps.setInt(4, amount);
-                ps.setDouble(5, cost); // Update values if exists
+                ps.setDouble(5, cost);
                 ps.setInt(6, amount);
                 ps.executeUpdate();
                 return true;

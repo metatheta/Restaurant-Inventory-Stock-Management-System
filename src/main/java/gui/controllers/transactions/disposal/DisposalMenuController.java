@@ -25,7 +25,6 @@ public class DisposalMenuController {
         DB = new DBInteractor();
         root.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (oldScene != null && newScene == null) {
-                System.out.println("Running exit code");
                 DB.exitingTransaction3();
             }
         });

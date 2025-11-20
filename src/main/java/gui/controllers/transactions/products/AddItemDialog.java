@@ -1,6 +1,7 @@
 package gui.controllers.transactions.products;
 
 import gui.ScreenManager;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -45,6 +46,16 @@ public class AddItemDialog extends Dialog<AddItemDialog.ItemDBItem> {
 
         this.getDialogPane().setContent(grid);
 
+        Button btOk = (Button) this.getDialogPane().lookupButton(saveBtn);
+        btOk.addEventFilter(ActionEvent.ACTION, event -> {
+            String catVal = categoryBox.getValue();
+            if (nameField.getText().trim().isEmpty() ||
+                    unitField.getText().trim().isEmpty() ||
+                    catVal == null || catVal.trim().isEmpty()) {
+                event.consume();
+            }
+        });
+
         this.setResultConverter(btn -> {
             if (btn == saveBtn) return createItemInDb();
             return null;
@@ -52,11 +63,9 @@ public class AddItemDialog extends Dialog<AddItemDialog.ItemDBItem> {
     }
 
     private ItemDBItem createItemInDb() {
-        String name = nameField.getText();
-        String unit = unitField.getText();
+        String name = nameField.getText().trim();
+        String unit = unitField.getText().trim();
         String cat = categoryBox.getValue();
-
-        if (name.isEmpty() || unit.isEmpty() || cat == null) return null;
 
         String sql = "INSERT INTO stock_items (item_name, unit_of_measure, category) VALUES (?, ?, ?)";
 

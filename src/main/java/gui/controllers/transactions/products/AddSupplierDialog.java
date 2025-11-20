@@ -1,6 +1,7 @@
 package gui.controllers.transactions.products;
 
 import gui.ScreenManager;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -41,6 +42,15 @@ public class AddSupplierDialog extends Dialog<AddSupplierDialog.SupplierDBItem> 
 
         this.getDialogPane().setContent(grid);
 
+        Button btOk = (Button) this.getDialogPane().lookupButton(saveBtn);
+        btOk.addEventFilter(ActionEvent.ACTION, event -> {
+            if (nameField.getText().trim().isEmpty() ||
+                    contactNameField.getText().trim().isEmpty() ||
+                    contactInfoField.getText().trim().isEmpty()) {
+                event.consume();
+            }
+        });
+
         this.setResultConverter(btn -> {
             if (btn == saveBtn) return createSupplierInDb();
             return null;
@@ -48,11 +58,9 @@ public class AddSupplierDialog extends Dialog<AddSupplierDialog.SupplierDBItem> 
     }
 
     private SupplierDBItem createSupplierInDb() {
-        String name = nameField.getText();
-        String person = contactNameField.getText();
-        String info = contactInfoField.getText();
-
-        if (name.isEmpty()) return null;
+        String name = nameField.getText().trim();
+        String person = contactNameField.getText().trim();
+        String info = contactInfoField.getText().trim();
 
         String sql = "INSERT INTO suppliers (name, contact_person, contact_info) VALUES (?, ?, ?)";
 
