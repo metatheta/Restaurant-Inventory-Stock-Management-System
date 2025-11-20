@@ -14,10 +14,14 @@ import java.util.Optional;
 
 public class ProductRegistryMenuController {
 
-    @FXML private SearchableComboBox<SupplierOption> supplierSelector;
-    @FXML private SearchableComboBox<StockItemOption> itemSelector;
-    @FXML private TextField unitCostField;
-    @FXML private TextField amountField;
+    @FXML
+    private SearchableComboBox<RegistrySupplierOption> supplierSelector;
+    @FXML
+    private SearchableComboBox<StockItemOption> itemSelector;
+    @FXML
+    private TextField unitCostField;
+    @FXML
+    private TextField amountField;
 
     private final DBInteractor db = new DBInteractor();
 
@@ -36,7 +40,7 @@ public class ProductRegistryMenuController {
         if (rs != null) {
             try {
                 while (rs.next()) {
-                    supplierSelector.getItems().add(new SupplierOption(
+                    supplierSelector.getItems().add(new RegistrySupplierOption(
                             rs.getInt("supplier_id"),
                             rs.getString("name")
                     ));
@@ -48,7 +52,10 @@ public class ProductRegistryMenuController {
     }
 
     private void loadStockItems() {
+        StockItemOption current = itemSelector.getValue();
+        itemSelector.getSelectionModel().clearSelection();
         itemSelector.getItems().clear();
+
         ResultSet rs = db.getActiveStockItems();
         if (rs != null) {
             try {
@@ -62,6 +69,13 @@ public class ProductRegistryMenuController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+
+        if (current != null) {
+            itemSelector.getItems().stream()
+                    .filter(item -> item.itemId() == current.itemId())
+                    .findFirst()
+                    .ifPresent(item -> itemSelector.setValue(item));
         }
     }
 
@@ -108,8 +122,27 @@ public class ProductRegistryMenuController {
     }
 
     @FXML
+    private void onAddNewItem() {
+        AddItemDialog dialog = new AddItemDialog();
+        Optional<AddItemDialog.ItemDBItem> result = dialog.showAndWait();
+
+        result.ifPresent(newItem -> {
+            loadStockItems();
+
+            for (StockItemOption option : itemSelector.getItems()) {
+                if (option.itemId() == newItem.id()) {
+                    itemSelector.getSelectionModel().select(option);
+                    break;
+                }
+            }
+
+            showAlert(Alert.AlertType.INFORMATION, "Success", "New stock item created: " + newItem.name());
+        });
+    }
+
+    @FXML
     private void onConfirmSelection() {
-        SupplierOption selectedSupplier = supplierSelector.getValue();
+        RegistrySupplierOption selectedSupplier = supplierSelector.getValue();
         StockItemOption selectedItem = itemSelector.getValue();
         String costText = unitCostField.getText();
         String amountText = amountField.getText();
@@ -131,16 +164,11 @@ public class ProductRegistryMenuController {
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Product details updated.");
                 clearFields();
             }
-        }
-
-        else if (db.checkInvisibleRecordExists(selectedSupplier.id, selectedItem.itemId)) {
+        } else if (db.checkInvisibleRecordExists(selectedSupplier.id, selectedItem.itemId)) {
             db.registerSupplierProduct(selectedSupplier.id, selectedItem.itemId, amount, unitCost, true);
             showAlert(Alert.AlertType.INFORMATION, "Success", "Product re-registered (was previously deleted).");
             clearFields();
-        }
-
-
-        else {
+        } else {
             db.registerSupplierProduct(selectedSupplier.id, selectedItem.itemId, amount, unitCost, false);
             showAlert(Alert.AlertType.INFORMATION, "Success", "New product registered to supplier.");
             clearFields();
@@ -208,9 +236,16 @@ public class ProductRegistryMenuController {
     }
 
     private record StockItemOption(int itemId, String itemName, String unit) {
-        @Override public String toString() { return itemName + " (" + unit + ")"; }
+        @Override
+        public String toString() {
+            return itemName + " (" + unit + ")";
+        }
     }
-    private record SupplierOption(int id, String name) {
-        @Override public String toString() { return name; }
+
+    private record RegistrySupplierOption(int id, String name) {
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 }

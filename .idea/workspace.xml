@@ -4,14 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="feat: report 1">
+    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="fix: made restock actually update the last restock date">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/purchase/AddItemDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/products/AddItemDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/purchase/AddLocationDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/products/AddLocationDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/purchase/AddSupplierDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/products/AddSupplierDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/purchase/AssignSupplierDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/products/AssignSupplierDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/purchase/ProductRegistryMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/products/ProductRegistryMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/restock/RestockDetailsDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/restock/RestockDetailsDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/products/ProductRegistryMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/products/ProductRegistryMenuController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/product-registry.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/transactions/product-registry.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -378,7 +373,31 @@
       <option name="project" value="LOCAL" />
       <updated>1763634745221</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="refactor: purchase changed name to product registry">
+      <option name="closed" value="true" />
+      <created>1763635669650</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1763635669650</updated>
+    </task>
+    <task id="LOCAL-00034" summary="fix: prevent user from entering nonexistent IDs for location and item id">
+      <option name="closed" value="true" />
+      <created>1763636599145</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1763636599145</updated>
+    </task>
+    <task id="LOCAL-00035" summary="fix: made restock actually update the last restock date">
+      <option name="closed" value="true" />
+      <created>1763637454121</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1763637454121</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -405,9 +424,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat: disabled add row button until all cols are non empty" />
-    <MESSAGE value="feat: made edit and delete buttons per-row" />
-    <MESSAGE value="feat: edited table CSS" />
     <MESSAGE value="fix: merging errors" />
     <MESSAGE value="feat: restock menu" />
     <MESSAGE value="feat: created 2 types of sql tables the main and the read only" />
@@ -430,7 +446,10 @@
     <MESSAGE value="feat: product registry menu" />
     <MESSAGE value="feat: changed table structure for restock logs" />
     <MESSAGE value="feat: report 1" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: report 1" />
+    <MESSAGE value="refactor: purchase changed name to product registry" />
+    <MESSAGE value="fix: prevent user from entering nonexistent IDs for location and item id" />
+    <MESSAGE value="fix: made restock actually update the last restock date" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: made restock actually update the last restock date" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
