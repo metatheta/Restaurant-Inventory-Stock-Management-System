@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYZE_INJECTED_CODE" value="false" />
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="feat: removed amount field">
+    <list default="true" id="9cbab5af-b296-47e2-90f3-9c8352074442" name="Changes" comment="fix: remove add supplier">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/db/DBInteractor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/db/DBInteractor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/db/Query.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/db/Query.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/ReportsMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/ReportsMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/reports/ExpiryWasteReportController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/reports/ExpiryWasteReportController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/reports/YearMonthReportController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/reports/SeasonalStockReportController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/restock/RestockDetailsDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/restock/RestockDetailsDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/restock/SupplierOption.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/restock/SupplierOption.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/reports/SeasonalStockReportController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/reports/SeasonalStockReportController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/AddRowDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/AddRowDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/CoreTableSQLController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/CoreTableSQLController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/DateTimePicker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/DateTimePicker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/ReadOnlySQLTableController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/ReadOnlySQLTableController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/ReadOnlyScrollSQLTableController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/tables/ReadOnlyScrollSQLTableController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/disposal/DisposalMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/disposal/DisposalMenuController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/restock/RestockMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gui/controllers/transactions/restock/RestockMenuController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/gui/view/reports/seasonal-stock.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gui/view/reports/seasonal-stock.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -67,30 +72,31 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Application.Db Test.executor&quot;: &quot;Run&quot;,
-    &quot;Application.DbTest.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Driver.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Main Menu.executor&quot;: &quot;Run&quot;,
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;Maven.Main Menu.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;deletionFromPopupRequiresConfirmation&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;gui/transaction-interface&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/allen/projects/Java/try/Restaurant-Inventory-Stock-Management-System&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.28582203&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Application.Db Test.executor": "Run",
+    "Application.DbTest.executor": "Run",
+    "Application.Driver.executor": "Run",
+    "Application.Main Menu.executor": "Run",
+    "Downloaded.Files.Path.Enabled": "false",
+    "Maven.Main Menu.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "deletionFromPopupRequiresConfirmation": "false",
+    "git-widget-placeholder": "gui/transaction-interface",
+    "last_opened_file_path": "C:/Users/allen/projects/Java/try/Restaurant-Inventory-Stock-Management-System",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.28582203",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\allen\projects\Java\try\Restaurant-Inventory-Stock-Management-System" />
@@ -411,7 +417,23 @@
       <option name="project" value="LOCAL" />
       <updated>1763640607028</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="fix: fixed usages of amount field">
+      <option name="closed" value="true" />
+      <created>1763642450164</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1763642450164</updated>
+    </task>
+    <task id="LOCAL-00038" summary="fix: remove add supplier">
+      <option name="closed" value="true" />
+      <created>1763643496203</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1763643496203</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -438,8 +460,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat: restock menu" />
-    <MESSAGE value="feat: created 2 types of sql tables the main and the read only" />
     <MESSAGE value="fix: merge from other branch and removed unused button in core tables" />
     <MESSAGE value="feat: made table IDs visible" />
     <MESSAGE value="feat: created disposal menu" />
@@ -463,7 +483,9 @@
     <MESSAGE value="fix: prevent user from entering nonexistent IDs for location and item id" />
     <MESSAGE value="fix: made restock actually update the last restock date" />
     <MESSAGE value="feat: removed amount field" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: removed amount field" />
+    <MESSAGE value="fix: fixed usages of amount field" />
+    <MESSAGE value="fix: remove add supplier" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: remove add supplier" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

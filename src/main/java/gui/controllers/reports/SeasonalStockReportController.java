@@ -8,22 +8,20 @@ import javafx.scene.control.ComboBox;
 
 import java.io.IOException;
 import java.sql.ResultSet;
-import java.time.Month;
+import java.time.LocalDate;
 import java.time.Year;
-import java.time.format.TextStyle;
-import java.util.Locale;
 
 public class SeasonalStockReportController {
 
     @FXML
     private ComboBox<Integer> yearComboBox;
     @FXML
-    private ComboBox<String> monthComboBox;
+    private ComboBox<String> seasonComboBox;
 
     @FXML
     public void initialize() {
         populateYears();
-        populateMonths();
+        populateSeasons();
     }
 
     private void populateYears() {
@@ -36,36 +34,68 @@ public class SeasonalStockReportController {
         yearComboBox.setValue(currentYear);
     }
 
-    private void populateMonths() {
-        for (Month month : Month.values()) {
-            String monthName = month.getDisplayName(TextStyle.FULL, Locale.ENGLISH);
-            monthComboBox.getItems().add(monthName);
+    private void populateSeasons() {
+        seasonComboBox.getItems().addAll("Spring", "Summer", "Autumn", "Winter");
+        int currentMonth = LocalDate.now().getMonthValue();
+        String currentSeason;
+
+        if (currentMonth >= 3 && currentMonth <= 5) {
+            currentSeason = "Spring";
+        } else if (currentMonth >= 6 && currentMonth <= 8) {
+            currentSeason = "Summer";
+        } else if (currentMonth >= 9 && currentMonth <= 11) {
+            currentSeason = "Autumn";
+        } else {
+            currentSeason = "Winter";
         }
-        String currentMonth = java.time.LocalDate.now().getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
-        monthComboBox.setValue(currentMonth);
+
+        seasonComboBox.setValue(currentSeason);
     }
 
     @FXML
     private void onViewReport() {
         Integer selectedYear = yearComboBox.getValue();
-        String selectedMonth = monthComboBox.getValue();
+        String selectedSeason = seasonComboBox.getValue();
 
-        if (selectedYear == null || selectedMonth == null) {
-            showAlert(Alert.AlertType.WARNING, "Selection Missing", "Please select both a year and a month.");
+        if (selectedYear == null || selectedSeason == null) {
+            showAlert(Alert.AlertType.WARNING, "Selection Missing", "Please select both a year and a season.");
             return;
         }
 
-        int monthIndex = Month.valueOf(selectedMonth.toUpperCase()).getValue();
+        int startMonth = 0;
+        int endMonth = 0;
+
+        switch (selectedSeason) {
+            case "Spring":
+                startMonth = 9;
+                endMonth = 11;
+                break;
+            case "Summer":
+                startMonth = 12;
+                endMonth = 2;
+                break;
+            case "Autumn":
+                startMonth = 3;
+                endMonth = 5;
+                break;
+            case "Winter":
+                startMonth = 6;
+                endMonth = 8;
+                break;
+        }
 
         DBInteractor db = new DBInteractor();
-        ResultSet rs = db.report1(selectedYear, monthIndex);
+        ResultSet rs = db.report3(startMonth, endMonth, selectedYear);
 
         try {
-            String reportTitle = "Expiry Waste Report for " + selectedMonth + " " + selectedYear;
+            String reportTitle = "Seasonal Stock Report: " + selectedSeason + " " + selectedYear;
             ScreenManager.SINGLETON.loadReadOnlyTableScreen(
                     rs,
                     reportTitle,
-                    "Item", "Total Quantity Disposed", "Total Quantity Purchased", "Disposal-Purchase Ratio"
+                    "Item",
+                    "Total Quantity Disposed",
+                    "Total Quantity Used",
+                    "Disposal-Used Ratio"
             );
 
         } catch (IOException e) {

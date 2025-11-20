@@ -370,7 +370,7 @@ public class DBInteractor {
         return null;
     }
 
-    public ResultSet report3() {
+    public ResultSet report3(int startMonth, int endMonth, int startYear) {
         try {
             ResultSet rs = s.executeQuery(Query.seasonalStockReport());
             return rs;
