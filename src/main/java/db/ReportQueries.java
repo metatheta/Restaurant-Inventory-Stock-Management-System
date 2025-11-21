@@ -70,30 +70,23 @@ public class ReportQueries {
                 "ORDER BY total_restocked DESC;";
     }
 
-    public static String seasonalStockReport(int startMonth, int endMonth, int startYear) {
+    public static String seasonalStockReport(int startMonth, int endMonth, int startYear, int endYear) {
+        int numberOfMonths = (endYear - startYear) * 12 + (endMonth - startMonth) + 1;
+        String startDate = startYear + "-" + startMonth + "-" + "01";
+        String endDate = endYear + "-" + endMonth + "-" + "31";
+
         return "SELECT si.item_name, " +
-                "COALESCE(b.y, 0) AS totalMovementInTransactions, " +
-                "COALESCE(b.y, 0)/30 AS averageMovementInTransactions, " +
-                "COALESCE(a.x, 0) + COALESCE(c.z, 0) AS totalMovementOutTransactions, " +
-                "(COALESCE(a.x, 0) + COALESCE(c.z, 0))/30 AS averageMovementOutTransactions " +
+                "COALESCE(b.y, 0) AS totalRestocks, " +
+                "COALESCE(b.y, 0)/" + numberOfMonths + " AS averageRestocks, " +
+                "COALESCE(c.z, 0) AS totalConsumptions, " +
+                "COALESCE(c.z, 0))/" + numberOfMonths + " AS averageConsumptions " +
                 "FROM stock_items si " +
-                "LEFT JOIN ( " +
-                "    SELECT si.item_id, COUNT(di.disposed_id) AS x " +
-                "    FROM stock_items si " +
-                "    LEFT JOIN inventory i ON si.item_id = i.item_id " +
-                "    LEFT JOIN disposed_items di ON i.inventory_id = di.inventory_id " +
-                "    WHERE si.visible = 1 AND i.visible = 1 AND di.visible = 1 " +
-                "      AND YEAR(di.disposed_date) = " + startYear + " " +
-                "      AND MONTH(di.disposed_date) BETWEEN " + startMonth + " AND " + endMonth + " " +
-                "    GROUP BY si.item_id " +
-                ") a ON si.item_id = a.item_id " +
                 "LEFT JOIN ( " +
                 "    SELECT si.item_id, COUNT(rs.restock_id) AS y " +
                 "    FROM stock_items si " +
                 "    LEFT JOIN item_restocks rs ON si.item_id = rs.item_id " +
                 "    WHERE si.visible = 1 AND rs.visible = 1 " +
-                "      AND YEAR(rs.restocked_at) = " + startYear + " " +
-                "      AND MONTH(rs.restocked_at) BETWEEN " + startMonth + " AND " + endMonth + " " +
+                "      AND rs.restocked_at BETWEEN " + startDate + " AND " + endDate + " " +
                 "    GROUP BY si.item_id " +
                 ") b ON si.item_id = b.item_id " +
                 "LEFT JOIN ( " +
@@ -103,8 +96,7 @@ public class ReportQueries {
                 "    LEFT JOIN dishes d ON dr.dish_id = d.dish_id " +
                 "    LEFT JOIN dish_consumption dc ON d.dish_id = dc.dish_id " +
                 "    WHERE si.visible = 1 AND dr.visible = 1 AND d.visible = 1 AND dc.visible = 1 " +
-                "      AND YEAR(dc.consumed_at) = " + startYear + " " +
-                "      AND MONTH(dc.consumed_at) BETWEEN " + startMonth + " AND " + endMonth + " " +
+                "      AND dc.consumed_at BETWEEN " + startDate + " AND " + endDate + " " +
                 "    GROUP BY si.item_id " +
                 ") c ON si.item_id = c.item_id " +
                 "WHERE si.visible = 1 " +
